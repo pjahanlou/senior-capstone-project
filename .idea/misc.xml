@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/capstoneproject/senior-capstone-project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2203125" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/capstoneproject/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.25" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/capstoneproject/senior-capstone-project/app/src/main/res/layout/activity_login_page.xml" value="0.18" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/capstoneproject/senior-capstone-project/app/src/main/res/layout/signup_tab_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
