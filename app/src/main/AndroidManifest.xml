@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeizureDetectionApp">
         <activity
+            android:name=".Datatable"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
