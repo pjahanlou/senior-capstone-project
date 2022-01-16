@@ -146,4 +146,6 @@
     <color name="MediumBlue">#0000CD</color>
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
+    <color name="Platinum">#EBEBEB</color>
+    <color name="OceanBlue">#473FA2</color>
 </resources>
