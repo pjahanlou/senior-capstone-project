@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Seizure Detection App</string>
+    <string name="enter_name">Enter name</string>
+    <string name="Input_countdown_time">Time in seconds</string>
+    <string name="Input_emergency_contacts">example@email.com</string>
+    <string name="Add_Contact">Add_Contact</string>
 </resources>
