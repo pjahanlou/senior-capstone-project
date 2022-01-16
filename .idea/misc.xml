@@ -9,6 +9,15 @@
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionaire.xml" value="0.2" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire.xml" value="0.22" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/popup.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
+        <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
+        <entry key="app/src/main/res/layout/activity_login_page.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/addjournal.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/layout/login_tap_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/sample.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/signup_tab_fragment.xml" value="0.33" />
       </map>
     </option>
   </component>
