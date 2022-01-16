@@ -120,7 +120,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             return;
         }
 
-        if(passwordText != confirmPasswordText){
+        if(passwordText.equals(confirmPasswordText)){
             confirmPassword.setError("The confirm password needs to match the password");
             confirmPassword.requestFocus();
             return;

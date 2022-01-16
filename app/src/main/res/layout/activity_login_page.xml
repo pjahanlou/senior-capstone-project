@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabTextColor="@color/black"
-            android:background="@color/platinum"
+            android:background="@color/Platinum"
             app:tabIndicatorColor="@color/purple_500"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toBottomOf="parent"
