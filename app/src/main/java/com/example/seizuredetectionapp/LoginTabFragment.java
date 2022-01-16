@@ -1,5 +1,6 @@
 package com.example.seizuredetectionapp;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
-public class LoginTabFragment extends Fragment {
+public class LoginTabFragment extends Fragment implements View.OnClickListener {
 
     Button login;
     TextView forgetPassword;
@@ -27,6 +28,7 @@ public class LoginTabFragment extends Fragment {
         password = root.findViewById(R.id.password);
         forgetPassword = root.findViewById(R.id.forgetPassword);
         login = root.findViewById(R.id.login);
+        login.setOnClickListener(this);
 
         // Adding animations to the views
         email.setTranslationY(800);
@@ -45,5 +47,15 @@ public class LoginTabFragment extends Fragment {
         login.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(700).start();
 
         return root;
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.login:
+                // Change to the Datatable page
+                startActivity(new Intent(this.getContext(), Datatable.class));
+                break;
+        }
     }
 }

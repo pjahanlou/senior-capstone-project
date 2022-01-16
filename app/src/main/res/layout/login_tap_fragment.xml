@@ -15,8 +15,10 @@
         android:textSize="16dp"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
+        android:textColorHint="@color/black"
         android:paddingBottom="10dp"
         android:background="@drawable/edit_text_bg"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +33,10 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textSize="16dp"
+        android:inputType="textPassword"
         android:background="@drawable/edit_text_bg"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".5"
@@ -45,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintWidth_percent=".8"
-        app:layout_constraintVertical_bias=".7"
+        app:layout_constraintVertical_bias=".5"
         android:text="Login"
         android:textSize="16dp"
         android:textStyle="bold"
@@ -53,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/forgetPassword"/>
 
     <TextView
         android:id="@+id/forgetPassword"
@@ -63,6 +68,7 @@
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="1"
         android:layout_marginTop="10dp"
+        android:textColor="@color/black"
         android:layout_marginRight="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/password"
