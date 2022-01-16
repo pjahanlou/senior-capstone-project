@@ -4,134 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Platinum"
     tools:context=".Datatable">
+
+    <Button
+        android:id="@+id/btnjournaladd"
+        android:layout_width="55dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="285dp"
+        android:background="@color/OceanBlue"
+        android:text="+"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="66dp"
-        android:layout_marginTop="81dp"
-        android:layout_marginEnd="292dp"
-        android:layout_marginBottom="631dp"
         android:text="Seizures"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.71"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="142dp"
-        android:layout_marginTop="81dp"
-        android:layout_marginBottom="631dp"
-        android:text="Missed Seizures"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.773"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:id="@+id/divider6"
-        android:layout_width="409dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="2dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.093" />
-
-    <View
-        android:id="@+id/divider7"
-        android:layout_width="2dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="543dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/divider8"
-        android:layout_width="409dp"
-        android:layout_height="2dp"
-        android:layout_marginBottom="542dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider7" />
-
-    <View
-        android:id="@+id/divider9"
-        android:layout_width="409dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="325dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="213dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider8" />
-
-    <View
-        android:id="@+id/divider10"
-        android:layout_width="409dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="281dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/divider9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider8" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="333dp"
-        android:layout_height="42dp"
-        android:layout_marginEnd="57dp"
-        android:layout_marginBottom="178dp"
+        android:layout_marginTop="312dp"
         android:text="Journal"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider9"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/btnjournaladd"
-        android:layout_width="72dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="163dp"
-        android:text="Add"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/divider9" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
