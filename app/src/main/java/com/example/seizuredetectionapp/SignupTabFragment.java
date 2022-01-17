@@ -26,6 +26,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
     Button signup;
     EditText email, username, password, confirmPassword;
     float v = 0;
+    static boolean signupFlag = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,59 +72,91 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             case R.id.signup:
                 // TODO: Change this to the questionnaire page later
                 // Change to the Datatable page
-                signupUser();
-                startActivity(new Intent(this.getContext(), Datatable.class));
+                boolean flag = signupUser();
+                if(flag){
+                    startActivity(new Intent(this.getContext(), Datatable.class));
+                }
                 break;
         }
     }
 
     // Checking the user inputs and signing them up if valid
-    public void signupUser(){
+    public boolean signupUser(){
         String emailText = email.getText().toString().trim();
         String usernameText = username.getText().toString().trim();
         String passwordText = password.getText().toString().trim();
         String confirmPasswordText = confirmPassword.getText().toString().trim();
 
+        // Regex strings for password confirmation
+        String upperCaseChars = "(.*[A-Z].*)";
+        String lowerCaseChars = "(.*[a-z].*)";
+        String numbers = "(.*[0-9].*)";
+        String specialChars = "(.*[@,#,$,%].*$)";
+
         if(emailText.isEmpty()){
             email.setError("Email is required!");
             email.requestFocus();
-            return;
+            return signupFlag;
         }
 
         if(usernameText.isEmpty()){
             username.setError("Username is required!");
             username.requestFocus();
-            return;
+            return signupFlag;
         }
 
         if(passwordText.isEmpty()){
             password.setError("Password is required!");
             password.requestFocus();
-            return;
+            return signupFlag;
         }
 
         if(confirmPasswordText.isEmpty()){
             confirmPassword.setError("Confirm password is required!");
             confirmPassword.requestFocus();
-            return;
+            return signupFlag;
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()){
             email.setError("Please provide a valid email address");
             email.requestFocus();
-            return;
+            return signupFlag;
         }
 
-        if(passwordText.length() < 8){
-            password.setError("The password needs to be at least 8 characters");
+        if(passwordText.length() <= 8 && passwordText.length() >= 20){
+            password.setError("The password needs to be at between 8-20 characters");
             password.requestFocus();
-            return;
+            return signupFlag;
         }
 
-        if(passwordText.equals(confirmPasswordText)){
+        if(!passwordText.matches(upperCaseChars)){
+            password.setError("Password must have at least one uppercase character");
+            password.requestFocus();
+            return signupFlag;
+        }
+
+        if(!passwordText.matches(lowerCaseChars)){
+            password.setError("Password must have at least one lowercase character");
+            password.requestFocus();
+            return signupFlag;
+        }
+
+        if(!passwordText.matches(numbers)){
+            password.setError("Password must have at least one number");
+            password.requestFocus();
+            return signupFlag;
+        }
+
+        if(!passwordText.matches(specialChars)){
+            password.setError("Password must have at least one special symbol");
+            password.requestFocus();
+            return signupFlag;
+        }
+
+        if(!passwordText.equals(confirmPasswordText)){
             confirmPassword.setError("The confirm password needs to match the password");
             confirmPassword.requestFocus();
-            return;
+            return signupFlag;
         }
 
         mAuth.createUserWithEmailAndPassword(emailText, passwordText)
@@ -141,6 +174,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(getActivity(), "User has signed up successfully", Toast.LENGTH_LONG).show();
+                                        SignupTabFragment.signupFlag = true;
                                     }
                                     else{
                                         Toast.makeText(getActivity(), "User sign up failed!", Toast.LENGTH_LONG).show();
@@ -154,6 +188,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                     }
                 });
 
+        return signupFlag;
     }
 
 }
