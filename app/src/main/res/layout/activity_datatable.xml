@@ -13,12 +13,12 @@
         android:layout_height="44dp"
         android:layout_marginStart="272dp"
         android:layout_marginTop="285dp"
-        android:background="@color/OceanBlue"
         android:text="+"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        android:background="@drawable/button_bg"/>
 
     <TextView
         android:id="@+id/textView"
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/button_bg"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
