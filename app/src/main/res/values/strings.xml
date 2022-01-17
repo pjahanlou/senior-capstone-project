@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Seizure Detection App</string>
+    <string name="enter_name">Enter name</string>
+    <string name="Input_countdown_time">Time in seconds</string>
+    <string name="Input_emergency_contacts">example@email.com</string>
+    <string name="Add_Contact">Add_Contact</string>
     <string name="user_email">Email Address</string>
     <string name="user_password">Password</string>
     <string name="login_button">Login</string>
