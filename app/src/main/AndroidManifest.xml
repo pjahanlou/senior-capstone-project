@@ -10,8 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".ForgetPassword"
+            android:exported="false" />
+        <activity
             android:name=".AddJournal"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Datatable"
             android:exported="true" />
