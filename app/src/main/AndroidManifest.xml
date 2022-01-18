@@ -13,6 +13,9 @@
             android:name=".AlertSettings"
             android:exported="false" />
         <activity
+            android:name=".ForgetPassword"
+            android:exported="false" />
+        <activity 
             android:name=".AddJournal"
             android:exported="false" />
         <activity
