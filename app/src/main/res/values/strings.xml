@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Seizure Detection App</string>
     <string name="enter_name">Enter name</string>
-    <string name="Input_countdown_time">Time in seconds</string>
-    <string name="Input_emergency_contacts">example@email.com</string>
-    <string name="Add_Contact">Add_Contact</string>
+    <string name="enter_Age">Enter age</string>
+    <string name="Input_countdown_time">Time in minutes</string>
+    <string name="Input_emergency_contacts">(___)-___-____</string>
+    <string name="Add_Contact">Add</string>
     <string name="user_email">Email Address</string>
     <string name="user_password">Password</string>
     <string name="login_button">Login</string>
+    <string-array name="Contact_Preference">
+        <item>text message</item>
+        <item>email</item>
+    </string-array>
 </resources>
