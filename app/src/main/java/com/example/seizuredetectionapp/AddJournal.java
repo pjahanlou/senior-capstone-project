@@ -75,8 +75,6 @@ public class AddJournal extends Activity {
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
 
-
-
         Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription);
 
