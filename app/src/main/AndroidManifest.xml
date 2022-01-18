@@ -10,9 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".ForgetPassword"
+            android:name=".AlertSettings"
             android:exported="false" />
         <activity
+            android:name=".ForgetPassword"
+            android:exported="false" />
+        <activity 
             android:name=".AddJournal"
             android:exported="false" />
         <activity
@@ -20,7 +23,7 @@
             android:exported="true" />
         <activity
             android:name=".PopUpWindow"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Questionaire"
             android:exported="true">
