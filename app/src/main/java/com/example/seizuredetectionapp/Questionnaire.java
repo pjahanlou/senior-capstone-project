@@ -5,11 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 
 public class Questionnaire {
-    private static String name;
-    private static ArrayList<String> contactList;
-    private static String contactMethod;
-    private static String countdownTimer;
-    private static String age;
+    public String name, contactMethod, countdownTimer, age;
+    public ArrayList<String> contactList;
 
     public Questionnaire(){
 
@@ -26,6 +23,6 @@ public class Questionnaire {
     @NonNull
     @Override
     public String toString() {
-        return ' ' + contactMethod + ' ' + age + ' ' + countdownTimer;
+        return name + contactList.toString() + ' ' + contactMethod + ' ' + age + ' ' + countdownTimer;
     }
 }

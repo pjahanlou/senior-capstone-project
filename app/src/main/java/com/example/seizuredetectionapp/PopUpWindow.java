@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -34,67 +35,82 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-public class PopUpWindow extends Activity {
-    private TextView receiveContacts;
-    private EditText nameInput, countdownTimerInput, ageInput, emergencyContactInput;
-    private Button submit, addContact;
-    private ArrayList<String> contactList=new ArrayList<String>();
-    private Spinner contactMethodInput;
+public class PopUpWindow extends Activity implements View.OnClickListener{
+    public TextView allContacts;
+    public EditText nameInput, countdownTimerInput, ageInput, emergencyContactInput;
+    public Button submitQuestionnaireButton, addContactButton;
+    public ArrayList<String> contactList = new ArrayList<>();
+    public Spinner contactMethodSpinner;
+    public FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pop_up_window);
 
-        nameInput = (EditText) findViewById(R.id.nameInput);
-        emergencyContactInput = (EditText) findViewById(R.id.emergencyContactInput);
-        receiveContacts = (TextView) findViewById(R.id.contactView);
-        contactMethodInput = (Spinner) findViewById(R.id.contact_Preference_Input);
-        ageInput = (EditText) findViewById(R.id.ageInput);
-        countdownTimerInput = (EditText) findViewById(R.id.countdownTimerInput);
+        //firebase DB
+        mAuth = FirebaseAuth.getInstance();
 
-        addContact = (Button) findViewById(R.id.addContact);
-        addContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String contact = emergencyContactInput.getText().toString().trim();
-                contactList.add(contact);
-                receiveContacts.setText(contact);
-            }
-        });
+        // Get the UI elements
+        nameInput = findViewById(R.id.nameInput);
+        ageInput = findViewById(R.id.ageInput);
+        contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
+        countdownTimerInput = findViewById(R.id.countdownTimerInput);
+        emergencyContactInput = findViewById(R.id.emergencyContactInput);
+        allContacts = findViewById(R.id.allContacts);
+        addContactButton = findViewById(R.id.addContact);
+        submitQuestionnaireButton = findViewById(R.id.submitQuestionaire);
 
-        submit = (Button) findViewById(R.id.submitQuestionaire);
-        submit.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                writeToFirebase();
-            }
-        });
+        // Add click listeners to buttons
+        addContactButton.setOnClickListener(this);
+        submitQuestionnaireButton.setOnClickListener(this);
 
     }
-    private void writeToFirebase() {
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.addContact:
+                String contact = emergencyContactInput.getText().toString().trim();
+
+                // Adding contact to contactList array
+                contactList.add(contact);
+
+                // Store contact in the bigger Text box
+                allContacts.setText(contact);
+                break;
+
+            case R.id.submitQuestionaire:
+                storeQuestionnaireData();
+                break;
+        }
+    }
+
+    private void storeQuestionnaireData() {
         String name = nameInput.getText().toString().trim();
-        String contactMethod = contactMethodInput.getSelectedItem().toString().trim();
         String age = ageInput.getText().toString().trim();
+        String contactMethod = contactMethodSpinner.getSelectedItem().toString().trim();
         String countdownTimer = countdownTimerInput.getText().toString().trim();
-        String contacts = contactList.toString().trim();
+        String contacts = contactList.toString();
 
         if (name.isEmpty()) {
             nameInput.setError("Contact method is required!");
             nameInput.requestFocus();
             return;
         }
+
         if (age.isEmpty()) {
             ageInput.setError("Age is required!");
             ageInput.requestFocus();
             return;
         }
+
         if (countdownTimer.isEmpty()) {
             countdownTimerInput.setError("Countdown timer is required!");
             countdownTimerInput.requestFocus();
             return;
         }
+
         if (contacts.isEmpty()) {
             emergencyContactInput.setError("An emergency contact is required!");
             emergencyContactInput.requestFocus();
@@ -104,16 +120,18 @@ public class PopUpWindow extends Activity {
         Questionnaire contactListObject = new Questionnaire(name, contactList, countdownTimer, age, contactMethod);
 
         // Write a message to the database
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("server/Questionnaire-data").child("Questionnaire");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Questionnaire");
 
         myRef.push().setValue(contactListObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(PopUpWindow.this, "Questionnaire Saved.", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(PopUpWindow.this, Datatable.class));
+                    Toast.makeText(PopUpWindow.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(PopUpWindow.this, "Questionnaire Save Failed.", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(PopUpWindow.this, PopUpWindow.class));
+                    Toast.makeText(PopUpWindow.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
                 }
             }
         });
