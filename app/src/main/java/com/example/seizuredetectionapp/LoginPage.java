@@ -119,6 +119,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                 break;
 
             case R.id.fab_twitter:
+                startActivity(new Intent(LoginPage.this, TwitterLogin.class));
                 break;
         }
     }

@@ -19,4 +19,5 @@ public class Journal {
             this.description = description;
             this.postDescription = postDescription;
         }
+
 }
