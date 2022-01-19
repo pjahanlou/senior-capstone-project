@@ -17,6 +17,9 @@
 **Forget Password**
 - The user can reset their password if they have forgotten it.
 
+**Journals**
+- The user can manually add journal entries. This feature is still under production becuase the user cannot edit or remove previous journals.
+
 
 ## How to start?
 
@@ -70,6 +73,24 @@
 - Class TwitterLogin
   - Method
     - onCreate: handles directing the user to the Twitter login page and getting the response from it.
+
+**AddJournal.java**
+- Class AddJournal
+  - Method
+    - onCreate: handles creating the UI for the AddJournal activity.
+    - saveInformation: reterieves information in each text box and pushes the information to Firebase.
+
+**Journal.java**
+- Class Journal
+  - Method
+    - Journal: constructor of the Journal class which creates the Journal object for wrtiting to Firebase.
+
+**Datatable.java**
+-Class Datatable
+  - Method
+    - onCreate: handles generating the UI and retrieves Journal dateAndTime from Firebase and displays them in a ListView.
+
+
 
 
 
