@@ -1,6 +1,7 @@
 package com.example.seizuredetectionapp;
 
 import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 
@@ -75,7 +76,7 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                 // Change to the Datatable page
                 boolean flag = loginUser();
                 if(flag) {
-                    startActivity(new Intent(this.getContext(), Datatable.class));
+                    startActivity(new Intent(this.getContext(), Questionaire.class));
                 }
                 break;
             case R.id.forgetPassword:
@@ -113,9 +114,11 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                 if(task.isSuccessful()){
                     // Checking if the user has verified their email
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
 
                     if(user.isEmailVerified()){
                         LoginTabFragment.loginFlag = true;
+
                     }
                     else{
                         user.sendEmailVerification();
