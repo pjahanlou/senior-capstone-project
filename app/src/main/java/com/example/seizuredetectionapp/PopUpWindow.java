@@ -71,6 +71,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
     public void onClick(View v){
         switch(v.getId()){
             case R.id.addContact:
+
                 String contact = emergencyContactInput.getText().toString().trim();
 
                 // Adding contact to contactList array
@@ -93,6 +94,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
         String countdownTimer = countdownTimerInput.getText().toString().trim();
         String contacts = contactList.toString();
 
+        //checks to see if any inputs are empty and alerts user.
         if (name.isEmpty()) {
             nameInput.setError("Contact method is required!");
             nameInput.requestFocus();
@@ -117,6 +119,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
             return;
         }
 
+        //constructs and instance of an object containing the questionnaire data
         Questionnaire contactListObject = new Questionnaire(name, contactList, countdownTimer, age, contactMethod);
 
         // Write a message to the database
