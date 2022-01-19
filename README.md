@@ -1,24 +1,32 @@
-# STRapp (Seizure Technical Response app) 
+# STRapp (Seizure Technical Response app)
 
 ## Features
 
 **Internal Login**
-- The user is able to login with their email and password
+ - The user is able to login with their email and password
 
 **Internal Signup**
-- The user is able to signup for the application using email, username, and password
+ - The user is able to signup for the application using email, username, and password
 
 **Google Login/Signup**
-- The user can signup and login with their Google account
+ - The user can signup and login with their Google account
 
 **Twitter Login/Signup**
-- The user can signup and login with their twitter account. Note: This feature is currently under production as we're having some minor issues with the API keys.
+ - The user can signup and login with their twitter account. Note: This feature is currently under production as we're having some minor issues with the API keys.
 
 **Forget Password**
-- The user can reset their password if they have forgotten it.
+ - The user can reset their password if they have forgotten it.
 
 **Journals**
-- The user can manually add journal entries. This feature is still under production becuase the user cannot edit or remove previous journals.
+ - The user can manually add journal entries. This feature is still under production because the user cannot edit or remove previous journals.
+
+**Contacts Page**
+
+ - The user can view their contacts. This feature is still under production. Eventually functionality for adding and removing contacts from the Emergency contact list will implemented.
+
+**Questionnaire**
+ - The user is prompted with a Questionnaire after logging in. This requests user preferences for certain app functions. Eventually this feature will utilize the Contacts Page once it is fully functional.
+
 
 
 ## How to start?
@@ -50,7 +58,7 @@
     - googleSignIn: handles sending the user to the Google sign in page
     - createGoogleRequest: handles building the Google request and making sure the user has not signed in before
     - onActivityResult: handles getting the response from the Google login API
-    - handleSignInResult: handles sendind the user to the correct page after signing up    
+    - handleSignInResult: handles sendind the user to the correct page after signing up
 
 **LoginTabFragment.java**
 - Class LoginTabFragment
@@ -83,12 +91,37 @@
 **Journal.java**
 - Class Journal
   - Method
-    - Journal: constructor of the Journal class which creates the Journal object for wrtiting to Firebase.
+    - Journal: constructor of the Journal class which creates the Journal object for writing to Firebase.
 
 **Datatable.java**
 -Class Datatable
   - Method
     - onCreate: handles generating the UI and retrieves Journal dateAndTime from Firebase and displays them in a ListView.
+
+**ContactsPage.java**
+- Class ContactsPage
+	  - Method
+		  - onCreate: generates UI and checks to see if it has permission to access contacts.
+		  - checkPermission: checks if the app has permission to access the devices contacts, and requests access if it does not.
+		  - getContactList: grabs contacts from user device.
+
+**ContactLayout.java**
+- Class ContactLayout
+	- Method
+		- Contact: generates a contact UI which acts as a template for ContactsPage.
+		-
+
+**PopUpWindow**
+   - Class PopUpWindow
+	  - Method
+		  - onCreate: generates UI and assigns all UI and firebase implements to variables.
+		  - storeQuestionnaireData: Checks the validity of the inputs, and send data to firebase.
+
+**Questionnaire**
+  - Class Questionnaire
+	  - Method
+		  - Questionnaire: Creates an Object containing the data given by the questionnaire.
+		  - toString: Currently for debugging purposes. returns the data in String form.
 
 
 
