@@ -33,7 +33,7 @@ public class AddJournal extends Activity {
         //firebase DB
         mAuth = FirebaseAuth.getInstance();
 
-        //saving all of the EditText fields
+        //get ui elements
         dateAndTime = findViewById(R.id.datetime);
         mood = findViewById(R.id.mood);
         typeOfSeizure = findViewById(R.id.typeofseizure);
@@ -41,32 +41,35 @@ public class AddJournal extends Activity {
         triggers = findViewById(R.id.triggers);
         description = findViewById(R.id.description);
         postDescription = findViewById(R.id.postdescription);
-
+        btnSave = (Button) findViewById(R.id.btnsave);
         btnCloseWindow = (Button) findViewById(R.id.btnclose);
+
+        //close button
         btnCloseWindow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
             {
                 //closes activity and returns to datatable
-                //replace with saving data to DB and display on datatable activity
                 finish();
             }
         });
 
-        btnSave = (Button) findViewById(R.id.btnsave);
+        //save button
         btnSave.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
             {
+                //saves information to firebase then closes popup activity
                 saveInformation();
                 finish();
             }
         });
 
     }
-
+    //method for retrieving info written and saving to firebase
     public void saveInformation()
     {
+        //retrieving text from text boxes
         String datetime = dateAndTime.getText().toString().trim();
         String moodType = mood.getText().toString().trim();
         String seizureType = typeOfSeizure.getText().toString().trim();
@@ -78,7 +81,7 @@ public class AddJournal extends Activity {
         Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription);
 
-        // Write a message to the database
+        // Sends HashMap of entry to Firebase DB
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Journal");
 
@@ -94,6 +97,10 @@ public class AddJournal extends Activity {
 
             }
         });
+
+    }
+
+    public void fillText(){
 
     }
 

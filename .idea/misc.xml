@@ -3,14 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.321025641025641" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textcolor.xml" value="0.1" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/Questionnaire.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire.xml" value="0.22" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/popup.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
-        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
         <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.15721728817922137" />
