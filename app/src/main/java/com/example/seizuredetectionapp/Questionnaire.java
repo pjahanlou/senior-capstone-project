@@ -11,21 +11,12 @@ public class Questionnaire {
     private static String countdownTimer;
     private static String age;
 
-    public Questionnaire(){
-
-    }
-
+    // Creates an Object containing the data given by the questionnaire.
     public Questionnaire(String name, ArrayList<String> contactList, String countdownTimer, String age, String contactMethod){
         this.name = name;
         this.contactList = contactList;
         this.countdownTimer = countdownTimer;
         this.age = age;
         this.contactMethod = contactMethod;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return ' ' + contactMethod + ' ' + age + ' ' + countdownTimer;
     }
 }
