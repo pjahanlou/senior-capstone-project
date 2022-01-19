@@ -7,6 +7,10 @@ import java.util.ArrayList;
 public class Questionnaire {
     public String name, contactMethod, countdownTimer, age;
     public ArrayList<String> contactList;
+    
+    public Questionnaire(){
+    
+    }
 
     // Creates an Object containing the data given by the questionnaire.
     public Questionnaire(String name, ArrayList<String> contactList, String countdownTimer, String age, String contactMethod){
