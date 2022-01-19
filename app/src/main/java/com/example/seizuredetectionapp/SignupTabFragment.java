@@ -70,11 +70,10 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v){
         switch(v.getId()){
             case R.id.signup:
-                // TODO: Change this to the questionnaire page later
-                // Change to the Datatable page
+                // Change to the Questionnaire page
                 boolean flag = signupUser();
                 if(flag){
-                    startActivity(new Intent(this.getContext(), Datatable.class));
+                    startActivity(new Intent(this.getContext(), Questionaire.class));
                 }
                 break;
         }

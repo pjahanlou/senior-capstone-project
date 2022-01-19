@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:src="@drawable/google_icon"
+            android:src="@drawable/google_ic"
             android:elevation="35dp"
             android:layout_marginLeft="67dp"
             app:layout_constraintBottom_toBottomOf="parent"
