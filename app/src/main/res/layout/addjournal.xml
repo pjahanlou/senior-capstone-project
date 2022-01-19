@@ -1,133 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/btnsave"
-        android:layout_width="75dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="256dp"
-        android:layout_toStartOf="@+id/btnclose"
-        android:text="save"
-        android:background="@drawable/button_bg"/>
-
-    <Button
-        android:id="@+id/btnclose"
-        android:layout_width="75dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/button_bg"
-        android:text="Exit" />
-
-    <EditText
-        android:id="@+id/datetime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
-        android:hint="mm/dd/year hour:minutes"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"
-        />
-
-    <EditText
-        android:id="@+id/mood"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/datetime"
-        android:layout_marginTop="20dp"
-        android:hint="Mood"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
-
-    <EditText
-        android:id="@+id/typeofseizure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mood"
-        android:layout_marginTop="20dp"
-        android:hint="Type of Seizure"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
-
-    <EditText
-        android:id="@+id/duration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/typeofseizure"
-        android:layout_marginTop="20dp"
-        android:hint="Duration"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
-
-    <EditText
-        android:id="@+id/triggers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/duration"
-        android:layout_marginTop="20dp"
-        android:hint="Triggers"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
-
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_below="@+id/triggers"
-        android:layout_marginTop="20dp"
-        android:hint="Description"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
+    android:layout_height="match_parent"
+    android:background="@color/Platinum"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <EditText
-        android:id="@+id/postdescription"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_below="@+id/description"
-        android:layout_marginTop="20dp"
-        android:hint="Post Description"
-        android:textSize="16dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:textColorHint="@color/black"
-        android:paddingBottom="10dp"
-        android:background="@drawable/edit_text_bg"
-        android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/btnsave"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="256dp"
+            android:layout_toStartOf="@+id/btnclose"
+            android:text="save"
+            android:background="@drawable/button_bg"/>
+
+        <Button
+            android:id="@+id/btnclose"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_bg"
+            android:text="Exit" />
+
+        <EditText
+            android:id="@+id/datetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="40dp"
+            android:hint="mm/dd/year hour:minutes"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"
+            />
+
+        <EditText
+            android:id="@+id/mood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/datetime"
+            android:layout_marginTop="20dp"
+            android:hint="Mood"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/typeofseizure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mood"
+            android:layout_marginTop="20dp"
+            android:hint="Type of Seizure"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/typeofseizure"
+            android:layout_marginTop="20dp"
+            android:hint="Duration"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/triggers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/duration"
+            android:layout_marginTop="20dp"
+            android:hint="Triggers"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_below="@+id/triggers"
+            android:layout_marginTop="20dp"
+            android:hint="Description"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
+
+        <EditText
+            android:id="@+id/postdescription"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_below="@+id/description"
+            android:layout_marginTop="20dp"
+            android:hint="Post Description"
+            android:textSize="16dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:textColorHint="@color/black"
+            android:paddingBottom="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:textColor="@color/black"/>
+
 
 </RelativeLayout>
