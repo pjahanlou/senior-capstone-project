@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".LoginPage"
+            android:name=".AlertPage"
             android:exported="false" />
         <activity
             android:name=".ContactsPage"
@@ -42,7 +42,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".AlertPage"
+            android:name=".LoginPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
