@@ -32,7 +32,7 @@
             android:exported="false" />
         <activity
             android:name=".Datatable"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".PopUpWindow"
             android:exported="true" />
