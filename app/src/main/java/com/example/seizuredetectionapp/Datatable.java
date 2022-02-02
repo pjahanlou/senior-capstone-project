@@ -54,12 +54,11 @@ public class Datatable extends AppCompatActivity {
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Journal");
+        myRef = database.getReference();
 
         //ui elements
         btnAddJournal = (Button) findViewById(R.id.btnjournaladd);
         btnSettings = findViewById(R.id.settings);
-        journalList = (ListView) findViewById(R.id.displayJournal);
 
 
         //Bottom Swipe
