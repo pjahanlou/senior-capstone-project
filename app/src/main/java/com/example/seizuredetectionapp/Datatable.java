@@ -45,6 +45,7 @@ public class Datatable extends AppCompatActivity {
     DatabaseReference myRef;
     Button btnOpenJournalView;
     FrameLayout sheetBottom;
+    private String currentUserUID;
 
 
     @Override
@@ -53,13 +54,13 @@ public class Datatable extends AppCompatActivity {
         setContentView(R.layout.activity_datatable);
 
         //firebase
+        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
+        myRef = database.getReference("Users").child(currentUserUID);
 
         //ui elements
         btnAddJournal = (Button) findViewById(R.id.btnjournaladd);
         btnSettings = findViewById(R.id.settings);
-
 
         //Bottom Swipe
         sheetBottom = findViewById(R.id.sheet);
