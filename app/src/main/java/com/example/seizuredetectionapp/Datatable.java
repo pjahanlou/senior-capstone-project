@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Datatable extends AppCompatActivity {
-    Button btnAddJournal;
+    Button btnAddJournal, btnSettings;
     ListView journalList;
     ArrayList<String> journalInfo = new ArrayList<>();
     ArrayList<String> journalMap = new ArrayList<>();
@@ -58,6 +58,9 @@ public class Datatable extends AppCompatActivity {
 
         //ui elements
         btnAddJournal = (Button) findViewById(R.id.btnjournaladd);
+        btnSettings = findViewById(R.id.settings);
+        journalList = (ListView) findViewById(R.id.displayJournal);
+
 
         //Bottom Swipe
         sheetBottom = findViewById(R.id.sheet);
@@ -89,6 +92,17 @@ public class Datatable extends AppCompatActivity {
             public void onClick(View v) {
                 //opens up journal activity on button press
                 Intent intent = new Intent(Datatable.this, AddJournal.class);
+                startActivity(intent);
+
+            }
+        });
+
+        //button functionality to change to addJournal activity
+        btnSettings.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //opens up journal activity on button press
+                Intent intent = new Intent(Datatable.this, AlertPage.class);
                 startActivity(intent);
 
             }
