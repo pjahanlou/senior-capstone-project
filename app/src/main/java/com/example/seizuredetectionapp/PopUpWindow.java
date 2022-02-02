@@ -42,6 +42,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
     public ArrayList<String> contactList = new ArrayList<>();
     public Spinner contactMethodSpinner;
     public FirebaseAuth mAuth;
+    private String currentUserUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
 
         //firebase DB
         mAuth = FirebaseAuth.getInstance();
+        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Get the UI elements
         nameInput = findViewById(R.id.nameInput);
@@ -124,9 +126,9 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
 
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Questionnaire");
+        DatabaseReference myRef = database.getReference("Users");
 
-        myRef.push().setValue(contactListObject).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child(currentUserUID).child("Settings").setValue(contactListObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
