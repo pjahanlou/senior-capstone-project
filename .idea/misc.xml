@@ -3,21 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.22" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.22" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_login_page.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.18" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/addjournal.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textcolor.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.14130434782608695" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/signup_tab_fragment.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/Questionnaire.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_contacts_page.xml" value="0.275" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_pop_up_window.xml" value="0.145703125" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire.xml" value="0.22" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.275" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_personal.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_questionnaire.xml" value="0.22" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/item_contact.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/popup.xml" value="0.2" />
@@ -33,7 +26,7 @@
         <entry key="app/src/main/res/layout/activity_main_settings.xml" value="0.167578125" />
         <entry key="app/src/main/res/layout/activity_pop_up_window.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.20520833333333333" />
-        <entry key="app/src/main/res/layout/activity_profile_settings.xml" value="0.20921659882116814" />
+        <entry key="app/src/main/res/layout/activity_profile_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_questionaire.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_twitter_login.xml" value="0.136328125" />
         <entry key="app/src/main/res/layout/addjournal.xml" value="0.16770833333333332" />

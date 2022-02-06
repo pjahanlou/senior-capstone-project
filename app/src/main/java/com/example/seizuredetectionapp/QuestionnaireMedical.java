@@ -72,23 +72,23 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         switch (v.getId()) {
 
             case R.id.submitQuestionnaireMedical: {
-                int seizureDuration = seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60);
-                int height = heightInches.getValue() + (heightFeet.getValue() * 12);
-                int weight = Integer.parseInt(weightInput.getText().toString());
-                int seizureFrequencyPerMonth = Integer.parseInt(seizureFrequency.getText().toString());
-                int seizureStartD = Integer.parseInt(seizureStartDate.getText().toString());
+                String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
+                String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
+                String weight = weightInput.getText().toString().trim();
+                String seizureFrequencyPerMonth = seizureFrequency.getText().toString().trim();
+                String seizureStartD = seizureStartDate.getText().toString().trim();
                 String seizureStartM = seizureStartMonth.getSelectedItem().toString().trim();
-                int seizureStartY = Integer.parseInt(seizureStartYear.getText().toString());
+                String seizureStartY = seizureStartYear.getText().toString().trim();
                 String seizureT = seizureType.getSelectedItem().toString().trim();
                 String sex = sexInput.getSelectedItem().toString().trim();
 
                 //checks to see if any inputs are empty and alerts user.
-                if (height == 0) {
+                if (height.equals("0")) {
                     heightFeet.requestFocus();
                     return;
                 }
 
-                if (weight == 0) {
+                if (weight.equals("0")) {
                     weightInput.requestFocus();
                     return;
                 }
