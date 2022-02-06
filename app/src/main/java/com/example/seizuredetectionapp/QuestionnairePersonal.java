@@ -1,7 +1,5 @@
 package com.example.seizuredetectionapp;
 
-import androidx.annotation.NonNull;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 
 public class QuestionnairePersonal extends Activity implements View.OnClickListener{
@@ -125,20 +116,5 @@ public class QuestionnairePersonal extends Activity implements View.OnClickListe
         Intent i = new Intent(this, QuestionnaireMedical.class);
         i.putExtra("contactListObject", contactListObject);
         startActivity(i);
-        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
-
-        myRef.push().setValue(contactListObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(QuestionnairePersonal.this, QuestionnaireMedical.class));
-                    Toast.makeText(QuestionnairePersonal.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(QuestionnairePersonal.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 }

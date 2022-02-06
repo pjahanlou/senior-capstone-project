@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.Viewer> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Viewer> {
     View v;
     Activity activity;
     ArrayList<ContactLayout> contactList;
 
-    public MainAdapter(Activity activity, ArrayList<ContactLayout> contactList, View v, ImageButton btn){
+    public ContactsAdapter(Activity activity, ArrayList<ContactLayout> contactList, View v, ImageButton btn){
         this.activity = activity;
         this.contactList = contactList;
         this.v = v;
@@ -27,13 +27,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.Viewer> {
 
     @NonNull
     @Override
-    public MainAdapter.Viewer onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactsAdapter.Viewer onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
         return new Viewer(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainAdapter.Viewer holder, int position) {
+    public void onBindViewHolder(@NonNull ContactsAdapter.Viewer holder, int position) {
         ContactLayout model = contactList.get(position);
 
         holder.name.setText(model.getName());

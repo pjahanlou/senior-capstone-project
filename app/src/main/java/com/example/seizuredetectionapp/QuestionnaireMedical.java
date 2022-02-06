@@ -70,9 +70,6 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.seizureStartButton:
-                showDatePickerDialog();
-                break;*/
 
             case R.id.submitQuestionnaireMedical: {
                 int seizureDuration = seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60);
@@ -84,25 +81,18 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 int seizureStartY = Integer.parseInt(seizureStartYear.getText().toString());
                 String seizureT = seizureType.getSelectedItem().toString().trim();
                 String sex = sexInput.getSelectedItem().toString().trim();
-                /*
-                Calendar seizureStart = Calendar.getInstance();
-                int year = seizureStart.get(Calendar.YEAR);
-                int month = seizureStart.get(Calendar.MONTH);
-                int day = seizureStart.get(Calendar.DAY_OF_MONTH);
-                */
 
                 //checks to see if any inputs are empty and alerts user.
                 if (height == 0) {
-                    //heightFeet.setError("please set a valid height");
                     heightFeet.requestFocus();
                     return;
                 }
 
                 if (weight == 0) {
-                    //weight.setError("Age is required!");
                     weightInput.requestFocus();
                     return;
                 }
+
                 // grab data from last questionnaire
                 Intent i = getIntent();
                 Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
@@ -116,36 +106,21 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 personalObject.seizureT = seizureT;
                 personalObject.sex = sex;
 
-
-                // Update the database
+                // Push to firebase
                 String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
 
-                myRef.setValue(personalObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(QuestionnaireMedical.this, Datatable.class));
-                        }
-                        else {
-                            Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
-                        }
+                myRef.setValue(personalObject).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(QuestionnaireMedical.this, Datatable.class));
+                    }
+                    else {
+                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
                     }
                 });
             }
         }
     }
-/*
-    private void showDatePickerDialog() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (DatePickerDialog.OnDateSetListener) this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }*/
 }
