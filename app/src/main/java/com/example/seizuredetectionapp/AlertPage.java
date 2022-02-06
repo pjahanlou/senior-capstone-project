@@ -187,9 +187,6 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
 
             case "email":
                 break;
-
-            case "call":
-                break;
         }
     }
 
