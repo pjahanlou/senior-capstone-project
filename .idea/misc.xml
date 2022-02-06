@@ -17,12 +17,16 @@
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
+        <entry key="app/src/main/res/layout/activity_alert_page.xml" value="0.167578125" />
+        <entry key="app/src/main/res/layout/activity_app_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.15721728817922137" />
         <entry key="app/src/main/res/layout/activity_login_page.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22708333333333333" />
+        <entry key="app/src/main/res/layout/activity_main_settings.xml" value="0.167578125" />
         <entry key="app/src/main/res/layout/activity_pop_up_window.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/activity_profile_settings.xml" value="0.20921659882116814" />
         <entry key="app/src/main/res/layout/activity_questionaire.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_twitter_login.xml" value="0.136328125" />
         <entry key="app/src/main/res/layout/addjournal.xml" value="0.16770833333333332" />
