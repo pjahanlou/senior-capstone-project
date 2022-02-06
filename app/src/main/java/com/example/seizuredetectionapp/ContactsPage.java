@@ -36,6 +36,11 @@ public class ContactsPage extends AppCompatActivity {
 
         // stores the view for our template contact
         recyclerView = findViewById(R.id.contactRecycler);
+        /*recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, recyclerView, new RecycleritemClickListener.OnItemClickListener(){
+
+                })
+        );*/
         checkPermission(v);
     }
 
@@ -86,6 +91,7 @@ public class ContactsPage extends AppCompatActivity {
         }
         // uses our template and list of layouts to fill the contacts page
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         ImageButton btn = (ImageButton) findViewById(R.id.addContact_Button);
         adapter = new MainAdapter(ContactsPage.this, contactList, v, btn);
         recyclerView.setAdapter(adapter);

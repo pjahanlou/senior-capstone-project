@@ -34,11 +34,14 @@
             android:name=".Datatable"
             android:exported="true" />
         <activity
-            android:name=".PopUpWindow"
+            android:name=".QuestionnairePersonal"
             android:exported="true" />
         <activity
             android:name=".Questionaire"
-            android:exported="false" />
+            android:exported="true" />
+        <activity
+            android:name=".QuestionnaireMedical"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
