@@ -39,6 +39,7 @@ public class Datatable extends AppCompatActivity {
     Button btnOpenJournalView;
     LinearLayout sheetBottom;
     private String currentUserUID;
+    private Button btnHelpRequest;
 
 
 
@@ -55,6 +56,7 @@ public class Datatable extends AppCompatActivity {
         //ui elements
         btnAddJournal = (Button) findViewById(R.id.btnjournaladd);
         btnSettings = findViewById(R.id.settings);
+        btnHelpRequest = findViewById(R.id.helpRequest);
         journalList = (ListView) findViewById(R.id.journalList);
 
         //adapter for listview
@@ -126,12 +128,23 @@ public class Datatable extends AppCompatActivity {
             }
         });
 
-        //button functionality to change to AlertPage activity
+        //button functionality to change to settings activity
         btnSettings.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 //opens up journal activity on button press
                 Intent intent = new Intent(Datatable.this, MainSettings.class);
+                startActivity(intent);
+
+            }
+        });
+
+        //button functionality to change to AlertPage activity
+        btnHelpRequest.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //opens up journal activity on button press
+                Intent intent = new Intent(Datatable.this, AlertPage.class);
                 startActivity(intent);
 
             }

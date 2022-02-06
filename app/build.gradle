@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.0.1'
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
-
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     // https://github.com/skyfishjy/android-ripple-background
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
