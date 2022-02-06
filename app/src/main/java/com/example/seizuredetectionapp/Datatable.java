@@ -101,7 +101,7 @@ public class Datatable extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //opens up journal activity on button press
-                Intent intent = new Intent(Datatable.this, AlertPage.class);
+                Intent intent = new Intent(Datatable.this, MainSettings.class);
                 startActivity(intent);
 
             }

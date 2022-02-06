@@ -3,7 +3,7 @@
     package="com.example.seizuredetectionapp">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".ProfileSettings"
+            android:exported="false" />
+        <activity
+            android:name=".AppSettings"
+            android:exported="false" />
+        <activity
+            android:name=".MainSettings"
+            android:exported="false" />
         <activity
             android:name=".AlertPage"
             android:exported="false" />

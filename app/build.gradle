@@ -43,6 +43,9 @@ dependencies {
 
     // https://github.com/skyfishjy/android-ripple-background
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
+
+    // https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
