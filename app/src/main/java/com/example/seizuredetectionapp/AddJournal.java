@@ -82,8 +82,9 @@ public class AddJournal extends Activity {
                 seizureTrigger, seizureDescription, postSeizureDescription);
 
         // Sends HashMap of entry to Firebase DB
+        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Journal");
+        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Journals");
 
         myRef.push().setValue(journal).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

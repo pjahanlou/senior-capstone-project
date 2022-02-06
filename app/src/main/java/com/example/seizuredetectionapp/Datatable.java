@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class Datatable extends AppCompatActivity {
     private String currentUserUID;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class Datatable extends AppCompatActivity {
         //adapter for listview
         adapter = new ArrayAdapter<>(this, R.layout.listview_textformat, journalInfo);
         journalList.setAdapter(adapter);
+
 
         //Bottom Swipe
         sheetBottom = findViewById(R.id.bottom_sheet_header);

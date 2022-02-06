@@ -27,10 +27,15 @@
         android:background="@drawable/button_bg"
         android:text="add"/>
 
+
     <ListView
         android:id="@+id/journalList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"
+         />
+
 
 
 
