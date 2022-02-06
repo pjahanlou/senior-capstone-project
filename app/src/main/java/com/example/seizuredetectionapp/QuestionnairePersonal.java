@@ -1,21 +1,11 @@
 package com.example.seizuredetectionapp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,18 +14,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-public class PopUpWindow extends Activity implements View.OnClickListener{
+public class QuestionnairePersonal extends Activity implements View.OnClickListener{
     public TextView allContacts;
     public EditText nameInput, countdownTimerInput, ageInput, emergencyContactInput;
     public Button submitQuestionnaireButton, addContactButton;
@@ -46,7 +31,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pop_up_window);
+        setContentView(R.layout.activity_questionnaire_personal);
 
         //firebase DB
         mAuth = FirebaseAuth.getInstance();
@@ -59,7 +44,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
         emergencyContactInput = findViewById(R.id.emergencyContactInput);
         allContacts = findViewById(R.id.allContacts);
         addContactButton = findViewById(R.id.addContact);
-        submitQuestionnaireButton = findViewById(R.id.submitQuestionaire);
+        submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
 
         // Add click listeners to buttons
         addContactButton.setOnClickListener(this);
@@ -81,7 +66,7 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
                 allContacts.setText(contact);
                 break;
 
-            case R.id.submitQuestionaire:
+            case R.id.submitQuestionairePersonal:
                 storeQuestionnaireData();
                 break;
         }
@@ -120,21 +105,38 @@ public class PopUpWindow extends Activity implements View.OnClickListener{
         }
 
         //constructs and instance of an object containing the questionnaire data
-        Questionnaire contactListObject = new Questionnaire(name, contactList, countdownTimer, age, contactMethod);
+        Questionnaire contactListObject = new Questionnaire
+                (name,
+                        contactList,
+                        countdownTimer,
+                        age,
+                        contactMethod,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        -1,
+                        "",
+                        -1,
+                        "",
+                        "");
 
         // Write a message to the database
+        Intent i = new Intent(this, QuestionnaireMedical.class);
+        i.putExtra("contactListObject", contactListObject);
+        startActivity(i);
+        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Questionnaire");
+        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
 
         myRef.push().setValue(contactListObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    startActivity(new Intent(PopUpWindow.this, Datatable.class));
-                    Toast.makeText(PopUpWindow.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(QuestionnairePersonal.this, QuestionnaireMedical.class));
+                    Toast.makeText(QuestionnairePersonal.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
                 } else {
-                    startActivity(new Intent(PopUpWindow.this, PopUpWindow.class));
-                    Toast.makeText(PopUpWindow.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(QuestionnairePersonal.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
                 }
             }
         });

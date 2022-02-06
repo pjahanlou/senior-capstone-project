@@ -1,6 +1,5 @@
 package com.example.seizuredetectionapp;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,7 +19,7 @@ public class Questionaire extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent popupwindow = new Intent( Questionaire.this, PopUpWindow.class);
+                Intent popupwindow = new Intent( Questionaire.this, QuestionnairePersonal.class);
                 startActivity(popupwindow);
             }
         });
