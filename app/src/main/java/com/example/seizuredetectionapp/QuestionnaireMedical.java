@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener{
@@ -96,22 +99,20 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 // grab data from last questionnaire
                 Intent i = getIntent();
                 Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
-                personalObject.seizureDuration = seizureDuration;
-                personalObject.height = height;
-                personalObject.weight = weight;
-                personalObject.seizureFrequencyPerMonth = seizureFrequencyPerMonth;
-                personalObject.seizureStartD = seizureStartD;
-                personalObject.seizureStartM = seizureStartM;
-                personalObject.seizureStartY = seizureStartY;
-                personalObject.seizureT = seizureT;
-                personalObject.sex = sex;
+
+                Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
+                        personalObject.age, personalObject.contactMethod, seizureDuration, height,
+                        weight, seizureFrequencyPerMonth, seizureStartD,
+                        seizureStartM, seizureStartY, seizureT, sex);
+
+                Log.d("confirmation", "completed list: " + personal.toString());
 
                 // Push to firebase
                 String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
 
-                myRef.setValue(personalObject).addOnCompleteListener(task -> {
+                myRef.setValue(personal).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(QuestionnaireMedical.this, Datatable.class));

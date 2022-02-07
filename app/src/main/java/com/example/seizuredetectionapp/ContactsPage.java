@@ -1,5 +1,7 @@
 package com.example.seizuredetectionapp;
 
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -8,22 +10,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ContactsPage extends AppCompatActivity {
+
+public class ContactsPage extends AppCompatActivity implements Serializable {
     RecyclerView recyclerView;
     ArrayList<ContactLayout> contactList = new ArrayList<ContactLayout>();
     ContactsAdapter adapter;
     View v;
+    Button cancel, done;
 
 
     @Override
@@ -36,12 +45,30 @@ public class ContactsPage extends AppCompatActivity {
 
         // stores the view for our template contact
         recyclerView = findViewById(R.id.contactRecycler);
-        /*recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, recyclerView, new RecycleritemClickListener.OnItemClickListener(){
-
-                })
-        );*/
         checkPermission(v);
+
+        cancel = findViewById(R.id.cancel_Button);
+        done = findViewById(R.id.done_Button);
+
+        cancel.setOnClickListener(this::onClick);
+        done.setOnClickListener(this::onClick);
+
+
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            // returns the user to the previous page ignoring the selected contacts
+            case R.id.cancel_Button: {
+                finish();
+            }
+            // returns the user to the previous page with the selected contacts
+            case R.id.done_Button: {
+                addedContacts = adapter.listOfContacts;
+                Log.d("button click", "button Clicked on contact: " + addedContacts);
+                finish();
+            }
+        }
     }
 
     private void checkPermission(View v) {
@@ -91,9 +118,8 @@ public class ContactsPage extends AppCompatActivity {
         }
         // uses our template and list of layouts to fill the contacts page
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        ImageButton btn = (ImageButton) findViewById(R.id.addContact_Button);
-        adapter = new ContactsAdapter(ContactsPage.this, contactList, v, btn);
+        ArrayList<String> listOfContacts = new ArrayList<String>();
+        adapter = new ContactsAdapter(ContactsPage.this, contactList, v, listOfContacts);
         recyclerView.setAdapter(adapter);
     }
 
