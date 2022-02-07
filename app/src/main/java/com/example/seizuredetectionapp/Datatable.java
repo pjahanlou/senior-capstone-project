@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -33,14 +34,16 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class Datatable extends AppCompatActivity {
+public class Datatable extends AppCompatActivity{
     Button btnAddJournal, btnSettings;
     ListView journalList;
     ArrayList<String> journalInfo = new ArrayList<>();
     static ArrayAdapter adapter;
+    static ArrayAdapter sortedAdapter;
     Journal journal;
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -48,7 +51,10 @@ public class Datatable extends AppCompatActivity {
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-
+    private Spinner sortSpinner;
+    private String[] sortOptions = new String[1];
+    ListView sortedJournalList;
+    ArrayList<String> sortedJournalInfo = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +67,61 @@ public class Datatable extends AppCompatActivity {
         myRef = database.getReference("Users").child(currentUserUID);
 
         //ui elements
-        btnAddJournal = (Button) findViewById(R.id.btnjournaladd);
+        btnAddJournal = findViewById(R.id.btnjournaladd);
         btnSettings = findViewById(R.id.settings);
         btnHelpRequest = findViewById(R.id.helpRequest);
-        journalList = (ListView) findViewById(R.id.journalList);
+        journalList = findViewById(R.id.journalList);
+        sortSpinner = findViewById(R.id.sortSpinner);
+
+        // send those journals to listview
+        sortedAdapter = new ArrayAdapter<>(Datatable.this, R.layout.listview_textformat, sortedJournalInfo);
+        journalList.setAdapter(sortedAdapter);
+
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItem = adapterView.getItemAtPosition(i).toString().trim();
+                Log.d("selected Item", "selected Item" + selectedItem);
+
+                // get a list of all the journals in firebase
+                //Populate ListView
+                myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        Journal journal  = snapshot.getValue(Journal.class);
+                        sortedJournalInfo.add(journal.dateAndTime);
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                // sort those journals
+                Collections.sort(sortedJournalInfo);
+                sortedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         //listview set up
         adapter = new ArrayAdapter<>(this, R.layout.listview_textformat, journalInfo);
@@ -204,6 +261,7 @@ public class Datatable extends AppCompatActivity {
         });
 
     }
+
     //remove single journal from firebase
     public void removeJournal(int pos){
 
@@ -227,6 +285,39 @@ public class Datatable extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    private void sortJournals(){
+        String selectedSortOption = sortSpinner.getSelectedItem().toString().trim();
+        ArrayList<String> journalInfo = new ArrayList<>();
+
+        //Populate ListView
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Journal journal  = snapshot.getValue(Journal.class);
+                journalInfo.add(journal.dateAndTime);
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public void editJournal(int pos){
         Intent intent = new Intent(Datatable.this, AddJournal.class);
