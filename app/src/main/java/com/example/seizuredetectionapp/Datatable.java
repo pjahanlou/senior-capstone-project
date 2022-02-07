@@ -153,7 +153,8 @@ public class Datatable extends AppCompatActivity{
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Journal journal  = snapshot.getValue(Journal.class);
+                Log.d("child added", "child added " + snapshot);
+                Journal journal = snapshot.getValue(Journal.class);
                 journalInfo.add(journal.dateAndTime);
                 adapter.notifyDataSetChanged();
             }
@@ -190,6 +191,7 @@ public class Datatable extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //Toast.makeText(Datatable.this, "Edited", Toast.LENGTH_SHORT).show();
+                        editJournal(pos);
 
                     }
                 });
@@ -317,9 +319,31 @@ public class Datatable extends AppCompatActivity{
         });
     }
 
-    //TODO
     public void editJournal(int pos){
-        return;
+        Intent intent = new Intent(Datatable.this, AddJournal.class);
+        intent.putExtra("key", true);
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+
+        /*
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    snapshot.getRef().child("dateAndTime").setValue("penis");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Delete Operation", "onCancelled", databaseError.toException());
+            }
+        });
+
+         */
+
+        intent.putExtra("id", journalInfo.get(pos));
+        startActivity(intent);
+
     }
 
 }
