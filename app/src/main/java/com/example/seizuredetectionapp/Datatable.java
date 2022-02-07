@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +47,6 @@ public class Datatable extends AppCompatActivity {
     LinearLayout sheetBottom;
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
-
-
-
 
 
     @Override
@@ -189,13 +189,32 @@ public class Datatable extends AppCompatActivity {
         });
 
     }
-
+    //remove single journal from firebase
     public void removeJournal(int pos){
-        //remove single journal from firebase, TODO
-        //myRef.child("Journals").orderByChild("dateAndTime").equals(journalInfo.get(pos))
+
+        //gets key id for chosen journal
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    snapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Delete Operation", "onCancelled", databaseError.toException());
+            }
+        });
         journalInfo.remove(pos);
         adapter.notifyDataSetChanged();
     }
 
+    //TODO
+    public void editJournal(int pos){
+        return;
+    }
 
 }
