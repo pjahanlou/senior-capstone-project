@@ -18,7 +18,7 @@ public class Questionnaire implements Serializable{
     public String seizureT;
     public String sex;
     public static ArrayList<String> addedContacts;
-    public int seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStartD, seizureStartY;
+    public String seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStartD, seizureStartY;
 
     public Questionnaire(){
     }
