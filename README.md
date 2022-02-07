@@ -1,31 +1,32 @@
+
 # STRapp (Seizure Technical Response app)
 
 ## Features
 
 **Internal Login**
- - The user is able to login with their email and password
+  - The user is able to login with their email and password
 
 **Internal Signup**
- - The user is able to signup for the application using email, username, and password
+  - The user is able to signup for the application using email, username, and password
 
 **Google Login/Signup**
- - The user can signup and login with their Google account
+  - The user can signup and login with their Google account
 
 **Twitter Login/Signup**
- - The user can signup and login with their twitter account. Note: This feature is currently under production as we're having some minor issues with the API keys.
+  - The user can signup and login with their twitter account. Note: This feature is currently under production as we're having some minor issues with the API keys.
 
 **Forget Password**
- - The user can reset their password if they have forgotten it.
+  - The user can reset their password if they have forgotten it.
 
 **Journals**
- - The user can manually add journal entries. This feature is still under production because the user cannot edit or remove previous journals.
+  - The user can manually add journal entries. This feature is still under production because the user cannot edit or remove previous journals.
 
 **Contacts Page**
 
- - The user can view their contacts. This feature is still under production. Eventually functionality for adding and removing contacts from the Emergency contact list will implemented.
+  - The user can view their contacts, and select any amount to their emergency contacts. This feature is still under production. Eventually functionality for removing contacts from the Emergency contact list will implemented.
 
 **Questionnaire**
- - The user is prompted with a Questionnaire after logging in. This requests user preferences for certain app functions. Eventually this feature will utilize the Contacts Page once it is fully functional.
+  - The user is prompted with two questionnaires after logging in. This requests user preferences for certain app functions. This feature utilizes the Contacts Page to collect Emergency contacts list.
 
 
 
@@ -100,28 +101,34 @@
 
 **ContactsPage.java**
 - Class ContactsPage
-	  - Method
-		  - onCreate: generates UI and checks to see if it has permission to access contacts.
-		  - checkPermission: checks if the app has permission to access the devices contacts, and requests access if it does not.
-		  - getContactList: grabs contacts from user device.
+     - Method
+        - onCreate: generates UI and checks to see if it has permission to access contacts.
+        - checkPermission: checks if the app has permission to access the devices contacts, and requests access if it does not.
+        - getContactList: grabs contacts from user device.
 
 **ContactLayout.java**
 - Class ContactLayout
-	- Method
-		- Contact: generates a contact UI which acts as a template for ContactsPage.
-		-
+   - Method
+      - Contact: generates a contact UI which acts as a template for ContactsPage.
+      -
 
-**PopUpWindow**
-   - Class PopUpWindow
-	  - Method
-		  - onCreate: generates UI and assigns all UI and firebase implements to variables.
-		  - storeQuestionnaireData: Checks the validity of the inputs, and send data to firebase.
+**QuestionnairePersonal.java**
+  - Class QuestionnairePersonal
+     - Method
+        - onCreate: generates UI and assigns all UI and firebase implements to variables.
+        - storeQuestionnaireData: Checks the validity of the inputs, and saves it to a Questionnaire object.
 
-**Questionnaire**
+**QuestionnaireMedical.java**
+  - Class QuestionnaireMedical
+     - Method
+        - onCreate: generates UI and assigns all UI and firebase implements to variables.
+        - onClick: adds all remaining user input data to Questionnaire object and sends it to firebase.
+
+**Questionnaire.java**
   - Class Questionnaire
-	  - Method
-		  - Questionnaire: Creates an Object containing the data given by the questionnaire.
-		  - toString: Currently for debugging purposes. returns the data in String form.
+     - Method
+        - Questionnaire: Creates an Object containing the data given by the questionnaire.
+        - toString: Currently for debugging purposes. returns the data in String form.
 
 
 

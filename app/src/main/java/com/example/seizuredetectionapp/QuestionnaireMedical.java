@@ -51,7 +51,6 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         seizureType = findViewById(R.id.seizureType);
         sexInput = findViewById(R.id.sexInput);
 
-        //seizureStart = findViewById(R.id.seizureStartButton);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
 
         seizureDurationMinutes.setMinValue(0);
@@ -66,7 +65,6 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         heightInches.setMinValue(0);
         heightInches.setMaxValue(11);
 
-        //seizureStart.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
     }
 

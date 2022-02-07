@@ -4,7 +4,7 @@
     <string name="enter_Age">Enter age</string>
     <string name="Input_countdown_time">Time in Seconds</string>
     <string name="Input_emergency_contacts">(___)-___-____</string>
-    <string name="Add_Contact">Add</string>
+    <string name="Add_Contact">Add Emergency Contacts</string>
     <string name="user_email">Email Address</string>
     <string name="user_password">Password</string>
     <string name="login_button">Login</string>
