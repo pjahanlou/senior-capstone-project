@@ -1,7 +1,7 @@
 package com.example.seizuredetectionapp;
 
 public class Journal {
-    public String dateAndTime, mood, typeOfSeizure, durationOfSeizure, trigger, description, postDescription;
+    public String dateAndTime, mood, typeOfSeizure, durationOfSeizure, triggers, description, postDescription;
 
     public Journal()
     {
@@ -9,15 +9,19 @@ public class Journal {
     }
 
     public Journal(String dateAndTime,String mood,String typeOfSeizure,String durationOfSeizure,
-                   String trigger,String description,String postDescription)
+                   String triggers,String description,String postDescription)
         {
             this.dateAndTime = dateAndTime;
             this.mood = mood;
             this.typeOfSeizure = typeOfSeizure;
             this.durationOfSeizure = durationOfSeizure;
-            this.trigger = trigger;
+            this.triggers = triggers;
             this.description = description;
             this.postDescription = postDescription;
         }
+
+    public String toString(){
+        return dateAndTime + " " + mood + " " + typeOfSeizure;
+    }
 
 }
