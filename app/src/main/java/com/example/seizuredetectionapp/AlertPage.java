@@ -54,6 +54,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -277,7 +280,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Questionnaire settings = snapshot.getValue(Questionnaire.class);
                 AlertPage.preferredContactMethod = settings.contactMethod;
-                AlertPage.contactList = settings.contactList;
+                AlertPage.contactList = settings.addedContacts;
                 AlertPage.userCountdownTime = settings.countdownTimer;
 
                 AlertPage.start();
@@ -310,9 +313,12 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
     private static void alertContactList(String contactMethod, ArrayList<String> contactList, String message) {
         switch (contactMethod){
             case "text message":
-                for(String contactPerson:contactList){
-                    smsManager.sendTextMessage(contactPerson, null, message, null, null);
-                }
+
+                /*for(String contactPerson:contactList){
+                    Set<String> names = contactPerson.keySet();
+                    String name = names.iterator().next();
+                    smsManager.sendTextMessage(contactPerson.get(name), null, message, null, null);
+                }*/
                 break;
 
             case "email":

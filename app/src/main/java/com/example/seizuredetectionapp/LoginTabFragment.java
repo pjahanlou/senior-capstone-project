@@ -77,7 +77,7 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                 // Change to the Datatable page
                 boolean flag = loginUser();
                 if(flag) {
-                    startActivity(new Intent(this.getContext(), Datatable.class));
+                    startActivity(new Intent(this.getContext(), QuestionnairePersonal.class));
                 }
                 break;
             case R.id.forgetPassword:

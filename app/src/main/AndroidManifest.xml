@@ -28,7 +28,7 @@
             android:exported="false" />
         <activity
             android:name=".ContactsPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".TwitterLogin"
             android:exported="false" />

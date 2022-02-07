@@ -1,23 +1,53 @@
 package com.example.seizuredetectionapp;
 
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.google.firebase.auth.FirebaseAuth;
-import java.util.ArrayList;
 
-public class QuestionnairePersonal extends Activity implements View.OnClickListener{
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable {
     public TextView allContacts;
     public EditText nameInput, countdownTimerInput, ageInput, emergencyContactInput;
     public Button submitQuestionnaireButton, addContactButton;
-    public ArrayList<String> contactList = new ArrayList<>();
     public Spinner contactMethodSpinner;
     public FirebaseAuth mAuth;
+
+    //constructs and instance of an object containing the questionnaire data
+    public Questionnaire contactListObject = new Questionnaire
+            (
+                    "",
+                    addedContacts,
+                    "",
+                    "",
+                    "",
+                    -1,
+                    -1,
+                    -1,
+                    -1,
+                    -1,
+                    "",
+                    -1,
+                    "",
+                    "");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +77,18 @@ public class QuestionnairePersonal extends Activity implements View.OnClickListe
     public void onClick(View v){
         switch(v.getId()){
             case R.id.addContact:
+                Intent intent = new Intent(this, ContactsPage.class);
+                startActivity(intent);
 
-                String contact = emergencyContactInput.getText().toString().trim();
+                //startActivity(new Intent(QuestionnairePersonal.this, ContactsPage.class));
+
+                //String contact = emergencyContactInput.getText().toString().trim();
 
                 // Adding contact to contactList array
-                contactList.add(contact);
+                //contactList.add(contact);
 
                 // Store contact in the bigger Text box
-                allContacts.setText(contact);
+                //allContacts.setText(contact);
                 break;
 
             case R.id.submitQuestionairePersonal:
@@ -64,11 +98,11 @@ public class QuestionnairePersonal extends Activity implements View.OnClickListe
     }
 
     private void storeQuestionnaireData() {
+        Log.d("confirmation", "completed list: " + addedContacts);
         String name = nameInput.getText().toString().trim();
         String age = ageInput.getText().toString().trim();
         String contactMethod = contactMethodSpinner.getSelectedItem().toString().trim();
         String countdownTimer = countdownTimerInput.getText().toString().trim();
-        String contacts = contactList.toString();
 
         //checks to see if any inputs are empty and alerts user.
         if (name.isEmpty()) {
@@ -89,30 +123,13 @@ public class QuestionnairePersonal extends Activity implements View.OnClickListe
             return;
         }
 
-        if (contacts.isEmpty()) {
-            emergencyContactInput.setError("An emergency contact is required!");
-            emergencyContactInput.requestFocus();
-            return;
-        }
+        //Store Data in Questionnaire class object
+        contactListObject.name = name;
+        contactListObject.age = age;
+        contactListObject.addedContacts = addedContacts;
+        contactListObject.contactMethod = contactMethod;
+        contactListObject.countdownTimer = countdownTimer;
 
-        //constructs and instance of an object containing the questionnaire data
-        Questionnaire contactListObject = new Questionnaire
-                (name,
-                        contactList,
-                        countdownTimer,
-                        age,
-                        contactMethod,
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "");
-
-        // Write a message to the database
         Intent i = new Intent(this, QuestionnaireMedical.class);
         i.putExtra("contactListObject", contactListObject);
         startActivity(i);
