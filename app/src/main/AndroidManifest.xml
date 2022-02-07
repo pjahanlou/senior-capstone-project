@@ -28,7 +28,7 @@
             android:exported="false" />
         <activity
             android:name=".ContactsPage"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".TwitterLogin"
             android:exported="false" />
@@ -43,16 +43,16 @@
             android:exported="false" />
         <activity
             android:name=".Datatable"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".QuestionnairePersonal"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Questionaire"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".QuestionnaireMedical"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

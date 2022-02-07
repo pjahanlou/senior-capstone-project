@@ -56,6 +56,7 @@ dependencies {
     implementation 'info.cukes:cucumber-android:1.2.4'
     implementation 'info.cukes:cucumber-picocontainer:1.2.4'
     implementation 'com.android.support.test:testing-support-lib:0.1'
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
