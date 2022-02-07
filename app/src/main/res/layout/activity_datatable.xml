@@ -1,54 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/Platinum"
     tools:context=".Datatable">
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/activity_bottom_view_journal" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/helpRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Seizures"
-        android:textSize="24sp"
-        android:textColor="@color/black"
+        android:background="@drawable/button_bg"
+        android:text="Request Help"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintEnd_toStartOf="@id/settings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/sheet"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/LightSteelBlue"
-        app:layout_behavior="@string/bottom_sheet_behavior" >
-
-        <TextView
-            android:id="@+id/journalName"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="Journal"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="30dp" />
-
-        <Button
-            android:id="@+id/btnjournaladd"
-            android:layout_width="55dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="132dp"
-            android:background="@drawable/button_bg"
-            android:text="+"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/journalName" />
-
-
-
-    </FrameLayout>
 
     <Button
         android:id="@+id/settings"
@@ -59,5 +37,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 

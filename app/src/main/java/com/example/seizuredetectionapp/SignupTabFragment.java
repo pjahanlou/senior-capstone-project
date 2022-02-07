@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
@@ -122,7 +123,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             return signupFlag;
         }
 
-        if(passwordText.length() <= 8 && passwordText.length() >= 20){
+        if(passwordText.length() < 8 || passwordText.length() > 20){
             password.setError("The password needs to be at between 8-20 characters");
             password.requestFocus();
             return signupFlag;
@@ -172,8 +173,13 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(getActivity(), "User has signed up successfully", Toast.LENGTH_LONG).show();
+
+                                        // Sending verification email
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        user.sendEmailVerification();
+                                        Toast.makeText(getActivity(), "Check your email to verify your account", Toast.LENGTH_LONG).show();
                                         SignupTabFragment.signupFlag = true;
+
                                     }
                                     else{
                                         Toast.makeText(getActivity(), "User sign up failed!", Toast.LENGTH_LONG).show();

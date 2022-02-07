@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Questionnaire implements Serializable{
+
     public String name;
     public String contactMethod;
     public String countdownTimer;
@@ -28,13 +29,13 @@ public class Questionnaire implements Serializable{
                          String countdownTimer,
                          String age,
                          String contactMethod,
-                         Integer seizureDuration,
-                         Object height,
-                         Object weight,
-                         Object seizureFrequencyPerMonth,
-                         Object seizureStartD,
+                         String seizureDuration,
+                         String height,
+                         String weight,
+                         String seizureFrequencyPerMonth,
+                         String seizureStartD,
                          String seizureStartM,
-                         Object seizureStartY,
+                         String seizureStartY,
                          String seizureT,
                          String sex
             ){
@@ -44,12 +45,12 @@ public class Questionnaire implements Serializable{
         this.age = age;
         this.contactMethod = contactMethod;
         this.seizureDuration = seizureDuration;
-        this.height = (int) height;
-        this.weight = (int) weight;
-        this.seizureFrequencyPerMonth = (int) seizureFrequencyPerMonth;
-        this.seizureStartD = (int) seizureStartD;
+        this.height = height;
+        this.weight = weight;
+        this.seizureFrequencyPerMonth = seizureFrequencyPerMonth;
+        this.seizureStartD = seizureStartD;
         this.seizureStartM = seizureStartM;
-        this.seizureStartY = (int) seizureStartY;
+        this.seizureStartY = seizureStartY;
         this.seizureT = seizureT;
         this.sex = sex;
     }

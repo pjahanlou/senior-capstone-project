@@ -130,8 +130,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         contactListObject.contactMethod = contactMethod;
         contactListObject.countdownTimer = countdownTimer;
 
-
-        // Begin medical Questionnaire
         Intent i = new Intent(this, QuestionnaireMedical.class);
         i.putExtra("contactListObject", contactListObject);
         startActivity(i);
