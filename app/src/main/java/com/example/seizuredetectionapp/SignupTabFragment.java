@@ -122,7 +122,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             return signupFlag;
         }
 
-        if(passwordText.length() <= 8 && passwordText.length() >= 20){
+        if(passwordText.length() < 8 || passwordText.length() > 20){
             password.setError("The password needs to be at between 8-20 characters");
             password.requestFocus();
             return signupFlag;
