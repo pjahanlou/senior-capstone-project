@@ -1,11 +1,18 @@
 package com.example.seizuredetectionapp;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 
 import com.google.common.truth.Truth;
 
 public class PasswordTest {
 
+    // Unit Tests
     @Test
     public void whenPasswordIsValid(){
         String username = "Parsa@1379";
@@ -33,5 +40,4 @@ public class PasswordTest {
         boolean result = PasswordValidator.validatePassword(username);
         Truth.assertThat(result).isTrue();
     }
-
 }
