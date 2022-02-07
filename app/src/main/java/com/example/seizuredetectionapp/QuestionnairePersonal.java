@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable {
-    public TextView allContacts;
-    public EditText nameInput, countdownTimerInput, ageInput, emergencyContactInput;
+    public EditText nameInput, countdownTimerInput, ageInput;
     public Button submitQuestionnaireButton, addContactButton;
     public Spinner contactMethodSpinner;
     public FirebaseAuth mAuth;
@@ -62,8 +61,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         ageInput = findViewById(R.id.ageInput);
         contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
         countdownTimerInput = findViewById(R.id.countdownTimerInput);
-        emergencyContactInput = findViewById(R.id.emergencyContactInput);
-        allContacts = findViewById(R.id.allContacts);
         addContactButton = findViewById(R.id.addContact);
         submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
 
@@ -80,15 +77,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent(this, ContactsPage.class);
                 startActivity(intent);
 
-                //startActivity(new Intent(QuestionnairePersonal.this, ContactsPage.class));
-
-                //String contact = emergencyContactInput.getText().toString().trim();
-
-                // Adding contact to contactList array
-                //contactList.add(contact);
-
-                // Store contact in the bigger Text box
-                //allContacts.setText(contact);
                 break;
 
             case R.id.submitQuestionairePersonal:

@@ -67,8 +67,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
                 public void onClick(View view) {
                     String textName = name.getText().toString().trim();
                     String textPhoneNumber = phoneNumber.getText().toString().trim();
-                    //HashMap<String, String> contactHashMap = new HashMap<>();
-                    //contactHashMap.put(textName, textPhoneNumber);
                     Log.d("demo", "button Clicked on contact: " + textPhoneNumber);
                     if(listOfContacts.contains(textPhoneNumber) == false){
                         listOfContacts.add(textPhoneNumber);
