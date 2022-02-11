@@ -25,10 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class AddJournal extends Activity {
+public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
     static EditText dateAndTime, mood, typeOfSeizure, duration, triggers, description, postDescription;
-    Button btnCloseWindow, btnSave;
+    Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
     Boolean edit;
@@ -65,8 +65,8 @@ public class AddJournal extends Activity {
         triggers = findViewById(R.id.triggers);
         description = findViewById(R.id.description);
         postDescription = findViewById(R.id.postdescription);
-        btnSave = (Button) findViewById(R.id.btnsave);
-        btnCloseWindow = (Button) findViewById(R.id.btnclose);
+        btnSave =  findViewById(R.id.btnsave);
+        btnClose =  findViewById(R.id.btnclose);
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -82,22 +82,19 @@ public class AddJournal extends Activity {
             popJournalText();
         }
 
-        //close button
-        btnCloseWindow.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                //closes activity and returns to datatable
-                finish();
-            }
-        });
 
-        //save button
-        btnSave.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                //saves information to firebase then closes popup activity
+        btnClose.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.btnclose:
+                finish();
+                break;
+            case R.id.btnsave:
                 if(edit){
                     updateInformation();
                 }
@@ -105,9 +102,8 @@ public class AddJournal extends Activity {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Datatable.class));
-            }
-        });
-
+                break;
+        }
     }
 
     //method for retrieving info written and saving to firebase
@@ -222,7 +218,6 @@ public class AddJournal extends Activity {
                     AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
-
 
                 }
             }
