@@ -78,11 +78,11 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
 
         if(edit){
-            //Retrieving saved journal information
+            //Retrieving saved journal information and populating the EditText
             popJournalText();
         }
 
-
+        //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
@@ -121,6 +121,12 @@ public class AddJournal extends Activity implements View.OnClickListener {
         Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription);
 
+        if(datetime.isEmpty()){
+            dateAndTime.requestFocus();
+            Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Sends HashMap of entry to Firebase DB
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -152,12 +158,19 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
 
+        if(dateTime.isEmpty()){
+            dateAndTime.requestFocus();
+            Toast.makeText(AddJournal.this, "Date and Time field was empty. Did not save changes.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //This needs to be changed
         String previousValue = editJournal.dateAndTime;
         if(!previousValue.equals(dateTime)){
             updateFieldInFirebase("dateAndTime", dateTime);
         }
         previousValue = editJournal.mood;
-        if(!previousValue.equals(moodType) && previousValue != null){
+        if(!previousValue.equals(moodType)){
             updateFieldInFirebase("mood", moodType);
         }
         previousValue = editJournal.typeOfSeizure;
@@ -180,14 +193,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(!previousValue.equals(postSeizureDescription)){
             updateFieldInFirebase("postDescription", postSeizureDescription);
         }
-
-
-
     }
 
-
     public void popJournalText(){
-        //set existing journal to each edittext
+        //set existing journal entries to each edittext
 
         userTable.child("Journals").orderByChild("dateAndTime").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -201,7 +210,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     editJournal = childSnapshot.getValue(Journal.class);
                     Log.d("date", "date = " + editJournal.toString());
 
-
+                    //Get values in EditText
                     AddJournal.updateDateTime = editJournal.dateAndTime;
                     AddJournal.updateMood = editJournal.mood;
                     AddJournal.updateTypeOfSeizure = editJournal.typeOfSeizure;
