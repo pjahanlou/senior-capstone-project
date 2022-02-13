@@ -320,26 +320,10 @@ public class Datatable extends AppCompatActivity{
     }
 
     public void editJournal(int pos){
+        //create new AddJournal intent and pass the dateAndTime to the newly created activity
         Intent intent = new Intent(Datatable.this, AddJournal.class);
         intent.putExtra("key", true);
         Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
-
-        /*
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    snapshot.getRef().child("dateAndTime").setValue("penis");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Delete Operation", "onCancelled", databaseError.toException());
-            }
-        });
-
-         */
 
         intent.putExtra("id", journalInfo.get(pos));
         startActivity(intent);
