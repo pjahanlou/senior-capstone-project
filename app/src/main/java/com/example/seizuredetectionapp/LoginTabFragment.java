@@ -1,6 +1,7 @@
 package com.example.seizuredetectionapp;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -77,7 +78,7 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                 // Change to the Datatable page
                 boolean flag = loginUser();
                 if(flag) {
-                    startActivity(new Intent(this.getContext(), QuestionnaireMedical.class));
+                    startActivity(new Intent(this.getContext(), QuestionnairePersonal.class));
                 }
                 break;
             case R.id.forgetPassword:
