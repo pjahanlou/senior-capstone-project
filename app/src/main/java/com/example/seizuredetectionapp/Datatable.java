@@ -67,7 +67,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID);
 
-
         //ui elements
         btnAddJournal = findViewById(R.id.btnjournaladd);
         btnSettings = findViewById(R.id.settings);
@@ -117,7 +116,7 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        //Populate ListView
+        //Populate ListView upon datatable start up
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
