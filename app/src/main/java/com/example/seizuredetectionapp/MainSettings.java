@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,9 @@ public class MainSettings extends AppCompatActivity implements View.OnClickListe
         // Getting user info
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         email = currentUser.getEmail();
-        username = currentUser.getDisplayName();
+
+        SharedPreferences sharedPreferences = getSharedPreferences (LocalSettings.PREFERENCES, MODE_PRIVATE);
+        username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
 
         // Initializing the views
         userPicture = findViewById(R.id.profileImage);

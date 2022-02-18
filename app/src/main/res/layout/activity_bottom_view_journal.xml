@@ -39,7 +39,7 @@
             android:layout_alignEnd="@id/title"
             android:background="@android:drawable/btn_dropdown"
             android:entries="@array/spinnerItems"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
     </RelativeLayout>
 

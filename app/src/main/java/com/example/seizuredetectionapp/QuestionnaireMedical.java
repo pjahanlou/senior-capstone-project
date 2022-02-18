@@ -3,9 +3,12 @@ package com.example.seizuredetectionapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +35,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     EditText seizureFrequency, seizureStartDate, seizureStartYear, weightInput;
     Spinner seizureType, sexInput, seizureStartMonth;
     Button submitQuestionnaireMedical;
+    private LocalSettings localSettings;
 
 
     @Override
@@ -119,6 +123,12 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                         Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
                     }
                 });
+
+                localSettings.setQuestionnaireComplete("1");
+
+                SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+                editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
+                editor.apply();
             }
         }
     }
