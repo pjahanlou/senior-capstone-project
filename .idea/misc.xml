@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_app_settings.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.25" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_contacts_page.xml" value="0.18854166666666666" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.12559241706161137" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.2" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_login_page.xml" value="0.14130434782608695" />
-        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/addjournal.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/addjournal.xml" value="0.22" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textcolor.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.14130434782608695" />
