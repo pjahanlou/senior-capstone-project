@@ -19,6 +19,7 @@ public class LocalSettings extends Application {
     public static Set<String> contactList;
     public static String preferredContactMethod;
 
+    // A wrapper function for the app settings activity
     public static String getField(String field) {
         String fieldValue = null;
 
@@ -49,6 +50,7 @@ public class LocalSettings extends Application {
         return fieldValue;
     }
 
+    // A wrapper function for the app settings activity
     public static void setField(String field, String value) {
         switch(field){
             case "name":

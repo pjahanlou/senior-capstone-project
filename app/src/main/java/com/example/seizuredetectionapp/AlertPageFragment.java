@@ -268,12 +268,14 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                     timerStatus = AlertPageFragment.TimerStatus.STARTED;
                     changeUI(timerStatus);
                 }
+
+                // Moving to the datatable fragment if user cancels
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(currentFragment, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
+                // Updating the navbar to reflect the move to datatable
                 Navbar.getBottomNavigationView().setSelectedItemId(R.id.datatableFragment);
-
                 break;
         }
     }
@@ -340,6 +342,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
          */
 
+        // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
         // contactList = sharedPreferences.getStringSet(LocalSettings.DEFAULT, LocalSettings.getContactList());
@@ -406,7 +409,10 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onTick(long millisUntilFinished) {
 
+                // Updating the countdown text
                 timeTextView.setText(millisUntilFinished/1000 + " Sec");
+
+                // Updating the progress bar to reflect the change smoothly
                 counterProgressBar.setProgress((int) (millisUntilFinished / 50));
 
                 // if countdown timer under 10 secs, change text color

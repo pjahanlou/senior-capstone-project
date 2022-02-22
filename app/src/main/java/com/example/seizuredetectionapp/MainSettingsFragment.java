@@ -92,9 +92,11 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         email = currentUser.getEmail();
 
+        // Retrieving the user name and updating the main page
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
         username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
 
+        // Handling picture uploading in the main settings
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -161,6 +163,10 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    /**
+     * Method for handling opening the user gallery
+     *
+     * */
     private void selectImage(){
         Intent intent = new Intent();
         intent.setType("image/");

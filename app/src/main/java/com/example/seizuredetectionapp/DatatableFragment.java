@@ -111,17 +111,19 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        // Retrieving the user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         isQuestionnaireComplete = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.questionnaireComplete);
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
+        // Checking if the user has completed the questionnaire or not
         /*
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
          */
 
-        //firebase
+        // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID);

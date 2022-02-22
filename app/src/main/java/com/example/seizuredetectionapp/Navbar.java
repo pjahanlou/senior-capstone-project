@@ -34,10 +34,17 @@ public class Navbar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navbar);
 
+        // Initializing the views
         bottomNavigationView = findViewById(R.id.bottomNavbar);
         bottomNavigationView.setOnItemSelectedListener(navListener);
         linearLayout = findViewById(R.id.linearLayout);
 
+        // Setting the background of the bottomNavigationView to null
+        // This prevents conflicts with the bottom app bar view
+        bottomNavigationView.setBackground(null);
+
+        // Change to the datatable fragment on create
+        // Without this, it goes to alert page
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.datatableFragment); // change to whichever id should be default
         }
@@ -55,6 +62,7 @@ public class Navbar extends AppCompatActivity {
         this.bottomNavigationView = bottomNavigationView;
     }
 
+    // Navbar controller for forwarding the user to the right fragment
     private BottomNavigationView.OnItemSelectedListener navListener =
             item -> {
                 Fragment selectedFragment = null;
@@ -62,6 +70,8 @@ public class Navbar extends AppCompatActivity {
                 /* TODO: stop the countdown timer when the user moves from alert page to another fragment
                     to not save a journal to firebase */
 
+                // Fragment tag is as an identifier for the fragments
+                // They help us better identify the fragments during swiping
                 switch (item.getItemId()) {
                     case R.id.datatableFragment:
                         selectedFragment = new DatatableFragment();
@@ -90,6 +100,7 @@ public class Navbar extends AppCompatActivity {
                 return true;
             };
 
+    // Swipe listener class which handles swiping based on user touch
     private class SwipeListener implements View.OnTouchListener{
 
         GestureDetector gestureDetector;
@@ -114,19 +125,23 @@ public class Navbar extends AppCompatActivity {
                                 // check condition
                                 if(Math.abs(xDiff) > Math.abs(yDiff)){
                                     // When x is greater than y
-                                    // check condition
                                     if(Math.abs(xDiff) > threshold && Math.abs(velocityX) > velocityThreshold){
-                                        // check condition
+
+                                        // Get the current fragment
                                         Fragment nextFragment = null;
                                         Fragment selectedFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
-                                        Log.d("selected Fragment", ""+selectedFragment);
+
                                         if(xDiff < 0){
                                             // When swipe left
                                             if (selectedFragment != null && selectedFragment.isVisible()) {
 
                                                 if(selectedFragment instanceof AlertPageFragment){
+                                                    // Stop the countdown timer before moving to other fragments
+                                                    // This prevents help request protocol from being invoked
                                                     ((AlertPageFragment) selectedFragment).stopCountDownTimer();
                                                     nextFragment = new DatatableFragment();
+
+                                                    // Update the navbar to match the selected fragment
                                                     bottomNavigationView.setSelectedItemId(R.id.datatableFragment);
                                                     fragmentTag = "datatable";
                                                 }
@@ -169,6 +184,7 @@ public class Navbar extends AppCompatActivity {
                                                 }
                                             }
                                         }
+
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView2,
                                                 nextFragment, fragmentTag).commit();
                                         return true;

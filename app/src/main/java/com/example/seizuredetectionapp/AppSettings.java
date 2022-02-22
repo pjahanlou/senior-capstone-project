@@ -130,6 +130,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
 
          */
 
+        // Writing the new user data to shared preferences
         localSettings.setField(field, value);
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();

@@ -5,6 +5,15 @@
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
     </style>
 
+    <style name="AppThemeNavbar" parent="Theme.MaterialComponents">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/DarkOrange</item>
+        <item name="colorPrimaryDark">@color/Platinum</item>
+        <item name="colorAccent">@color/Platinum</item>
+        <item name="colorControlNormal">@color/Platinum</item>
+        <item name="android:textColorPrimary">@color/Platinum</item>
+    </style>
+
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
