@@ -76,9 +76,6 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             case R.id.signup:
                 // Change to the Questionnaire page
                 boolean flag = signupUser();
-                if(flag){
-                    startActivity(new Intent(this.getContext(), Questionaire.class));
-                }
                 break;
         }
     }
@@ -200,7 +197,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
         localSettings.setQuestionnaireComplete("0");
 
         SharedPreferences.Editor editor = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getField("name"));
+        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
         editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
         editor.apply();
 

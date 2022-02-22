@@ -1,6 +1,7 @@
 package com.example.seizuredetectionapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,37 +72,36 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         STOPPED
     }
 
-    private static AlertPageFragment.TimerStatus timerStatus;
-    private static long timeCountInMilliSeconds;
+    private AlertPageFragment.TimerStatus timerStatus;
+    private int timeCountInMilliSeconds = 1000;
 
-    public static String userCountdownTime = "30";
-    public static String preferredContactMethod;
-    public static ArrayList<String> contactList;
-    private static String seizureMessage = "Help! I'm having a seizure!";
-    private static String cancelMessage = "Get Punked! I didn't have a seizure";
+    public String userCountdownTime = "30";
+    public String preferredContactMethod;
+    public Set<String> contactList;
+    private String seizureMessage = "Help! I'm having a seizure!";
+    private String cancelMessage = "Get Punked! I didn't have a seizure";
 
-    private static SmsManager smsManager;
+    private SmsManager smsManager;
 
-    private static Button callButton, cancelButton;
-    private static TextView timeTextView, infoText;
-    private static ProgressBar counterProgressBar;
-    private static CountDownTimer countDownTimer;
-    private static RippleBackground rippleBackground;
-    private static Context context;
-    private static String helpRequestSent = "Help request sent. Waiting for acknowledgement";
-    private static String helpRequestInitiated = "Help request has been initiated. Help request will be sent in";
-    private static String userAddress = "";
+    private Button callButton, cancelButton;
+    private TextView timeTextView, infoText;
+    private ProgressBar counterProgressBar;
+    private CountDownTimer countDownTimer;
+    private RippleBackground rippleBackground;
+    private String helpRequestSent = "Help request sent. Waiting for acknowledgement";
+    private String helpRequestInitiated = "Help request has been initiated. Help request will be sent in";
+    private String userAddress = "";
 
-    public static FirebaseDatabase database;
-    public static DatabaseReference userTable;
-    private static String currentUserUID;
+    public FirebaseDatabase database;
+    public DatabaseReference userTable;
+    private String currentUserUID;
 
-    private static int PERMISSION_ID = 44;
-    private static double longitude, latitude;
+    private int PERMISSION_ID = 44;
+    private double longitude, latitude;
 
-    private static Geocoder geocoder;
+    private Geocoder geocoder;
     private LocationRequest locationRequest;
-    private static FusedLocationProviderClient fusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private LocalSettings localSettings;
 
@@ -139,7 +140,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.SEND_SMS, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
 
-        // database configurations
+        // database configurations for writing journals to firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
         userTable = database.getReference("Users").child(currentUserUID);
@@ -189,8 +190,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         Log.d("User Address", userAddress+" this");
 
         // Set necessary data and start the countdown timer
-        timerStatus = AlertPageFragment.TimerStatus.STARTED;
-        startAlertPage();
         Log.d("user info", preferredContactMethod+"");
     }
 
@@ -207,17 +206,19 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         infoText = root.findViewById(R.id.infoText);
         counterProgressBar = root.findViewById(R.id.progressBarCircle);
         rippleBackground = root.findViewById(R.id.ripple);
-        context = getActivity();
 
         // Add event listeners to the buttons
         callButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
 
+        timerStatus = AlertPageFragment.TimerStatus.STARTED;
+        startAlertPage();
+
         return root;
     }
 
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -261,21 +262,17 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
                 if(timerStatus == AlertPageFragment.TimerStatus.STARTED){
                     stopCountDownTimer();
-
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(currentFragment, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
                 }
                 if(timerStatus == AlertPageFragment.TimerStatus.STOPPED){
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(currentFragment, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
                     alertContactList(preferredContactMethod, contactList, cancelMessage);
                     timerStatus = AlertPageFragment.TimerStatus.STARTED;
                     changeUI(timerStatus);
                 }
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(currentFragment, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+                Navbar.getBottomNavigationView().setSelectedItemId(R.id.datatableFragment);
 
                 break;
         }
@@ -285,7 +282,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * method to stop the countdown timer and update
      * the timer status
      */
-    private void stopCountDownTimer() {
+    public void stopCountDownTimer() {
         countDownTimer.cancel();
         timerStatus = AlertPageFragment.TimerStatus.STOPPED;
     }
@@ -343,14 +340,15 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
          */
 
-        /*
-        SharedPreferences sharedPreferences = context.getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getField("age"));
-        contactList = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getField("name"));
-        userCountdownTime = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getField("countdownTimer"));
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
+        // contactList = sharedPreferences.getStringSet(LocalSettings.DEFAULT, LocalSettings.getContactList());
+        userCountdownTime = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getCountdownTimer());
+        if(userCountdownTime.equals("0")){
+            userCountdownTime = "30";
+        }
 
-        AlertPageFragment.start();
-         */
+        start();
 
     }
 
@@ -358,7 +356,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * helper method to allow startAlertPage() to initialize the
      * countdown timer
      */
-    private static void start() {
+    private void start() {
         setTimerValues();
         startCountDownTimer();
     }
@@ -370,7 +368,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Add the other ways of contacting
      * TODO: Add their location in message
      */
-    private static void alertContactList(String contactMethod, ArrayList<String> contactList, String message) {
+    private void alertContactList(String contactMethod, Set<String> contactList, String message) {
         switch (contactMethod){
             case "text message":
 
@@ -391,8 +389,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      *
      * reads from firebase and assigns the value to timeCountInMilliSeconds
      */
-    public static void setTimerValues() {
-        long countdownTime = Integer.parseInt(userCountdownTime);
+    public void setTimerValues() {
+        int countdownTime = Integer.parseInt(userCountdownTime);
 
         // assigning values after converting to milliseconds
         timeCountInMilliSeconds = countdownTime * 1000;
@@ -401,7 +399,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     /**
      * method to start count down timer
      */
-    public static void startCountDownTimer() {
+    public void startCountDownTimer() {
 
         setProgressBarValues();
         countDownTimer = new CountDownTimer(timeCountInMilliSeconds, 50) {
@@ -439,7 +437,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      *
      * TODO: Update the journal info in the future
      */
-    private static void saveJournal(){
+    private void saveJournal(){
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
                 format(Calendar.getInstance().getTime());
         String moodType = "";
@@ -455,10 +453,12 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         userTable.child("Journals").push().setValue(newJournal)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        Toast.makeText(context, "Journal saved", Toast.LENGTH_LONG).show();
+                        // TODO: figure out the bug with the getActivity when you leave the alert page via the navbar
+                        // Toast.makeText(getActivity(), "Journal saved", Toast.LENGTH_LONG).show();
+                        Log.d("Update", "journal saved");
                     }
                     else{
-                        Toast.makeText(context, "Journal error!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Journal error!", Toast.LENGTH_LONG).show();
                         Log.d("Journal Error: ", task.getException().getLocalizedMessage());
                     }
                 });
@@ -468,7 +468,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * method to update the UI based on the status of
      * the countdown timer
      */
-    private static void changeUI(AlertPageFragment.TimerStatus timerStatus) {
+    private void changeUI(AlertPageFragment.TimerStatus timerStatus) {
         switch(timerStatus){
             case STARTED:
                 infoText.setText(helpRequestInitiated);
@@ -497,10 +497,10 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     /**
      * method to set circular progress bar values
      */
-    private static void setProgressBarValues() {
+    private void setProgressBarValues() {
 
-        counterProgressBar.setMax((int) timeCountInMilliSeconds / 50);
-        counterProgressBar.setProgress((int) timeCountInMilliSeconds / 1000);
+        counterProgressBar.setMax(timeCountInMilliSeconds / 50);
+        counterProgressBar.setProgress(timeCountInMilliSeconds / 1000);
     }
 
     /**

@@ -75,61 +75,67 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case R.id.submitQuestionnaireMedical: {
-                String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
-                String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
-                String weight = weightInput.getText().toString().trim();
-                String seizureFrequencyPerMonth = seizureFrequency.getText().toString().trim();
-                String seizureStartD = seizureStartDate.getText().toString().trim();
-                String seizureStartM = seizureStartMonth.getSelectedItem().toString().trim();
-                String seizureStartY = seizureStartYear.getText().toString().trim();
-                String seizureT = seizureType.getSelectedItem().toString().trim();
-                String sex = sexInput.getSelectedItem().toString().trim();
-
-                //checks to see if any inputs are empty and alerts user.
-                if (height.equals("0")) {
-                    heightFeet.requestFocus();
-                    return;
-                }
-
-                if (weight.equals("0")) {
-                    weightInput.requestFocus();
-                    return;
-                }
-
-                // grab data from last questionnaire
-                Intent i = getIntent();
-                Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
-
-                Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
-                        personalObject.age, personalObject.contactMethod, seizureDuration, height,
-                        weight, seizureFrequencyPerMonth, seizureStartD,
-                        seizureStartM, seizureStartY, seizureT, sex);
-
-                Log.d("confirmation", "completed list: " + personal.toString());
-
-                // Push to firebase
-                String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
-
-                myRef.setValue(personal).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(QuestionnaireMedical.this, Datatable.class));
-                    }
-                    else {
-                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                localSettings.setQuestionnaireComplete("1");
-
-                SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-                editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
-                editor.apply();
-            }
+            case R.id.submitQuestionnaireMedical:
+                saveQuestionnaireMedicalToFirebase();
+                break;
         }
+    }
+
+    private void saveQuestionnaireMedicalToFirebase() {
+        String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
+        String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
+        String weight = weightInput.getText().toString().trim();
+        String seizureFrequencyPerMonth = seizureFrequency.getText().toString().trim();
+        String seizureStartD = seizureStartDate.getText().toString().trim();
+        String seizureStartM = seizureStartMonth.getSelectedItem().toString().trim();
+        String seizureStartY = seizureStartYear.getText().toString().trim();
+        String seizureT = seizureType.getSelectedItem().toString().trim();
+        String sex = sexInput.getSelectedItem().toString().trim();
+
+        //checks to see if any inputs are empty and alerts user.
+        if (height.equals("0")) {
+            heightFeet.requestFocus();
+            return;
+        }
+
+        if (weight.equals("0")) {
+            weightInput.requestFocus();
+            return;
+        }
+
+        // grab data from last questionnaire
+        Intent i = getIntent();
+        Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
+
+        Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
+                personalObject.age, personalObject.contactMethod, seizureDuration, height,
+                weight, seizureFrequencyPerMonth, seizureStartD,
+                seizureStartM, seizureStartY, seizureT, sex);
+
+        Log.d("confirmation", "completed list: " + personal.toString());
+
+        // Push to firebase
+        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
+
+        myRef.setValue(personal).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
+                questionnaireComplete();
+                startActivity(new Intent(QuestionnaireMedical.this, Navbar.class));
+            }
+            else {
+                Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void questionnaireComplete(){
+        localSettings.setQuestionnaireComplete("1");
+
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
+        editor.apply();
     }
 }

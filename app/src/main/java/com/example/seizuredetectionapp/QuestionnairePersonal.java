@@ -76,7 +76,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             case R.id.addContact:
                 Intent intent = new Intent(this, ContactsPage.class);
                 startActivity(intent);
-
                 break;
 
             case R.id.submitQuestionairePersonal:

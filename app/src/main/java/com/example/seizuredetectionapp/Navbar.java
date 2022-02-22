@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -19,16 +20,14 @@ import android.widget.LinearLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.List;
+
 public class Navbar extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
+    private static BottomNavigationView bottomNavigationView;
     private LinearLayout linearLayout;
     private SwipeListener swipeListener;
     private String fragmentTag = "datatable";
-    private int alertPageId;
-    private int datatableId = 2131296885;
-    private int mainSettingsId;
-    private int realtimeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +47,20 @@ public class Navbar extends AppCompatActivity {
 
     }
 
+    public static BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public void setBottomNavigationView(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
+
     private BottomNavigationView.OnItemSelectedListener navListener =
             item -> {
                 Fragment selectedFragment = null;
+
+                /* TODO: stop the countdown timer when the user moves from alert page to another fragment
+                    to not save a journal to firebase */
 
                 switch (item.getItemId()) {
                     case R.id.datatableFragment:
@@ -74,6 +84,7 @@ public class Navbar extends AppCompatActivity {
                 if(selectedFragment != null){
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView2,
                             selectedFragment, fragmentTag).commit();
+
                 }
 
                 return true;
@@ -108,42 +119,53 @@ public class Navbar extends AppCompatActivity {
                                         // check condition
                                         Fragment nextFragment = null;
                                         Fragment selectedFragment = getSupportFragmentManager().findFragmentByTag(fragmentTag);
-                                        if(xDiff > 0){
-                                            // When swipe right
+                                        Log.d("selected Fragment", ""+selectedFragment);
+                                        if(xDiff < 0){
+                                            // When swipe left
                                             if (selectedFragment != null && selectedFragment.isVisible()) {
-                                                int fragmentId = selectedFragment.getId();
-                                                Log.d("datatable id", ""+String.valueOf(fragmentId));
-                                                if(fragmentId == alertPageId){
 
+                                                if(selectedFragment instanceof AlertPageFragment){
+                                                    ((AlertPageFragment) selectedFragment).stopCountDownTimer();
+                                                    nextFragment = new DatatableFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.datatableFragment);
+                                                    fragmentTag = "datatable";
                                                 }
-                                                if(fragmentId == datatableId){
+                                                if(selectedFragment instanceof DatatableFragment){
                                                     nextFragment = new MainSettingsFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.mainSettingsFragment);
                                                     fragmentTag = "mainsettings";
                                                 }
-                                                if(fragmentId == mainSettingsId){
-
+                                                if(selectedFragment instanceof MainSettingsFragment){
+                                                    nextFragment = new RealtimeFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.realtimeFragment);
+                                                    fragmentTag = "realtime";
                                                 }
-                                                if(fragmentId == realtimeId){
-
+                                                if(selectedFragment instanceof RealtimeFragment){
+                                                    Log.d("Swipe Action", "Real time page has no page to the right of it!");
                                                 }
                                             }
                                         }
                                         else{
-                                            // when swipe left
+                                            // when swipe right
                                             if (selectedFragment != null && selectedFragment.isVisible()) {
-                                                int fragmentId = selectedFragment.getId();
-                                                if(fragmentId == alertPageId){
 
+                                                if(selectedFragment instanceof AlertPageFragment){
+                                                    Log.d("Swipe Action", "Alert page has no page to the left of it!");
                                                 }
-                                                if(fragmentId == datatableId){
+                                                if(selectedFragment instanceof DatatableFragment){
                                                     nextFragment = new AlertPageFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.alertPageFragment);
                                                     fragmentTag = "alertpage";
                                                 }
-                                                if(fragmentId == mainSettingsId){
-
+                                                if(selectedFragment instanceof MainSettingsFragment){
+                                                    nextFragment = new DatatableFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.datatableFragment);
+                                                    fragmentTag = "datatable";
                                                 }
-                                                if(fragmentId == realtimeId){
-
+                                                if(selectedFragment instanceof RealtimeFragment){
+                                                    nextFragment = new MainSettingsFragment();
+                                                    bottomNavigationView.setSelectedItemId(R.id.mainSettingsFragment);
+                                                    fragmentTag = "mainsettings";
                                                 }
                                             }
                                         }
