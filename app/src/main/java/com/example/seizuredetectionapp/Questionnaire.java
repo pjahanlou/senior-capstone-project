@@ -13,12 +13,11 @@ public class Questionnaire implements Serializable{
     public String name;
     public String contactMethod;
     public String countdownTimer;
-    public String age;
-    public String seizureStartM;
+    public String dateOfBirth;
     public String seizureT;
     public String sex;
     public static ArrayList<String> addedContacts;
-    public String seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStartD, seizureStartY;
+    public String seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStart;
 
     public Questionnaire(){
     }
@@ -27,30 +26,26 @@ public class Questionnaire implements Serializable{
     public Questionnaire(String name,
                          ArrayList<String> addedContacts,
                          String countdownTimer,
-                         String age,
+                         String dateOfBirth,
                          String contactMethod,
                          String seizureDuration,
                          String height,
                          String weight,
                          String seizureFrequencyPerMonth,
-                         String seizureStartD,
-                         String seizureStartM,
-                         String seizureStartY,
+                         String seizureStart,
                          String seizureT,
                          String sex
             ){
         this.name = name;
         this.addedContacts = addedContacts;
         this.countdownTimer = countdownTimer;
-        this.age = age;
+        this.dateOfBirth = dateOfBirth;
         this.contactMethod = contactMethod;
         this.seizureDuration = seizureDuration;
         this.height = height;
         this.weight = weight;
         this.seizureFrequencyPerMonth = seizureFrequencyPerMonth;
-        this.seizureStartD = seizureStartD;
-        this.seizureStartM = seizureStartM;
-        this.seizureStartY = seizureStartY;
+        this.seizureStart = seizureStart;
         this.seizureT = seizureT;
         this.sex = sex;
     }
@@ -58,6 +53,6 @@ public class Questionnaire implements Serializable{
     @NonNull
     @Override
     public String toString() {
-        return name + "" + addedContacts.toString() + " " + contactMethod + " " + age + " " + countdownTimer;
+        return name + "" + addedContacts.toString() + " " + contactMethod + " " + dateOfBirth + " " + countdownTimer;
     }
 }

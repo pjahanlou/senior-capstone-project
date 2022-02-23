@@ -50,13 +50,13 @@
             android:exported="true" />
         <activity
             android:name=".QuestionnairePersonal"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Questionaire"
             android:exported="false" />
         <activity
             android:name=".QuestionnaireMedical"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

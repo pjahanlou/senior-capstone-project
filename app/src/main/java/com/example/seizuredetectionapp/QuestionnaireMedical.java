@@ -1,7 +1,5 @@
 package com.example.seizuredetectionapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -14,28 +12,27 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 
 
-public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener{
+public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     NumberPicker seizureDurationMinutes, seizureDurationSeconds, heightFeet, heightInches;
-    EditText seizureFrequency, seizureStartDate, seizureStartYear, weightInput;
-    Spinner seizureType, sexInput, seizureStartMonth;
-    Button submitQuestionnaireMedical;
+    EditText seizureFrequency, weightInput;
+    Spinner seizureType, sexInput;
+    Button submitQuestionnaireMedical, openDatePicker;
+    String seizureStartD;
     private LocalSettings localSettings;
+
 
 
     @Override
@@ -49,58 +46,114 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         heightInches = findViewById(R.id.heightInputInches);
         weightInput = findViewById(R.id.weightInput);
         seizureFrequency = findViewById(R.id.seizureFrequency);
-        seizureStartDate = findViewById(R.id.seizureStartDate);
-        seizureStartMonth = findViewById(R.id.seizureStartMonth);
-        seizureStartYear = findViewById(R.id.seizureStartYear);
         seizureType = findViewById(R.id.seizureType);
         sexInput = findViewById(R.id.sexInput);
+        seizureStartD = "";
 
+        openDatePicker = findViewById(R.id.openDatePickerDialog);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
 
         seizureDurationMinutes.setMinValue(0);
         seizureDurationMinutes.setMaxValue(60);
+        //seizureDurationMinutes.setTextColor(Integer.parseInt("black"));
 
         seizureDurationSeconds.setMinValue(0);
         seizureDurationSeconds.setMaxValue(59);
+        //seizureDurationSeconds.setTextColor(Integer.parseInt("black"));
 
         heightFeet.setMinValue(0);
         heightFeet.setMaxValue(12);
+        //heightFeet.setTextColor(Integer.parseInt("black"));
 
         heightInches.setMinValue(0);
         heightInches.setMaxValue(11);
+        //heightInches.setTextColor(Integer.parseInt("black"));
 
+        openDatePicker.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.submitQuestionnaireMedical:
-                saveQuestionnaireMedicalToFirebase();
+            case R.id.openDatePickerDialog: {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        this,
+                        0,
+                        this,
+                        Calendar.getInstance().get(Calendar.YEAR),
+                        Calendar.getInstance().get(Calendar.MONTH),
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                );
+                datePickerDialog.show();
+
                 break;
-        }
-    }
+            }
 
-    private void saveQuestionnaireMedicalToFirebase() {
-        String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
-        String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
-        String weight = weightInput.getText().toString().trim();
-        String seizureFrequencyPerMonth = seizureFrequency.getText().toString().trim();
-        String seizureStartD = seizureStartDate.getText().toString().trim();
-        String seizureStartM = seizureStartMonth.getSelectedItem().toString().trim();
-        String seizureStartY = seizureStartYear.getText().toString().trim();
-        String seizureT = seizureType.getSelectedItem().toString().trim();
-        String sex = sexInput.getSelectedItem().toString().trim();
+            case R.id.submitQuestionnaireMedical: {
+                //Toast.makeText(QuestionnaireMedical.this, seizureStartD, Toast.LENGTH_LONG).show();
+                String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
+                String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
+                String weight = weightInput.getText().toString().trim();
+                String seizureFrequencyPerMonth = seizureFrequency.getText().toString().trim();
+                String seizureT = seizureType.getSelectedItem().toString().trim();
+                String sex = sexInput.getSelectedItem().toString().trim();
 
-        //checks to see if any inputs are empty and alerts user.
-        if (height.equals("0")) {
-            heightFeet.requestFocus();
-            return;
-        }
+                //checks to see if any inputs are empty and alerts user.
+                if (seizureDuration.equals("0")) {
+                    seizureDurationSeconds.requestFocus();
+                    return;
+                }
 
-        if (weight.equals("0")) {
-            weightInput.requestFocus();
-            return;
+                if (height.equals("0")) {
+                    heightFeet.requestFocus();
+                    return;
+                }
+
+                if (weight.equals("0")) {
+                    weightInput.requestFocus();
+                    return;
+                }
+
+                if (seizureT.equals("0")) {
+                    seizureType.requestFocus();
+                    return;
+                }
+
+                if (seizureStartD == "") {
+                    openDatePicker.requestFocus();
+                    openDatePicker.setError("A seizure start date is required!");
+                    return;
+                }
+
+
+
+                // grab data from last questionnaire
+                Intent i = getIntent();
+                Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
+
+                Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
+                        personalObject.dateOfBirth, personalObject.contactMethod, seizureDuration, height,
+                        weight, seizureFrequencyPerMonth, seizureStartD, seizureT, sex);
+
+                Log.d("confirmation", "completed list: " + personal.toString());
+
+                // Push to firebase
+                String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
+
+                myRef.setValue(personal).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(QuestionnaireMedical.this, Datatable.class));
+                    }
+                    else {
+                        Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
+                    }
+                });
+                break;
+            }
         }
 
         // grab data from last questionnaire
@@ -137,5 +190,10 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
         editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
         editor.apply();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        seizureStartD = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 }
