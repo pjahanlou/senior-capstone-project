@@ -38,7 +38,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     public Questionnaire contactListObject = new Questionnaire
             (
                     "",
-                    addedContacts,
                     "",
                     "",
                     "",

@@ -132,7 +132,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 Intent i = getIntent();
                 Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
 
-                Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
+                Questionnaire personal = new Questionnaire(personalObject.name, personalObject.countdownTimer,
                         personalObject.dateOfBirth, personalObject.contactMethod, seizureDuration, height,
                         weight, seizureFrequencyPerMonth, seizureStartD, seizureT, sex);
 
