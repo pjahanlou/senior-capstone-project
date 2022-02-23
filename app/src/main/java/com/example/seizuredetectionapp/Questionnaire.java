@@ -24,7 +24,6 @@ public class Questionnaire implements Serializable{
 
     // Creates an Object containing the data given by the questionnaire.
     public Questionnaire(String name,
-                         ArrayList<String> addedContacts,
                          String countdownTimer,
                          String dateOfBirth,
                          String contactMethod,
@@ -37,7 +36,6 @@ public class Questionnaire implements Serializable{
                          String sex
             ){
         this.name = name;
-        this.addedContacts = addedContacts;
         this.countdownTimer = countdownTimer;
         this.dateOfBirth = dateOfBirth;
         this.contactMethod = contactMethod;
@@ -53,6 +51,6 @@ public class Questionnaire implements Serializable{
     @NonNull
     @Override
     public String toString() {
-        return name + "" + addedContacts.toString() + " " + contactMethod + " " + dateOfBirth + " " + countdownTimer;
+        return name + " " + contactMethod + " " + dateOfBirth + " " + countdownTimer;
     }
 }
