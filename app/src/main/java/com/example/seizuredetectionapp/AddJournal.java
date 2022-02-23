@@ -25,10 +25,10 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class AddJournal extends Activity {
+public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
     static EditText dateAndTime, mood, typeOfSeizure, duration, triggers, description, postDescription;
-    Button btnCloseWindow, btnSave;
+    Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
     Boolean edit;
@@ -65,8 +65,8 @@ public class AddJournal extends Activity {
         triggers = findViewById(R.id.triggers);
         description = findViewById(R.id.description);
         postDescription = findViewById(R.id.postdescription);
-        btnSave = (Button) findViewById(R.id.btnsave);
-        btnCloseWindow = (Button) findViewById(R.id.btnclose);
+        btnSave =  findViewById(R.id.btnsave);
+        btnClose =  findViewById(R.id.btnclose);
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -78,26 +78,23 @@ public class AddJournal extends Activity {
         }
 
         if(edit){
-            //Retrieving saved journal information
+            //Retrieving saved journal information and populating the EditText
             popJournalText();
         }
 
-        //close button
-        btnCloseWindow.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                //closes activity and returns to datatable
-                finish();
-            }
-        });
+        //onClick Listeners
+        btnClose.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
 
-        //save button
-        btnSave.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                //saves information to firebase then closes popup activity
+    }
+
+    @Override
+    public void onClick(View v){
+        switch(v.getId()){
+            case R.id.btnclose:
+                finish();
+                break;
+            case R.id.btnsave:
                 if(edit){
                     updateInformation();
                 }
@@ -105,9 +102,8 @@ public class AddJournal extends Activity {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Datatable.class));
-            }
-        });
-
+                break;
+        }
     }
 
     //method for retrieving info written and saving to firebase
@@ -124,6 +120,12 @@ public class AddJournal extends Activity {
 
         Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription);
+
+        if(datetime.isEmpty()){
+            dateAndTime.requestFocus();
+            Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         // Sends HashMap of entry to Firebase DB
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -156,12 +158,19 @@ public class AddJournal extends Activity {
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
 
+        if(dateTime.isEmpty()){
+            dateAndTime.requestFocus();
+            Toast.makeText(AddJournal.this, "Date and Time field was empty. Did not save changes.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //This needs to be changed
         String previousValue = editJournal.dateAndTime;
         if(!previousValue.equals(dateTime)){
             updateFieldInFirebase("dateAndTime", dateTime);
         }
         previousValue = editJournal.mood;
-        if(!previousValue.equals(moodType) && previousValue != null){
+        if(!previousValue.equals(moodType)){
             updateFieldInFirebase("mood", moodType);
         }
         previousValue = editJournal.typeOfSeizure;
@@ -184,14 +193,10 @@ public class AddJournal extends Activity {
         if(!previousValue.equals(postSeizureDescription)){
             updateFieldInFirebase("postDescription", postSeizureDescription);
         }
-
-
-
     }
 
-
     public void popJournalText(){
-        //set existing journal to each edittext
+        //set existing journal entries to each edittext
 
         userTable.child("Journals").orderByChild("dateAndTime").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -205,7 +210,7 @@ public class AddJournal extends Activity {
                     editJournal = childSnapshot.getValue(Journal.class);
                     Log.d("date", "date = " + editJournal.toString());
 
-
+                    //Get values in EditText
                     AddJournal.updateDateTime = editJournal.dateAndTime;
                     AddJournal.updateMood = editJournal.mood;
                     AddJournal.updateTypeOfSeizure = editJournal.typeOfSeizure;
@@ -222,7 +227,6 @@ public class AddJournal extends Activity {
                     AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
-
 
                 }
             }

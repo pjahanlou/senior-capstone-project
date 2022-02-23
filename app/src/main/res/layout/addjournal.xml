@@ -3,135 +3,197 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Platinum"
+    android:layout_gravity="top"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
 
 
         <Button
             android:id="@+id/btnsave"
-            android:layout_width="75dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="256dp"
-            android:layout_toStartOf="@+id/btnclose"
-            android:text="save"
-            android:background="@drawable/button_bg"/>
+            android:background="@drawable/button_bg"
+            android:text="save" />
 
         <Button
             android:id="@+id/btnclose"
-            android:layout_width="75dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5dp"
             android:background="@drawable/button_bg"
             android:text="Exit" />
+
 
         <EditText
             android:id="@+id/datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/edit_text_bg"
+            android:layout_below="@+id/dateAndTimeTitle"
+            android:background="@color/white"
             android:hint="mm/dd/year hour:minutes"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/mood"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/datetime"
-            android:layout_marginTop="20dp"
-            android:hint="Mood"
-            android:textSize="16dp"
+            android:layout_below="@+id/moodTitle"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/typeofseizure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mood"
-            android:layout_marginTop="20dp"
-            android:hint="Type of Seizure"
-            android:textSize="16dp"
+            android:layout_below="@+id/typeOfSeizureTitle"
+            android:layout_marginTop="0dp"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/typeofseizure"
-            android:layout_marginTop="20dp"
-            android:hint="Duration"
-            android:textSize="16dp"
+            android:layout_below="@+id/durationTitle"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/triggers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/duration"
-            android:layout_marginTop="20dp"
-            android:hint="Triggers"
-            android:textSize="16dp"
+            android:layout_below="@+id/triggersTitle"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_below="@+id/triggers"
-            android:layout_marginTop="20dp"
-            android:hint="Description"
-            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/descriptionTitle"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
-
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/postdescription"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_below="@+id/description"
-            android:layout_marginTop="20dp"
-            android:hint="Post Description"
-            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/postdescriptionTitle"
+            android:background="@color/white"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
-            android:textColorHint="@color/black"
             android:paddingBottom="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/triggersTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/duration"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Triggers"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/descriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/triggers"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Description"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/postdescriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="Post Description" />
+
+        <TextView
+            android:id="@+id/durationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/typeofseizure"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Duration"
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/typeOfSeizureTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mood"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Type of Seizure"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/moodTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/datetime"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Mood"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dateAndTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="10dp"
+            android:layout_below="@id/btnsave"
+            android:text="Date and Time" />
 
 
 </RelativeLayout>

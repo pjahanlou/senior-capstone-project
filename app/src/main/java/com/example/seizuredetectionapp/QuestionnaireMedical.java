@@ -1,9 +1,13 @@
 package com.example.seizuredetectionapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +31,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     Spinner seizureType, sexInput;
     Button submitQuestionnaireMedical, openDatePicker;
     String seizureStartD;
+    private LocalSettings localSettings;
+
 
 
     @Override
@@ -149,6 +155,41 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 break;
             }
         }
+
+        // grab data from last questionnaire
+        Intent i = getIntent();
+        Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
+
+        Questionnaire personal = new Questionnaire(personalObject.name, personalObject.addedContacts, personalObject.countdownTimer,
+                personalObject.age, personalObject.contactMethod, seizureDuration, height,
+                weight, seizureFrequencyPerMonth, seizureStartD,
+                seizureStartM, seizureStartY, seizureT, sex);
+
+        Log.d("confirmation", "completed list: " + personal.toString());
+
+        // Push to firebase
+        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
+
+        myRef.setValue(personal).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
+                questionnaireComplete();
+                startActivity(new Intent(QuestionnaireMedical.this, Navbar.class));
+            }
+            else {
+                Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void questionnaireComplete(){
+        localSettings.setQuestionnaireComplete("1");
+
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
+        editor.apply();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.seizuredetectionapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
     EditText email, username, password, confirmPassword;
     float v = 0;
     static boolean signupFlag = false;
+    private LocalSettings localSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,9 +76,6 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
             case R.id.signup:
                 // Change to the Questionnaire page
                 boolean flag = signupUser();
-                if(flag){
-                    startActivity(new Intent(this.getContext(), Questionaire.class));
-                }
                 break;
         }
     }
@@ -192,6 +192,14 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                         }
                     }
                 });
+
+        localSettings.setField("name", usernameText);
+        localSettings.setQuestionnaireComplete("0");
+
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
+        editor.apply();
 
         return signupFlag;
     }

@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,12 +30,17 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
     private FirebaseDatabase database;
     private DatabaseReference settingsTable;
 
+    private LocalSettings localSettings;
+
     private Questionnaire settings = new Questionnaire();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
+
+        // Initializing settings
+        localSettings = (LocalSettings) getApplication();
 
         // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -102,14 +108,15 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
     }
 
     private void updateFieldInFirebase(String field, TextView textview){
-        String newField = textview.getText().toString().trim();
+        String value = textview.getText().toString().trim();
 
-        if(newField.isEmpty()){
+        if(value.isEmpty()){
             textview.setError("Field is required!");
             textview.requestFocus();
             return;
         }
 
+        /*
         settingsTable.child(field).setValue(newField).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 Toast.makeText(AppSettings.this, field + " updated.", Toast.LENGTH_LONG).show();
@@ -120,6 +127,15 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 Log.d(field, task.getException().toString());
             }
         });
+
+         */
+
+        // Writing the new user data to shared preferences
+        localSettings.setField(field, value);
+
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getField(field));
+        editor.apply();
 
     }
 }

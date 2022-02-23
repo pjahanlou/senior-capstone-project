@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,7 +39,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class Datatable extends AppCompatActivity{
+public class Datatable extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
     Button btnAddJournal, btnSettings;
     ListView journalList;
     ArrayList<String> journalInfo = new ArrayList<>();
@@ -73,55 +74,20 @@ public class Datatable extends AppCompatActivity{
         journalList = findViewById(R.id.journalList);
         sortSpinner = findViewById(R.id.sortSpinner);
 
+        //Buttons
+        btnAddJournal.setOnClickListener(this);
+        btnSettings.setOnClickListener(this);
+        btnHelpRequest.setOnClickListener(this);
+
+        //item press listener
+        journalList.setOnItemClickListener(this);
+
+        //spinner
+        sortSpinner.setOnItemSelectedListener(this);
+
         // send those journals to listview
         sortedAdapter = new ArrayAdapter<>(Datatable.this, R.layout.listview_textformat, sortedJournalInfo);
         journalList.setAdapter(sortedAdapter);
-
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = adapterView.getItemAtPosition(i).toString().trim();
-                Log.d("selected Item", "selected Item" + selectedItem);
-
-                // get a list of all the journals in firebase
-                //Populate ListView
-                myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Journal journal  = snapshot.getValue(Journal.class);
-                        sortedJournalInfo.add(journal.dateAndTime);
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                // sort those journals
-                Collections.sort(sortedJournalInfo);
-                sortedAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         //listview set up
         adapter = new ArrayAdapter<>(this, R.layout.listview_textformat, journalInfo);
@@ -135,8 +101,9 @@ public class Datatable extends AppCompatActivity{
         //Peek Height
         bottomSheetBehavior.setPeekHeight(210);
 
-        //Hideable
+        //set journal to not be hideable
         bottomSheetBehavior.setHideable(false);
+
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -149,7 +116,7 @@ public class Datatable extends AppCompatActivity{
             }
         });
 
-        //Populate ListView
+        //Populate ListView upon datatable start up
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -158,6 +125,7 @@ public class Datatable extends AppCompatActivity{
                 journalInfo.add(journal.dateAndTime);
                 adapter.notifyDataSetChanged();
             }
+
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 adapter.notifyDataSetChanged();
@@ -179,88 +147,8 @@ public class Datatable extends AppCompatActivity{
             }
         });
 
-        //click row, brings up edit or remove
-        journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                //Dialog popup for choosing edit or remove journal
-                AlertDialog.Builder editOrRemove = new AlertDialog.Builder(Datatable.this);
-                editOrRemove.setTitle("Do you want to edit or remove this journal?");
-                editOrRemove.setMessage("Edit or Remove?");
-                editOrRemove.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Toast.makeText(Datatable.this, "Edited", Toast.LENGTH_SHORT).show();
-                        editJournal(pos);
-
-                    }
-                });
-
-                editOrRemove.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int j) {
-                        //Confirmation on removing journal
-                        AlertDialog.Builder confirmRemove = new AlertDialog.Builder(Datatable.this);
-                        confirmRemove.setTitle("Are you sure you want to remove this journal?");
-                        confirmRemove.setMessage("Yes or No");
-                        confirmRemove.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                removeJournal(pos);
-                                Toast.makeText(Datatable.this, "Removed.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        confirmRemove.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(Datatable.this, "Canceled.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                           confirmRemove.show();
-
-                    }
-                });
-                editOrRemove.show();
-
-            }
-        });
-
-        //button functionality to change to addJournal activity
-        btnAddJournal.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                //opens up journal activity on button press
-                Intent intent = new Intent(Datatable.this, AddJournal.class);
-                startActivity(intent);
-
-            }
-        });
-
-        //button functionality to change to settings activity
-        btnSettings.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                //opens up journal activity on button press
-                Intent intent = new Intent(Datatable.this, MainSettings.class);
-                startActivity(intent);
-
-            }
-        });
-
-        //button functionality to change to AlertPage activity
-        btnHelpRequest.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                //opens up journal activity on button press
-                Intent intent = new Intent(Datatable.this, AlertPage.class);
-                startActivity(intent);
-
-            }
-        });
-
     }
+
 
     //remove single journal from firebase
     public void removeJournal(int pos){
@@ -320,30 +208,125 @@ public class Datatable extends AppCompatActivity{
     }
 
     public void editJournal(int pos){
+        //create new AddJournal intent and pass the dateAndTime to the newly created activity
         Intent intent = new Intent(Datatable.this, AddJournal.class);
         intent.putExtra("key", true);
         Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
-
-        /*
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    snapshot.getRef().child("dateAndTime").setValue("penis");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Delete Operation", "onCancelled", databaseError.toException());
-            }
-        });
-
-         */
 
         intent.putExtra("id", journalInfo.get(pos));
         startActivity(intent);
 
     }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()){
+            case(R.id.btnjournaladd):
+                intent = new Intent(Datatable.this, AddJournal.class);
+                startActivity(intent);
+                break;
+            case(R.id.settings):
+                intent = new Intent(Datatable.this, MainSettings.class);
+                startActivity(intent);
+                break;
+            case(R.id.helpRequest):
+                intent = new Intent(Datatable.this, AlertPage.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+        //Dialog popup for choosing edit or remove journal
+        AlertDialog.Builder editOrRemove = new AlertDialog.Builder(Datatable.this);
+        editOrRemove.setTitle("Do you want to edit or remove this journal?");
+        editOrRemove.setMessage("Edit or Remove?");
+        editOrRemove.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Toast.makeText(Datatable.this, "Edited", Toast.LENGTH_SHORT).show();
+                editJournal(pos);
+
+            }
+        });
+
+        editOrRemove.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int j) {
+                //Confirmation on removing journal
+                AlertDialog.Builder confirmRemove = new AlertDialog.Builder(Datatable.this);
+                confirmRemove.setTitle("Are you sure you want to remove this journal?");
+                confirmRemove.setMessage("Yes or No");
+                confirmRemove.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        removeJournal(pos);
+                        Toast.makeText(Datatable.this, "Removed.", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+                confirmRemove.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(Datatable.this, "Canceled.", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+                confirmRemove.show();
+
+            }
+        });
+        editOrRemove.show();
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedItem = adapterView.getItemAtPosition(i).toString().trim();
+        Log.d("selected Item", "selected Item" + selectedItem);
+
+        // get a list of all the journals in firebase
+        //Populate ListView
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Journal journal = snapshot.getValue(Journal.class);
+                sortedJournalInfo.add(journal.dateAndTime);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // sort those journals
+        Collections.sort(sortedJournalInfo);
+        sortedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+
 
 }

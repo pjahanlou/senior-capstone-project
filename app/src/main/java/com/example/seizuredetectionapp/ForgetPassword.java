@@ -25,11 +25,14 @@ public class ForgetPassword extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
+
+        // Preventing the user screen from being configured when the keyboard slides up
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         // Initializing Firebase token
         mAuth = FirebaseAuth.getInstance();
 
+        // Initializing the views
         email = findViewById(R.id.email);
         resetPasswordButton = findViewById(R.id.resetPassword);
         resetPasswordButton.setOnClickListener(this);
@@ -47,6 +50,7 @@ public class ForgetPassword extends AppCompatActivity implements View.OnClickLis
     public void resetPassword(){
         String emailText = email.getText().toString().trim();
 
+        // Validating the user input
         if(emailText.isEmpty()){
             email.setError("Email is required!");
             email.requestFocus();
@@ -59,6 +63,7 @@ public class ForgetPassword extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        // Sending the user a forget password email regarding their password change
         mAuth.sendPasswordResetEmail(emailText).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
