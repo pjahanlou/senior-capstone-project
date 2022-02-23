@@ -2,6 +2,9 @@ package com.example.seizuredetectionapp;
 
 import android.app.Application;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class LocalSettings extends Application {
 
     public static String PREFERENCES = "preferences";
@@ -13,7 +16,10 @@ public class LocalSettings extends Application {
     public static String weight;
     public static String seizureFrequency;
     public static String questionnaireComplete;
+    public static Set<String> contactList;
+    public static String preferredContactMethod;
 
+    // A wrapper function for the app settings activity
     public static String getField(String field) {
         String fieldValue = null;
 
@@ -44,6 +50,7 @@ public class LocalSettings extends Application {
         return fieldValue;
     }
 
+    // A wrapper function for the app settings activity
     public static void setField(String field, String value) {
         switch(field){
             case "name":
@@ -134,5 +141,21 @@ public class LocalSettings extends Application {
 
     public static void setQuestionnaireComplete(String questionnaireComplete) {
         LocalSettings.questionnaireComplete = questionnaireComplete;
+    }
+
+    public static Set<String> getContactList() {
+        return contactList;
+    }
+
+    public static void setContactList(Set<String> contactList) {
+        LocalSettings.contactList = contactList;
+    }
+
+    public static String getPreferredContactMethod() {
+        return preferredContactMethod;
+    }
+
+    public static void setPreferredContactMethod(String preferredContactMethod) {
+        LocalSettings.preferredContactMethod = preferredContactMethod;
     }
 }

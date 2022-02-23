@@ -147,4 +147,7 @@
     <color name="Navy">#000080</color>
     <color name="Platinum">#EBEBEB</color>
     <color name="OceanBlue">#473FA2</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>

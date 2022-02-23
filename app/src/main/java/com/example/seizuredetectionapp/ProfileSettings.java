@@ -69,6 +69,10 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * Method for handling display name updates
+     *
+     * */
     private void updateDisplayName(){
         String TAG = "New Display Name";
         String newDisplayName = changeDisplayNameText.getText().toString().trim();
@@ -83,6 +87,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 .setDisplayName(newDisplayName)
                 .build();
 
+        // Update the user profile in Firebase Authentication
         currentUser.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -97,10 +102,14 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Method for handling email update
+     * */
     private void updateEmail(){
         String TAG = "New Email Address";
         String newEmail = changeEmailText.getText().toString().trim();
 
+        // Validating user input
         if(newEmail.isEmpty()){
             changeEmailText.setError("Email is required!");
             changeEmailText.requestFocus();
@@ -113,6 +122,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
+        // Updating their email in Firebase Authentication
         currentUser.updateEmail(newEmail)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -127,6 +137,9 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Method for handling user deleting their account
+     * */
     private void deleteAccount(){
         String TAG = "Delete Account";
 
