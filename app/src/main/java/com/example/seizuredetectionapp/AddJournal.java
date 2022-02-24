@@ -101,7 +101,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 else{
                     saveInformation();
                 }
-                startActivity(new Intent(AddJournal.this, Datatable.class));
+                startActivity(new Intent(AddJournal.this, Navbar.class));
                 break;
         }
     }

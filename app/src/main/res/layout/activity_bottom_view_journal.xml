@@ -24,12 +24,14 @@
             android:textColor="@color/black"
             android:textSize="30dp" />
 
+
         <Button
             android:id="@+id/btnjournaladd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
-            android:text="add" />
+            android:text="add"
+            />
 
 
         <Spinner
@@ -48,8 +50,9 @@
         android:id="@+id/journalList"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10dp"
-         />
+        android:divider="@android:color/black"
+        android:dividerHeight="1dp">
+
+    </ListView>
 
 </LinearLayout>
