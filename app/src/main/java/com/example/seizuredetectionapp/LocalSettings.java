@@ -46,6 +46,8 @@ public class LocalSettings extends Application {
             case "seizureFrequencyPerMonth":
                 fieldValue = getSeizureFrequency();
                 break;
+            case "preferred contact method":
+                fieldValue = getPreferredContactMethod();
         }
 
         return fieldValue;
@@ -74,6 +76,9 @@ public class LocalSettings extends Application {
                 break;
             case "seizureFrequencyPerMonth":
                 setSeizureFrequency(value);
+                break;
+            case "preferred contact method":
+                setPreferredContactMethod(value);
                 break;
         }
     }
