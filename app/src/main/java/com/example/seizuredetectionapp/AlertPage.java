@@ -73,7 +73,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
 
     public static String userCountdownTime = "30";
     public static String preferredContactMethod;
-    public static ArrayList<String> contactList;
+    public static Set<String> contactList;
     private static String seizureMessage = "Help! I'm having a seizure!";
     private static String cancelMessage = "Get Punked! I didn't have a seizure";
 
@@ -310,7 +310,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
      * TODO: Add the other ways of contacting
      * TODO: Add their location in message
      */
-    private static void alertContactList(String contactMethod, ArrayList<String> contactList, String message) {
+    private static void alertContactList(String contactMethod, Set<String> contactList, String message) {
         switch (contactMethod){
             case "text message":
 
