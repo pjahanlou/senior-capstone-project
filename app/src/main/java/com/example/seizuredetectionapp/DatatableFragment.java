@@ -55,10 +55,11 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.jar.JarOutputStream;
 
 
 /**
@@ -80,9 +81,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     Button btnExport, btnSettings;
     ListView journalList;
     ArrayList<Journal> journals = new ArrayList<>();
-    static ArrayAdapter adapter;
     ArrayList<JournalLayout> journalInfo = new ArrayList<>();
-    //static ArrayAdapter adapter;
     static ArrayAdapter sortedAdapter;
     JournalAdapter adapter;
     Journal journal;
@@ -313,24 +312,31 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     }
 
     private void sortJournals(String selectedItem){
-        ArrayList<String> sortedJournals = new ArrayList<>();
+        ArrayList<JournalLayout> sortedJournals = new ArrayList<>();
+
+        for(Journal journal: journals){
+            if(!journal.dateAndTime.equals("")) {
+                sortedJournals.add(new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description));
+            }
+        }
 
         if (selectedItem.equals("Date")) {
-            for(Journal journal: journals){
-                if(!journal.dateAndTime.equals("")) {
-                    sortedJournals.add(journal.dateAndTime);
+            Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
+                @Override
+                public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    return t1.getDateAndTime().compareTo(journalLayout.getDateAndTime());
                 }
-            }
+            });
         }
         else if(selectedItem.equals("Duration")){
-            for(Journal journal: journals){
-                if(!journal.durationOfSeizure.equals("")) {
-                    sortedJournals.add(journal.durationOfSeizure);
+            Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
+                @Override
+                public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    return t1.getDuration().compareTo(journalLayout.getDuration());
                 }
-            }
+            });
         }
 
-        Collections.sort(sortedJournals, Collections.reverseOrder());
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
         journalList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
