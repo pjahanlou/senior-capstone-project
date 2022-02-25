@@ -232,10 +232,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        //listview set up
-        adapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, journalInfo);
-        journalList.setAdapter(adapter);
-
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
         bottomSheetBehavior = BottomSheetBehavior.from(sheetBottom);
