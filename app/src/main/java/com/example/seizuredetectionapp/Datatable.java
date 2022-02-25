@@ -68,7 +68,7 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
         myRef = database.getReference("Users").child(currentUserUID);
 
         //ui elements
-        btnAddJournal = findViewById(R.id.btnjournaladd);
+        btnAddJournal = findViewById(R.id.btnjournalExport);
         btnSettings = findViewById(R.id.settings);
         btnHelpRequest = findViewById(R.id.helpRequest);
         journalList = findViewById(R.id.journalList);
@@ -222,7 +222,7 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
-            case(R.id.btnjournaladd):
+            case(R.id.btnjournalExport):
                 intent = new Intent(Datatable.this, AddJournal.class);
                 startActivity(intent);
                 break;

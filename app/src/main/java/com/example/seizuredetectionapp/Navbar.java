@@ -9,25 +9,29 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.List;
 
-public class Navbar extends AppCompatActivity {
+public class Navbar extends AppCompatActivity implements View.OnClickListener {
 
     private static BottomNavigationView bottomNavigationView;
     private LinearLayout linearLayout;
     private SwipeListener swipeListener;
     private String fragmentTag = "datatable";
+    FloatingActionButton addJournal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,8 @@ public class Navbar extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavbar);
         bottomNavigationView.setOnItemSelectedListener(navListener);
         linearLayout = findViewById(R.id.linearLayout);
+        addJournal = findViewById(R.id.fab);
+        addJournal.setOnClickListener(this);
 
         // Setting the background of the bottomNavigationView to null
         // This prevents conflicts with the bottom app bar view
@@ -99,6 +105,17 @@ public class Navbar extends AppCompatActivity {
 
                 return true;
             };
+
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()){
+            case(R.id.fab):
+                intent = new Intent(Navbar.this, AddJournal.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
     // Swipe listener class which handles swiping based on user touch
     private class SwipeListener implements View.OnTouchListener{
@@ -222,4 +239,6 @@ public class Navbar extends AppCompatActivity {
             return gestureDetector.onTouchEvent(motionEvent);
         }
     }
+
+
 }

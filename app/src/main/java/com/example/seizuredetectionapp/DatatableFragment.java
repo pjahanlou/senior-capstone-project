@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +47,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +69,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private Dialog dialog;
     private String isQuestionnaireComplete;
 
-    Button btnAddJournal, btnSettings;
+    Button btnExport, btnSettings;
     ListView journalList;
     ArrayList<String> journalInfo = new ArrayList<>();
     static ArrayAdapter adapter;
@@ -76,6 +85,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
+    int pdfHeight = 1080;
+    int pdfWidth = 720;
+    Bitmap bmp;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -137,14 +149,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
         //ui elements
-        btnAddJournal = root.findViewById(R.id.btnjournaladd);
+        btnExport = root.findViewById(R.id.btnjournalExport);
         btnSettings = root.findViewById(R.id.settings);
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
         sortSpinner = root.findViewById(R.id.sortSpinner);
 
         //Buttons
-        btnAddJournal.setOnClickListener(this);
+        btnExport.setOnClickListener(this);
 
         //item press listener
         journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -339,6 +351,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Journal journal  = snapshot.getValue(Journal.class);
                 journalInfo.add(journal.dateAndTime);
+                Log.d("journals", journal.toString());
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -378,9 +391,13 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
-            case(R.id.btnjournaladd):
-                intent = new Intent(getContext(), AddJournal.class);
-                startActivity(intent);
+            case(R.id.btnjournalExport):
+                try {
+                    createPdf();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
+                }
                 break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
@@ -426,5 +443,45 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             }
         });
         dialog.show();
+    }
+
+    public void createPdf() throws IOException{
+        //create pdf document
+        PdfDocument document = new PdfDocument();
+
+        Paint paint = new Paint();
+        Paint title = new Paint();
+
+        //set pdf height and width
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pdfWidth,pdfHeight,1).create();
+
+        //start pdf page
+        PdfDocument.Page page = document.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+
+        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+
+        //set size of text
+        title.setTextSize(20);
+
+        canvas.drawText("Logged Journals", 100, 200, title);
+
+        //close pdf page
+        document.finishPage(page);
+
+        //downloads directory
+        File file = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+
+        try{
+            //save file to downloads directory
+            document.writeTo(new FileOutputStream(file));
+
+        }catch(IOException e){
+            Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+
+        }
+        document.close();
     }
 }
