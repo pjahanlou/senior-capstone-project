@@ -44,4 +44,6 @@
     <string name="request_help">Request Help</string>
     <string name="home">Home</string>
     <string name="realtime">Realtime</string>
+    <string name="prefContactMethodTextMessage">Text Message</string>
+    <string name="prefContactMethodEmail">Email</string>
 </resources>

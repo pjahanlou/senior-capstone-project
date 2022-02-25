@@ -49,6 +49,8 @@ dependencies {
     // https://github.com/skyfishjy/android-ripple-background
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
+    implementation "com.github.skydoves:powerspinner:1.1.9"
+
     // https://github.com/hdodenhof/CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.google.android.material:material:1.0.0'
