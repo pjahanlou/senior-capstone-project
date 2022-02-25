@@ -53,7 +53,7 @@
             android:exported="true" />
         <activity
             android:name=".QuestionnairePersonal"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Questionaire"
             android:exported="false" />

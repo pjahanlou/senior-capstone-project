@@ -54,6 +54,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 
 
 /**
@@ -69,6 +72,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
     private Dialog dialog;
     private String isQuestionnaireComplete;
+    private Set<String> contactList = new HashSet<String>();
+    private SharedPreferences sharedPreferences;
 
     Button btnExport, btnSettings;
     ListView journalList;
@@ -126,9 +131,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         // Retrieving the user info from shared preferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         isQuestionnaireComplete = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.questionnaireComplete);
         Log.d("boolQ", ""+isQuestionnaireComplete);
+
+
 
         // Checking if the user has completed the questionnaire or not
         /*
@@ -325,7 +332,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             }
         });
-
         return root;
     }
 

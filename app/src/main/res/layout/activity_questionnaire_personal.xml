@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionnaireMedical">
+    tools:context=".QuestionnairePersonal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -26,7 +26,6 @@
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
@@ -36,8 +35,6 @@
             android:id="@+id/nameInput"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
             android:background="@drawable/edit_text_bg"
             android:ems="10"
             android:hint="@string/enter_name"
@@ -48,16 +45,18 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.133" />
 
         <Spinner
             android:id="@+id/contactPreferenceSpinner"
             android:entries="@array/Contact_Preference"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
             android:background="@drawable/edit_text_bg"
             android:ems="10"
             android:inputType="textPersonName"
@@ -67,34 +66,38 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ageInput" />
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.633" />
 
-        <EditText
-            android:id="@+id/ageInput"
+        <Button
+            android:id="@+id/dateOfBirthInput"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/edit_text_bg"
             android:ems="10"
-            android:hint="@string/enter_Age"
+            android:hint="Enter Date of Birth"
             android:inputType="text"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:background="@drawable/button_bg"
+            android:textColor="@color/Platinum"
+            android:textColorHint="@color/Platinum"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameInput" />
+            android:textStyle="bold"
+            android:paddingLeft="20dp"
+            android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.3" />
 
         <EditText
             android:id="@+id/countdownTimerInput"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
             android:background="@drawable/edit_text_bg"
             android:ems="10"
             android:hint="@string/Input_countdown_time"
@@ -105,21 +108,27 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contactPreferenceSpinner" />
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.467" />
 
         <Button
             android:id="@+id/addContact"
             android:layout_width="200dp"
             android:layout_height="48dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
             android:background="@drawable/button_bg"
             android:text="@string/Add_Contact"
             android:textSize="16dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/countdownTimerInput" />
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.8" />
 
         <Button
             android:id="@+id/submitQuestionairePersonal"
@@ -130,10 +139,12 @@
             android:text="Submit"
             android:textSize="16dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.886"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="612dp" />
+            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+            app:layout_constraintEnd_toEndOf="@+id/imageView4"
+            app:layout_constraintHorizontal_bias="0.94"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintVertical_bias="0.972" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

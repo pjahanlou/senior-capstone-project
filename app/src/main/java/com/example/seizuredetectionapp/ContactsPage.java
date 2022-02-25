@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,7 +25,12 @@ import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NavigableSet;
+import java.util.Set;
 
 
 public class ContactsPage extends AppCompatActivity implements Serializable {
@@ -33,6 +39,7 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
     ContactsAdapter adapter;
     View v;
     Button cancel, done;
+    LocalSettings localSettings;
 
 
     @Override
@@ -65,7 +72,8 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
             // returns the user to the previous page with the selected contacts
             case R.id.done_Button: {
                 addedContacts = adapter.listOfContacts;
-                Log.d("button click", "button Clicked on contact: " + addedContacts);
+                //localSettings.setContactList(addedContacts);
+                Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
                 finish();
             }
         }
@@ -118,7 +126,8 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
         }
         // uses our template and list of layouts to fill the contacts page
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<String> listOfContacts = new ArrayList<String>();
+        Set<String> listOfContacts = new HashSet<>();
+
         adapter = new ContactsAdapter(ContactsPage.this, contactList, v, listOfContacts);
         recyclerView.setAdapter(adapter);
     }
