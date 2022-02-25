@@ -53,8 +53,10 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 
 
 /**
@@ -75,9 +77,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     Button btnExport, btnSettings;
     ListView journalList;
-    ArrayList<String> journalInfo = new ArrayList<>();
-    static ArrayAdapter adapter;
+    ArrayList<JournalLayout> journalInfo = new ArrayList<>();
+    //static ArrayAdapter adapter;
     static ArrayAdapter sortedAdapter;
+    JournalAdapter adapter;
     Journal journal;
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -154,6 +157,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
+        //adapter
+
+
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
         btnSettings = root.findViewById(R.id.settings);
@@ -164,6 +170,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //Buttons
         btnExport.setOnClickListener(this);
 
+        adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
+        journalList.setAdapter(adapter);
         //item press listener
         journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -210,7 +218,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 editOrRemove.show();
             }
         });
-
+/*
         //spinner
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -263,9 +271,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         sortedAdapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, sortedJournalInfo);
         journalList.setAdapter(sortedAdapter);
 
+*/
+
         //listview set up
-        adapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, journalInfo);
-        journalList.setAdapter(adapter);
+        //adapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, journalInfo);
+        //journalList.setAdapter(adapter);
+
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -296,7 +307,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Log.d("child added", "child added " + snapshot);
                 Journal journal = snapshot.getValue(Journal.class);
-                journalInfo.add(journal.dateAndTime);
+                JournalLayout journalLayout = new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description);
+                journalInfo.add(journalLayout);
                 adapter.notifyDataSetChanged();
             }
 
@@ -325,9 +337,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     //remove single journal from firebase
     public void removeJournal(int pos){
-
+        JournalLayout journalLayout = journalInfo.get(pos);
         //gets key id for chosen journal
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -385,9 +397,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //create new AddJournal intent and pass the dateAndTime to the newly created activity
         Intent intent = new Intent(getContext(), AddJournal.class);
         intent.putExtra("key", true);
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+        JournalLayout journalLayout = journalInfo.get(pos);
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
 
-        intent.putExtra("id", journalInfo.get(pos));
+        intent.putExtra("id", journalLayout.getDateAndTime());
         startActivity(intent);
 
     }
