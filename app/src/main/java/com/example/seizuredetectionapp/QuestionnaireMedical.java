@@ -143,9 +143,13 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
         editor.putString(LocalSettings.DEFAULT, localSettings.getSeizureDuration());
+        editor.apply();
         editor.putString(LocalSettings.DEFAULT, localSettings.getHeight());
+        editor.apply();
         editor.putString(LocalSettings.DEFAULT, localSettings.getWeight());
+        editor.apply();
         editor.putString(LocalSettings.DEFAULT, localSettings.getSeizureFrequency());
+        editor.apply();
         editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
         editor.apply();
 

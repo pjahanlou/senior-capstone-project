@@ -129,26 +129,27 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
 
         //Log.d("added contacts test", "" + addedContacts.toString());
 
-        localSettings.setName(name);
-        localSettings.setCountdownTimer(countdownTimer);
-        localSettings.setAge(selectedDOB);
-        localSettings.setPreferredContactMethod(contactMethod);
-        localSettings.setContactList(addedContacts);
-        Log.d("wtf", "" + addedContacts);
+        questionnaireComplete("name", name);
+        questionnaireComplete("countdownTimer", countdownTimer);
+        questionnaireComplete("age", selectedDOB);
+        questionnaireComplete("preferred contact method", contactMethod);
 
-        questionnaireComplete();
+        Log.d("countdown timer Qp", "" + countdownTimer);
+
+        localSettings.setContactList(addedContacts);
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putStringSet("contact method", localSettings.getContactList());
+        editor.apply();
 
         Intent i = new Intent(this, QuestionnaireMedical.class);
         startActivity(i);
     }
 
-    private void questionnaireComplete(){
+    private void questionnaireComplete(String field, String value){
+        localSettings.setField(field, value);
+
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
-        editor.putString(LocalSettings.DEFAULT, localSettings.getCountdownTimer());
-        editor.putString(LocalSettings.DEFAULT, localSettings.getAge());
-        editor.putString(LocalSettings.DEFAULT, localSettings.getPreferredContactMethod());
-        editor.putStringSet(LocalSettings.DEFAULT, localSettings.getContactList());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getField(field));
         editor.apply();
     }
     
