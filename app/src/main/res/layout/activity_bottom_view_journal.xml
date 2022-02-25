@@ -30,18 +30,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
-            android:text="export"
-            />
+            android:text="export" />
 
 
-        <Spinner
-            android:id="@+id/sortSpinner"
+        <com.skydoves.powerspinner.PowerSpinnerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/title"
-            android:background="@android:drawable/btn_dropdown"
-            android:entries="@array/spinnerItems"
-            android:spinnerMode="dropdown" />
+            android:id="@+id/sortDropdown"
+            android:background="@drawable/button_bg"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:hint="Sort by"
+            android:padding="12dp"
+            android:textColor="@color/Platinum"
+            android:textColorHint="@color/Platinum"
+            android:textSize="16dp"
+            app:spinner_arrow_gravity="end"
+            app:spinner_arrow_padding="4dp"
+            app:spinner_divider_color="@color/purple_500"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="1dp"
+            app:spinner_item_array="@array/journalSortDropDown"
+            app:spinner_popup_animation="bounce"
+            app:spinner_popup_background="@color/LightSteelBlue"
+            app:spinner_popup_elevation="14dp"
+            android:layout_alignEnd="@id/title"/>
+
 
     </RelativeLayout>
 
