@@ -347,9 +347,13 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
         // contactList = sharedPreferences.getStringSet(LocalSettings.DEFAULT, LocalSettings.getContactList());
         userCountdownTime = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getCountdownTimer());
+        Log.d("countdown time", ""+userCountdownTime);
+        /*
         if(userCountdownTime.equals("0")){
             userCountdownTime = "30";
         }
+
+         */
 
         start();
 
