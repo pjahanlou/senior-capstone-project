@@ -5,4 +5,10 @@
         <item>@string/prefContactMethodTextMessage</item>
         <item>@string/prefContactMethodEmail</item>
     </array>
+
+    <array
+        name="journalSortDropDown">
+        <item>@string/journalSortDate</item>
+        <item>@string/journalSortDuration</item>
+    </array>
 </resources>

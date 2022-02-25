@@ -46,7 +46,7 @@
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
         <entry key="app/src/main/res/layout/activity_alert_page.xml" value="0.19305019305019305" />
         <entry key="app/src/main/res/layout/activity_app_settings.xml" value="0.18984375" />
-        <entry key="app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.15721728817922137" />
         <entry key="app/src/main/res/layout/activity_login_page.xml" value="0.25" />

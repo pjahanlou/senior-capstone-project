@@ -46,6 +46,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,6 +79,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     Button btnExport, btnSettings;
     ListView journalList;
+    ArrayList<Journal> journals = new ArrayList<>();
+    static ArrayAdapter adapter;
     ArrayList<JournalLayout> journalInfo = new ArrayList<>();
     //static ArrayAdapter adapter;
     static ArrayAdapter sortedAdapter;
@@ -88,7 +92,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-    private Spinner sortSpinner;
+    private PowerSpinnerView sortDropDown;
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
@@ -165,7 +169,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         btnSettings = root.findViewById(R.id.settings);
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
-        sortSpinner = root.findViewById(R.id.sortSpinner);
+        sortDropDown = root.findViewById(R.id.sortDropdown);
 
         //Buttons
         btnExport.setOnClickListener(this);
@@ -218,64 +222,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 editOrRemove.show();
             }
         });
-/*
-        //spinner
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = adapterView.getItemAtPosition(i).toString().trim();
-                Log.d("selected Item", "selected Item" + selectedItem);
-
-                // get a list of all the journals in firebase
-                //Populate ListView
-                myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Journal journal = snapshot.getValue(Journal.class);
-                        sortedJournalInfo.add(journal.dateAndTime);
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                // sort those journals
-                Collections.sort(sortedJournalInfo);
-                sortedAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        // send those journals to listview
-        sortedAdapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, sortedJournalInfo);
-        journalList.setAdapter(sortedAdapter);
-
-*/
-
-        //listview set up
-        //adapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, journalInfo);
-        //journalList.setAdapter(adapter);
 
 
         //Bottom Swipe up setup
@@ -302,11 +248,13 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
 
         //Populate ListView upon datatable start up
+
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Log.d("child added", "child added " + snapshot);
                 Journal journal = snapshot.getValue(Journal.class);
+                journals.add(journal);
                 JournalLayout journalLayout = new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description);
                 journalInfo.add(journalLayout);
                 adapter.notifyDataSetChanged();
@@ -330,6 +278,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        sortDropDown.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
+            @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
+                sortJournals(newItem);
             }
         });
         return root;
@@ -358,39 +312,28 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         adapter.notifyDataSetChanged();
     }
 
-    private void sortJournals(){
-        String selectedSortOption = sortSpinner.getSelectedItem().toString().trim();
-        ArrayList<String> journalInfo = new ArrayList<>();
+    private void sortJournals(String selectedItem){
+        ArrayList<String> sortedJournals = new ArrayList<>();
 
-        //Populate ListView
-        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Journal journal  = snapshot.getValue(Journal.class);
-                journalInfo.add(journal.dateAndTime);
-                Log.d("journals", journal.toString());
-                adapter.notifyDataSetChanged();
+        if (selectedItem.equals("Date")) {
+            for(Journal journal: journals){
+                if(!journal.dateAndTime.equals("")) {
+                    sortedJournals.add(journal.dateAndTime);
+                }
             }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                adapter.notifyDataSetChanged();
+        }
+        else if(selectedItem.equals("Duration")){
+            for(Journal journal: journals){
+                if(!journal.durationOfSeizure.equals("")) {
+                    sortedJournals.add(journal.durationOfSeizure);
+                }
             }
+        }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        Collections.sort(sortedJournals, Collections.reverseOrder());
+        adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
+        journalList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public void editJournal(int pos){

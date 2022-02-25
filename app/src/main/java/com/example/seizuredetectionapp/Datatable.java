@@ -52,7 +52,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-    private Spinner sortSpinner;
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
@@ -72,7 +71,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
         btnSettings = findViewById(R.id.settings);
         btnHelpRequest = findViewById(R.id.helpRequest);
         journalList = findViewById(R.id.journalList);
-        sortSpinner = findViewById(R.id.sortSpinner);
 
         //Buttons
         btnAddJournal.setOnClickListener(this);
@@ -81,9 +79,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
 
         //item press listener
         journalList.setOnItemClickListener(this);
-
-        //spinner
-        sortSpinner.setOnItemSelectedListener(this);
 
         // send those journals to listview
         sortedAdapter = new ArrayAdapter<>(Datatable.this, R.layout.listview_textformat, sortedJournalInfo);
@@ -174,7 +169,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     }
 
     private void sortJournals(){
-        String selectedSortOption = sortSpinner.getSelectedItem().toString().trim();
         ArrayList<String> journalInfo = new ArrayList<>();
 
         //Populate ListView

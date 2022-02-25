@@ -46,4 +46,6 @@
     <string name="realtime">Realtime</string>
     <string name="prefContactMethodTextMessage">Text Message</string>
     <string name="prefContactMethodEmail">Email</string>
+    <string name="journalSortDate">Date</string>
+    <string name="journalSortDuration">Duration</string>
 </resources>
