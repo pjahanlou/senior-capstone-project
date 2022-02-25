@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <targetSelectedWithDropDown>
+    <runningDeviceTargetSelectedWithDropDown>
       <Target>
-        <type value="QUICK_BOOT_TARGET" />
+        <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
@@ -20,6 +20,13 @@
     <timeTargetWasSelectedWithDropDown value="2022-02-25T06:49:41.296525400Z" />
     <timeTargetWasSelectedWithDropDown value="2022-02-24T23:38:09.293776Z" />
     <timeTargetWasSelectedWithDropDown value="2022-02-25T02:12:18.468215400Z" />
+
+            <value value="C:\Users\willc\.android\avd\Nexus_4_API_30.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </runningDeviceTargetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2022-02-25T15:14:29.014473Z" />
 
   </component>
 </project>

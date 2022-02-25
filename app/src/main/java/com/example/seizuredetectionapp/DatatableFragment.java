@@ -35,6 +35,11 @@ import android.widget.Toast;
 
 import android.widget.Button;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,6 +57,7 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +104,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     int pdfHeight = 1080;
     int pdfWidth = 720;
     Bitmap bmp;
+
+    LineChart lineChart;
+    Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
+    ArrayList<String> xAxis = new ArrayList<>();
+    ArrayList<Entry> yAxis = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -160,8 +171,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-        //adapter
-
+        generateChart(root);
 
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
@@ -221,7 +231,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 editOrRemove.show();
             }
         });
-
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -450,5 +459,33 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         }
         document.close();
+    }
+
+    public void generateChart(View root){
+        //Implements the graph to view the timeline of the users journals
+        lineChart = root.findViewById(R.id.timeLineDisplayGraph);
+        graphDisplayYear = root.findViewById(R.id.showGraphYear);
+        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
+        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
+
+        //ArrayList<String> JournalDates = new ArrayList<>();
+
+        //JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
+        //Log.d("journal checker", JournalDates.toString());
+        int dataPoints = 12;
+        for(int i = 0; i < dataPoints; i++){
+            //git journals retrieved from firebase here
+            yAxis.add(new Entry(i, i));
+            xAxis.add(i, String.valueOf(i));
+        }
+
+        String[] xAxisString = new String[xAxis.size()];
+        for(int i = 0; i < xAxis.size(); i++){
+            xAxisString[i] = xAxis.get(i).toString();
+        }
+
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+        LineDataSet lineDataSet = new LineDataSet(yAxis, "Journal Entries");
+        lineChart.setData(new LineData());
     }
 }
