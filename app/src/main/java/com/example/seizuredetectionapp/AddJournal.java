@@ -75,8 +75,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
             edit = extras.getBoolean("key");
             ID = extras.getString("id");
             Log.d("journal ID","id" + ID);
+            Log.d("edit boolean", "" + edit.toString());
         }
-
+        Log.d("edit boolean 2", "" + edit.toString());
         if(edit){
             //Retrieving saved journal information and populating the EditText
             popJournalText();
@@ -118,14 +119,24 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
 
-        Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription);
+
 
         if(datetime.isEmpty()){
             dateAndTime.requestFocus();
             Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
             return;
         }
+
+        if(seizureDescription.isEmpty()){
+            seizureDescription = "None";
+        }
+
+        if(durationOfSeizure.isEmpty()){
+            durationOfSeizure = "0";
+        }
+
+        Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
+                seizureTrigger, seizureDescription, postSeizureDescription);
 
         // Sends HashMap of entry to Firebase DB
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -197,7 +208,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
     public void popJournalText(){
         //set existing journal entries to each edittext
-
+        Log.d("1", "made it here");
         userTable.child("Journals").orderByChild("dateAndTime").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
@@ -206,9 +217,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
                 for (DataSnapshot childSnapshot: snapshot.getChildren()) {
                     journalKey = childSnapshot.getKey();
-                    Log.d("date1", "date1 = " + journalKey);
                     editJournal = childSnapshot.getValue(Journal.class);
-                    Log.d("date", "date = " + editJournal.toString());
+                    Log.d("2", "made it here " + editJournal.toString());
 
                     //Get values in EditText
                     AddJournal.updateDateTime = editJournal.dateAndTime;

@@ -51,6 +51,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +61,11 @@ import java.sql.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarOutputStream;
 
 
 /**
@@ -74,12 +81,15 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
     private Dialog dialog;
     private String isQuestionnaireComplete;
+    private Set<String> contactList = new HashSet<String>();
+    private SharedPreferences sharedPreferences;
 
     Button btnExport, btnSettings;
     ListView journalList;
-    ArrayList<String> journalInfo = new ArrayList<>();
-    static ArrayAdapter adapter;
+    ArrayList<Journal> journals = new ArrayList<>();
+    ArrayList<JournalLayout> journalInfo = new ArrayList<>();
     static ArrayAdapter sortedAdapter;
+    JournalAdapter adapter;
     Journal journal;
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -87,7 +97,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-    private Spinner sortSpinner;
+    private PowerSpinnerView sortDropDown;
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
@@ -135,16 +145,18 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         // Retrieving the user info from shared preferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         isQuestionnaireComplete = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.questionnaireComplete);
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
+
+
         // Checking if the user has completed the questionnaire or not
-        /*
+
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-         */
+
 
         // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -161,17 +173,18 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         generateChart(root);
 
-
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
         btnSettings = root.findViewById(R.id.settings);
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
-        sortSpinner = root.findViewById(R.id.sortSpinner);
+        sortDropDown = root.findViewById(R.id.sortDropdown);
 
         //Buttons
         btnExport.setOnClickListener(this);
 
+        adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
+        journalList.setAdapter(adapter);
         //item press listener
         journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -219,59 +232,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        //spinner
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = adapterView.getItemAtPosition(i).toString().trim();
-                Log.d("selected Item", "selected Item" + selectedItem);
-
-                // get a list of all the journals in firebase
-                //Populate ListView
-                myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Journal journal = snapshot.getValue(Journal.class);
-                        sortedJournalInfo.add(journal.dateAndTime);
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                // sort those journals
-                Collections.sort(sortedJournalInfo);
-                Log.d("check for journal list", "" + sortedJournalInfo);
-                sortedAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        // send those journals to listview
-        sortedAdapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, sortedJournalInfo);
-        journalList.setAdapter(sortedAdapter);
-
         //listview set up
         adapter = new ArrayAdapter<>(getContext(), R.layout.listview_textformat, journalInfo);
         journalList.setAdapter(adapter);
@@ -300,12 +260,15 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
 
         //Populate ListView upon datatable start up
+
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Log.d("child added", "child added " + snapshot);
                 Journal journal = snapshot.getValue(Journal.class);
-                journalInfo.add(journal.dateAndTime);
+                journals.add(journal);
+                JournalLayout journalLayout = new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description);
+                journalInfo.add(journalLayout);
                 adapter.notifyDataSetChanged();
             }
 
@@ -330,14 +293,19 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+        sortDropDown.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
+            @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
+                sortJournals(newItem);
+            }
+        });
         return root;
     }
 
     //remove single journal from firebase
     public void removeJournal(int pos){
-
+        JournalLayout journalLayout = journalInfo.get(pos);
         //gets key id for chosen journal
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -356,48 +324,45 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         adapter.notifyDataSetChanged();
     }
 
-    private void sortJournals(){
-        String selectedSortOption = sortSpinner.getSelectedItem().toString().trim();
-        ArrayList<String> journalInfo = new ArrayList<>();
+    private void sortJournals(String selectedItem){
+        ArrayList<JournalLayout> sortedJournals = new ArrayList<>();
 
-        //Populate ListView
-        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Journal journal  = snapshot.getValue(Journal.class);
-                journalInfo.add(journal.dateAndTime);
-                Log.d("journals", journal.toString());
-                adapter.notifyDataSetChanged();
+        for(Journal journal: journals){
+            if(!journal.dateAndTime.equals("")) {
+                sortedJournals.add(new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description));
             }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                adapter.notifyDataSetChanged();
-            }
+        }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+        if (selectedItem.equals("Date")) {
+            Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
+                @Override
+                public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    return t1.getDateAndTime().compareTo(journalLayout.getDateAndTime());
+                }
+            });
+        }
+        else if(selectedItem.equals("Duration")){
+            Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
+                @Override
+                public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    return t1.getDuration().compareTo(journalLayout.getDuration());
+                }
+            });
+        }
 
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
+        journalList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public void editJournal(int pos){
         //create new AddJournal intent and pass the dateAndTime to the newly created activity
         Intent intent = new Intent(getContext(), AddJournal.class);
         intent.putExtra("key", true);
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalInfo.get(pos));
+        JournalLayout journalLayout = journalInfo.get(pos);
+        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
 
-        intent.putExtra("id", journalInfo.get(pos));
+        intent.putExtra("id", journalLayout.getDateAndTime());
         startActivity(intent);
 
     }

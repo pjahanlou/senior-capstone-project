@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -123,6 +124,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 updateFieldInFirebase("seizureFrequencyPerMonth", seizureFrequencyTextView);
                 break;
             case R.id.changeContactList:
+                startActivity(new Intent(AppSettings.this, UpdateContacts.class));
                 break;
         }
     }
@@ -135,20 +137,6 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
             textview.requestFocus();
             return;
         }
-
-        /*
-        settingsTable.child(field).setValue(newField).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Toast.makeText(AppSettings.this, field + " updated.", Toast.LENGTH_LONG).show();
-                Log.d(field, "Updated successfully");
-            }
-            else{
-                Toast.makeText(AppSettings.this, field + " update failed!", Toast.LENGTH_LONG).show();
-                Log.d(field, task.getException().toString());
-            }
-        });
-
-         */
 
         // Writing the new user data to shared preferences
         localSettings.setField(field, value);
