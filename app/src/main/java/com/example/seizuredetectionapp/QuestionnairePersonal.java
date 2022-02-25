@@ -3,11 +3,15 @@ package com.example.seizuredetectionapp;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,31 +26,19 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable {
-    public EditText nameInput, countdownTimerInput, ageInput;
-    public Button submitQuestionnaireButton, addContactButton;
+public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable, DatePickerDialog.OnDateSetListener {
+    public EditText nameInput, countdownTimerInput;
+    public Button submitQuestionnaireButton, addContactButton, dateOfBirth;
     public Spinner contactMethodSpinner;
     public FirebaseAuth mAuth;
-
-    //constructs and instance of an object containing the questionnaire data
-    public Questionnaire contactListObject = new Questionnaire
-            (
-                    "",
-                    addedContacts,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "");
+    public String selectedDOB;
+    public LocalSettings localSettings;
+    public Set<String> listOfContacts = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +50,14 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
 
         // Get the UI elements
         nameInput = findViewById(R.id.nameInput);
-        ageInput = findViewById(R.id.ageInput);
+        dateOfBirth = findViewById(R.id.dateOfBirthInput);
         contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
         countdownTimerInput = findViewById(R.id.countdownTimerInput);
         addContactButton = findViewById(R.id.addContact);
         submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
 
         // Add click listeners to buttons
+        dateOfBirth.setOnClickListener(this);
         addContactButton.setOnClickListener(this);
         submitQuestionnaireButton.setOnClickListener(this);
 
@@ -73,6 +66,19 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v){
         switch(v.getId()){
+            case R.id.dateOfBirthInput:
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        this,
+                        0,
+                        this,
+                        Calendar.getInstance().get(Calendar.YEAR),
+                        Calendar.getInstance().get(Calendar.MONTH),
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                );
+                datePickerDialog.show();
+
+                break;
+
             case R.id.addContact:
                 Intent intent = new Intent(this, ContactsPage.class);
                 startActivity(intent);
@@ -87,9 +93,9 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
         String name = nameInput.getText().toString().trim();
-        String age = ageInput.getText().toString().trim();
         String contactMethod = contactMethodSpinner.getSelectedItem().toString().trim();
         String countdownTimer = countdownTimerInput.getText().toString().trim();
+
 
         //checks to see if any inputs are empty and alerts user.
         if (name.isEmpty()) {
@@ -98,11 +104,11 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return;
         }
 
-        if (age.isEmpty()) {
-            ageInput.setError("Age is required!");
-            ageInput.requestFocus();
+        /*if (selectedDOB.equals(null)) {
+            dateOfBirth.setError("Age is required!");
+            dateOfBirth.requestFocus();
             return;
-        }
+        }*/
 
         if (countdownTimer.isEmpty()) {
             countdownTimerInput.setError("Countdown timer is required!");
@@ -110,15 +116,39 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return;
         }
 
-        //Store Data in Questionnaire class object
-        contactListObject.name = name;
-        contactListObject.age = age;
-        contactListObject.addedContacts = addedContacts;
-        contactListObject.contactMethod = contactMethod;
-        contactListObject.countdownTimer = countdownTimer;
+        //Log.d("added contacts test", "" + addedContacts.toString());
+
+        localSettings.setName(name);
+        localSettings.setCountdownTimer(countdownTimer);
+        localSettings.setAge(selectedDOB);
+        localSettings.setPreferredContactMethod(contactMethod);
+        localSettings.setContactList(addedContacts);
+        Log.d("wtf", "" + addedContacts);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        Set<String> contact = sharedPreferences.getStringSet("pen", localSettings.getContactList());
+        Log.d("contactList2", ""+contact);
+
+        questionnaireComplete();
 
         Intent i = new Intent(this, QuestionnaireMedical.class);
-        i.putExtra("contactListObject", contactListObject);
         startActivity(i);
+    }
+
+    private void questionnaireComplete(){
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getCountdownTimer());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getAge());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getPreferredContactMethod());
+        editor.putStringSet(LocalSettings.DEFAULT, localSettings.getContactList());
+        editor.apply();
+
+        Log.d("Local Storage", "" + localSettings.getCountdownTimer());
+    }
+    
+    @Override
+    public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
+        selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 }
