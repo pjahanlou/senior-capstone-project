@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,9 +21,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,16 +38,18 @@ import java.util.Set;
 public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable, DatePickerDialog.OnDateSetListener {
     public EditText nameInput, countdownTimerInput;
     public Button submitQuestionnaireButton, addContactButton, dateOfBirth;
-    public Spinner contactMethodSpinner;
+    public PowerSpinnerView contactMethodSpinner;
     public FirebaseAuth mAuth;
     public String selectedDOB;
     public LocalSettings localSettings;
     public Set<String> listOfContacts = new HashSet<>();
+    public String contactMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionnaire_personal);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         //firebase DB
         mAuth = FirebaseAuth.getInstance();
@@ -60,6 +66,12 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dateOfBirth.setOnClickListener(this);
         addContactButton.setOnClickListener(this);
         submitQuestionnaireButton.setOnClickListener(this);
+
+        contactMethodSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
+            @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
+                contactMethod = newItem;
+            }
+        });
 
     }
 
@@ -93,7 +105,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
         String name = nameInput.getText().toString().trim();
-        String contactMethod = contactMethodSpinner.getSelectedItem().toString().trim();
         String countdownTimer = countdownTimerInput.getText().toString().trim();
 
 
@@ -125,10 +136,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         localSettings.setContactList(addedContacts);
         Log.d("wtf", "" + addedContacts);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        Set<String> contact = sharedPreferences.getStringSet("pen", localSettings.getContactList());
-        Log.d("contactList2", ""+contact);
-
         questionnaireComplete();
 
         Intent i = new Intent(this, QuestionnaireMedical.class);
@@ -143,8 +150,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         editor.putString(LocalSettings.DEFAULT, localSettings.getPreferredContactMethod());
         editor.putStringSet(LocalSettings.DEFAULT, localSettings.getContactList());
         editor.apply();
-
-        Log.d("Local Storage", "" + localSettings.getCountdownTimer());
     }
     
     @Override
