@@ -4,7 +4,9 @@ import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable, DatePickerDialog.OnDateSetListener {
     public EditText nameInput, countdownTimerInput;
@@ -33,21 +37,8 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     public Spinner contactMethodSpinner;
     public FirebaseAuth mAuth;
     public String selectedDOB;
-
-    //constructs and instance of an object containing the questionnaire data
-    public Questionnaire contactListObject = new Questionnaire
-            (
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "");
+    public LocalSettings localSettings;
+    public Set<String> listOfContacts = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +96,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         String contactMethod = contactMethodSpinner.getSelectedItem().toString().trim();
         String countdownTimer = countdownTimerInput.getText().toString().trim();
 
+
         //checks to see if any inputs are empty and alerts user.
         if (name.isEmpty()) {
             nameInput.setError("Contact method is required!");
@@ -112,11 +104,11 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return;
         }
 
-        if (selectedDOB.isEmpty()) {
+        /*if (selectedDOB.equals(null)) {
             dateOfBirth.setError("Age is required!");
             dateOfBirth.requestFocus();
             return;
-        }
+        }*/
 
         if (countdownTimer.isEmpty()) {
             countdownTimerInput.setError("Countdown timer is required!");
@@ -124,18 +116,37 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return;
         }
 
-        //Store Data in Questionnaire class object
-        contactListObject.name = name;
-        contactListObject.dateOfBirth = selectedDOB;
-        contactListObject.addedContacts = addedContacts;
-        contactListObject.contactMethod = contactMethod;
-        contactListObject.countdownTimer = countdownTimer;
+        //Log.d("added contacts test", "" + addedContacts.toString());
+
+        localSettings.setName(name);
+        localSettings.setCountdownTimer(countdownTimer);
+        localSettings.setAge(selectedDOB);
+        localSettings.setPreferredContactMethod(contactMethod);
+        localSettings.setContactList(addedContacts);
+        Log.d("wtf", "" + addedContacts);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        Set<String> contact = sharedPreferences.getStringSet("pen", localSettings.getContactList());
+        Log.d("contactList2", ""+contact);
+
+        questionnaireComplete();
 
         Intent i = new Intent(this, QuestionnaireMedical.class);
-        i.putExtra("contactListObject", contactListObject);
         startActivity(i);
     }
 
+    private void questionnaireComplete(){
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getCountdownTimer());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getAge());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getPreferredContactMethod());
+        editor.putStringSet(LocalSettings.DEFAULT, localSettings.getContactList());
+        editor.apply();
+
+        Log.d("Local Storage", "" + localSettings.getCountdownTimer());
+    }
+    
     @Override
     public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
         selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;

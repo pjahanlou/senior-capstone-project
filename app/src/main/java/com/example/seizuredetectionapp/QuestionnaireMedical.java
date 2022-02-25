@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.Set;
 
 
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -127,38 +128,27 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         }
 
         // grab data from last questionnaire
-        Intent i = getIntent();
-        Questionnaire personalObject = (Questionnaire)i.getSerializableExtra("contactListObject");
-
-        Questionnaire personal = new Questionnaire(personalObject.name, personalObject.countdownTimer,
-                personalObject.dateOfBirth, personalObject.contactMethod, seizureDuration, height,
-                weight, seizureFrequencyPerMonth, seizureStartD, seizureT, sex);
-
-        Log.d("confirmation", "completed list: " + personal.toString());
-
-        // Push to firebase
-        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Users").child(currentUserUID).child("Settings");
-
-        myRef.setValue(personal).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(QuestionnaireMedical.this, "Questionnaire saved.", Toast.LENGTH_LONG).show();
-                questionnaireComplete();
-                startActivity(new Intent(QuestionnaireMedical.this, Navbar.class));
-            }
-            else {
-                Toast.makeText(QuestionnaireMedical.this, "Questionnaire save failed.", Toast.LENGTH_LONG).show();
-            }
-        });
+        localSettings.setSeizureDuration(seizureDuration);
+        localSettings.setHeight(height);
+        localSettings.setWeight(weight);
+        localSettings.setSeizureFrequency(seizureFrequencyPerMonth);
+        questionnaireComplete();
+        
     }
 
     private void questionnaireComplete(){
         localSettings.setQuestionnaireComplete("1");
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putString(LocalSettings.DEFAULT, localSettings.getSeizureDuration());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getHeight());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getWeight());
+        editor.putString(LocalSettings.DEFAULT, localSettings.getSeizureFrequency());
         editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
         editor.apply();
+
+        Log.d("Local Storage", "" + localSettings.getCountdownTimer());
+        startActivity(new Intent(QuestionnaireMedical.this, Navbar.class));
     }
 
     @Override

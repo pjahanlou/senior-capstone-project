@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import android.app.Application;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LocalSettings extends Application {
@@ -16,7 +17,7 @@ public class LocalSettings extends Application {
     public static String weight;
     public static String seizureFrequency;
     public static String questionnaireComplete;
-    public static Set<String> contactList;
+    public static Set<String> contactList = new HashSet<>();
     public static String preferredContactMethod;
 
     // A wrapper function for the app settings activity

@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Questionnaire implements Serializable{
 
@@ -16,7 +18,7 @@ public class Questionnaire implements Serializable{
     public String dateOfBirth;
     public String seizureT;
     public String sex;
-    public static ArrayList<String> addedContacts;
+    public static Set<String> addedContacts = new HashSet<>();
     public String seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStart;
 
     public Questionnaire(){
@@ -24,6 +26,7 @@ public class Questionnaire implements Serializable{
 
     // Creates an Object containing the data given by the questionnaire.
     public Questionnaire(String name,
+                         Set<String> addedContacts,
                          String countdownTimer,
                          String dateOfBirth,
                          String contactMethod,
@@ -36,6 +39,7 @@ public class Questionnaire implements Serializable{
                          String sex
             ){
         this.name = name;
+        this.addedContacts = addedContacts;
         this.countdownTimer = countdownTimer;
         this.dateOfBirth = dateOfBirth;
         this.contactMethod = contactMethod;
