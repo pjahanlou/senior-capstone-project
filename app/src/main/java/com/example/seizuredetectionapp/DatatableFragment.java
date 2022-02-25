@@ -141,11 +141,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
 
         // Checking if the user has completed the questionnaire or not
-        /*
+
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-         */
+
 
         // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
