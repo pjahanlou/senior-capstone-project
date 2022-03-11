@@ -344,7 +344,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
+        //preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
+        preferredContactMethod = "text message";
         // contactList = sharedPreferences.getStringSet(LocalSettings.DEFAULT, LocalSettings.getContactList());
         userCountdownTime = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getCountdownTimer());
         Log.d("countdown time", ""+userCountdownTime);

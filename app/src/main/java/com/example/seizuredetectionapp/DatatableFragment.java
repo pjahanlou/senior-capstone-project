@@ -153,9 +153,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         // Checking if the user has completed the questionnaire or not
 
+        /*
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
+
+         */
 
 
         // Initializing Firebase
@@ -256,7 +259,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
 
         //Populate ListView upon datatable start up
-
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
