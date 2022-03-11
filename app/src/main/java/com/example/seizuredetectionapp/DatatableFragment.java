@@ -182,6 +182,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
         sortDropDown = root.findViewById(R.id.sortDropdown);
+        graphDisplayYear = root.findViewById(R.id.showGraphYear);
+        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
+        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
 
         //Buttons
         btnExport.setOnClickListener(this);
@@ -369,6 +372,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
+            case(R.id.showGraphYear):
+                ArrayList<String> JournalDates = new ArrayList<>();
+                JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
+
+                Log.d("journal checker", JournalDates.toString());
             case(R.id.btnjournalExport):
                 try {
                     createPdf();
@@ -466,14 +474,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void generateChart(View root){
         //Implements the graph to view the timeline of the users journals
         lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-        graphDisplayYear = root.findViewById(R.id.showGraphYear);
-        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
-        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
 
-        //ArrayList<String> JournalDates = new ArrayList<>();
+        ArrayList<String> JournalDates = new ArrayList<>();
+        JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
 
-        //JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
-        //Log.d("journal checker", JournalDates.toString());
+        Log.d("journal checker", JournalDates.toString());
+
         int dataPoints = 12;
         for(int i = 0; i < dataPoints; i++){
             //git journals retrieved from firebase here
