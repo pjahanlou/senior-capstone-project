@@ -146,6 +146,11 @@ public class MainSettings extends AppCompatActivity implements View.OnClickListe
      */
     private void logoutUser(){
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(MainSettings.this, LoginPage.class));
+        Intent intent = new Intent(this, LoginPage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

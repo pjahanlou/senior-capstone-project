@@ -67,7 +67,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginPage"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
