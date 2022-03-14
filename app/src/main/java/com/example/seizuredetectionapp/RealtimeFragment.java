@@ -11,13 +11,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
-
+    Button btnEDA;
+    Button btnMM;
 
     public RealtimeFragment() {
         // Required empty public constructor
@@ -33,6 +35,9 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.fragment_realtime, container, false);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_realtime, container, false);
     }
