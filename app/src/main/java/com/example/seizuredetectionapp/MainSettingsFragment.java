@@ -9,8 +9,10 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -41,7 +45,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private Button profileButton, appButton, logoutButton;
 
     private FirebaseUser currentUser;
-
+    private String currentUserUID;
     private String username, email;
 
     private Uri imageUri;
@@ -85,12 +89,18 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        // Getting user info
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserUID = currentUser.getUid();
+        email = currentUser.getEmail();
+
         // initializing firebase cloud storage
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        // Getting user info
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        email = currentUser.getEmail();
+        // Setting the user picture at the beginning
+        storageReference.child("images/"+currentUserUID).getDownloadUrl().addOnSuccessListener(uri -> userPicture.setImageURI(uri)).addOnFailureListener(exception -> {
+            Toast.makeText(getContext(), "Picture upload failed!", Toast.LENGTH_LONG).show();
+        });
 
         // Retrieving the user name and updating the main page
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
@@ -109,7 +119,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
                         userPicture.setImageURI(imageUri);
 
                         // Uploading user image to firebase cloud storage
-                        storageReference.putFile(imageUri)
+                        storageReference.child("images/"+currentUserUID).putFile(imageUri)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     Toast.makeText(getContext(), "Picture uploaded successfully!", Toast.LENGTH_LONG).show();
                                 }).addOnFailureListener(e -> {
