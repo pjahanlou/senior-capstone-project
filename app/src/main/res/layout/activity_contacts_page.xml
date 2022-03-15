@@ -4,18 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Platinum"
     tools:context=".ContactsPage">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contactRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="665dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        tools:listitem="layout/item_contact">
-        >
-
-    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/cancel_Button"
@@ -25,6 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/button_bg"
         android:text="Cancel"
         android:textSize="16dp"
@@ -41,5 +32,15 @@
         android:text="Done"
         android:textSize="16dp"
         android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contactRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/cancel_Button"
+        android:layout_alignParentBottom="true"
+        tools:listitem="layout/item_contact">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>
