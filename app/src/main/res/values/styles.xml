@@ -20,7 +20,6 @@
     </style>
 
     <style name="SliderTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Add attributes here -->
         <item name="colorPrimary">@color/purple_500</item>
     </style>
 
