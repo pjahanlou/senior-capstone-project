@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/listview_rounded_boarder.xml" value="0.1" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/listview_rounded_border.xml" value="0.18385416666666668" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.22" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/custom_newuser_dialog.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/journal_item_listview.xml" value="0.10280797101449275" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.22" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/journal_item_listview.xml" value="0.25" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.103125" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_app_settings.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.25" />

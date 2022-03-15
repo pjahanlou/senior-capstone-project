@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/LightSteelBlue">
+    android:layout_height="wrap_content"
+    android:background="@drawable/listview_rounded_border">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@android:drawable/ic_dialog_dialer" />
+
 
     <TextView
         android:id="@+id/lvDateAndTime"
-        android:layout_width="match_parent"
+        android:layout_width="306dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:text="dateTime"
-        android:textSize="20sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textSize="22sp" />
+
 
     <TextView
         android:id="@+id/lvDuration"
-        android:layout_width="match_parent"
+        android:layout_width="306dp"
         android:layout_height="wrap_content"
         android:text="duration"
-        android:textSize="16sp"
-        android:textColor="@color/black"/>
+        android:layout_below="@+id/lvDateAndTime"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/lvDescription"
-        android:layout_width="match_parent"
+        android:layout_width="306dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
         android:text="description"
-        android:textSize="16sp"/>
+        android:textColor="@color/black"
+        android:layout_below="@+id/lvDuration"
+        android:textSize="18sp" />
 
-</LinearLayout>
+
+
+
+
+
+
+
+
+</RelativeLayout>
