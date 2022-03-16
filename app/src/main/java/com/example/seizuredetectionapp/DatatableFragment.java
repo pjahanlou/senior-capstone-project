@@ -486,7 +486,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 else {
                     JournalDates.add(String.valueOf(task.getResult().getValue()));
                     Log.d("graph checker", JournalDates.toString());
-                    Toast.makeText(DatatableFragment.this.getContext(), JournalDates.get(0), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), JournalDates.get(0), Toast.LENGTH_SHORT).show();
                 }
             }
         });

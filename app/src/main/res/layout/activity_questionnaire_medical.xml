@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".Questionaire">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintVertical_bias="0"
+        android:elevation="7dp"
+        android:src="@drawable/app_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -13,23 +25,8 @@
         android:background="@color/LightSteelBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:text="Medical Survey"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView"
@@ -39,241 +36,193 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/header"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/vie_bg" />
 
-        <TextView
-            android:id="@+id/textHelp"
-            android:layout_width="144dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Longest Seizure Duration"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".8"
+            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.098" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/textHelp4"
-            android:layout_width="144dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Average Seizure duration"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.428" />
+            <LinearLayout
+                android:id="@+id/seizureTypeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/openDatePickerDialog">
 
-        <TextView
-            android:id="@+id/textHelp5"
-            android:layout_width="144dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Number of Seizures per Week"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.538" />
+                <TextView
+                    android:id="@+id/seizureTypeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seizure Type(s)"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/openDatePickerDialog" />
 
-        <TextView
-            android:id="@+id/textHelp6"
-            android:layout_width="144dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Seizure Type"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.649" />
 
-        <TextView
-            android:id="@+id/textHelp7"
-            android:layout_width="144dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Date of First Seizure"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.067"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.759" />
+                <com.hootsuite.nachos.NachoTextView
+                    android:id="@+id/nacho_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipTextColor="@color/black"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
+                    android:paddingLeft="20dp"
+                    android:paddingVertical="5dp"
+                    android:hint="Types"
+                    android:textColorHint="@color/black"
+                    app:chipTextSize="16dp"
+                    app:chipHeight="30dp"
+                    app:chipVerticalSpacing="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/openDatePickerDialog"/>
 
-        <Button
-            android:id="@+id/openDatePickerDialog"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_bg"
-            android:hint="Select Date"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            android:textColor="@color/Platinum"
-            android:textColorHint="@color/Platinum"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.759" />
+            </LinearLayout>>
 
-        <NumberPicker
-            android:id="@+id/seizureDurationMinutes"
-            android:theme="@style/NumberPicker"
-            android:selectionDividerHeight="0dp"
-            android:layout_width="90dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:inputType="number"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.607"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.098" />
+            <Button
+                android:id="@+id/openDatePickerDialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:hint="First Seizure"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seizureTypeLayout"
+                app:layout_constraintBottom_toTopOf="@id/seizureFrequencyLayout"/>
 
-        <NumberPicker
-            android:id="@+id/seizureDurationSeconds"
-            android:theme="@style/NumberPicker"
-            android:selectionDividerHeight="0dp"
-            android:layout_width="90dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:inputType="number"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.95"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.098" />
-      
-        <EditText
-            android:id="@+id/averageSeizureTime"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.428" />
+            <LinearLayout
+                android:id="@+id/seizureFrequencyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/openDatePickerDialog"
+                app:layout_constraintBottom_toTopOf="@+id/averageSeizureDurationLayout">
 
-        <EditText
-            android:id="@+id/seizureFrequency"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.538" />
+                <TextView
+                    android:id="@+id/seizureFrequencyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seizure Frequency per Week"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/openDatePickerDialog" />
 
-        <Spinner
-            android:id="@+id/seizureType"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_bg"
-            android:ems="10"
-            android:entries="@array/seizureTypeInput"
-            android:inputType="text"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.649" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/seizureFrequencySlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="20"
+                    android:stepSize="1.0"
+                    app:layout_constraintTop_toBottomOf="@id/seizureFrequencyTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:theme="@style/SliderTheme"
+                    android:contentDescription="Weight"/>
 
-        <Button
-            android:id="@+id/submitQuestionnaireMedical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"
-            android:text="Next"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.97"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            app:layout_constraintVertical_bias="0.97" />
+            </LinearLayout>>
+
+            <LinearLayout
+                android:id="@+id/averageSeizureDurationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/seizureFrequencyLayout"
+                app:layout_constraintBottom_toTopOf="@+id/longestSeizureLayout">
+                <TextView
+                    android:id="@+id/averageSeizureDurationTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Average Seizure Duration"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/seizureFrequencySlider" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/averageSeizureDurationSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="1"
+                    android:valueTo="11"
+                    android:stepSize="1.0"
+                    app:layout_constraintTop_toBottomOf="@id/averageSeizureDurationTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:theme="@style/SliderTheme"
+                    android:contentDescription="Average Seizure"/>
+            </LinearLayout>>
+
+            <LinearLayout
+                android:id="@+id/longestSeizureLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/averageSeizureDurationLayout"
+                app:layout_constraintBottom_toTopOf="@id/submitQuestionnaireMedical">
+                <TextView
+                    android:id="@+id/longestSeizureTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Longest Seizure"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/averageSeizureDurationSlider" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/longestSeizureSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="60"
+                    android:stepSize="1.0"
+                    app:layout_constraintTop_toBottomOf="@id/longestSeizureTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:theme="@style/SliderTheme"
+                    android:contentDescription="Longest Seizure"/>
+            </LinearLayout>>
+
+            <com.royrodriguez.transitionbutton.TransitionButton
+                android:id="@+id/submitQuestionnaireMedical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                app:defaultColor="@color/purple_500"
+                app:loaderColor="@color/LightSteelBlue"
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_bg"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
