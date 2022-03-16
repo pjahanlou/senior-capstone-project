@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +27,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +56,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private String username, email;
 
     private Uri imageUri;
+    File localFile = null;
 
     private StorageReference storageReference;
 
@@ -95,12 +103,45 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         email = currentUser.getEmail();
 
         // initializing firebase cloud storage
-        storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference("users/"+currentUserUID+".jpg");
 
         // Setting the user picture at the beginning
-        storageReference.child("images/"+currentUserUID).getDownloadUrl().addOnSuccessListener(uri -> userPicture.setImageURI(uri)).addOnFailureListener(exception -> {
-            Toast.makeText(getContext(), "Picture upload failed!", Toast.LENGTH_LONG).show();
+        try {
+            Log.d("tag", "made it here");
+            localFile = File.createTempFile("users", "jpg", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.inSampleSize = 16;
+                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(), opts);
+                userPicture.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
         });
+
+        /*
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Toast.makeText(getContext(), "Picture initialized", Toast.LENGTH_LONG).show();
+                userPicture.setImageURI(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Picture not initialized!", Toast.LENGTH_LONG).show();
+            }
+        });
+
+         */
 
         // Retrieving the user name and updating the main page
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
@@ -119,7 +160,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
                         userPicture.setImageURI(imageUri);
 
                         // Uploading user image to firebase cloud storage
-                        storageReference.child("images/"+currentUserUID).putFile(imageUri)
+                        storageReference.putFile(imageUri)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     Toast.makeText(getContext(), "Picture uploaded successfully!", Toast.LENGTH_LONG).show();
                                 }).addOnFailureListener(e -> {
