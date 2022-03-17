@@ -127,22 +127,6 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
             }
         });
 
-        /*
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Toast.makeText(getContext(), "Picture initialized", Toast.LENGTH_LONG).show();
-                userPicture.setImageURI(uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Picture not initialized!", Toast.LENGTH_LONG).show();
-            }
-        });
-
-         */
-
         // Retrieving the user name and updating the main page
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
         username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);

@@ -2,9 +2,7 @@ package com.example.seizuredetectionapp;
 
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,43 +15,25 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.slider.BasicLabelFormatter;
-import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
-
 import java.io.Serializable;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class QuestionnairePersonal extends AppCompatActivity implements View.OnClickListener, Serializable, DatePickerDialog.OnDateSetListener {
-    public EditText nameInput, countdownTimerInput;
+    public EditText countdownTimerInput;
     public Button submitQuestionnaireButton, addContactButton, dateOfBirth;
-    public PowerSpinnerView contactMethodSpinner;
-    public FirebaseAuth mAuth;
+    public PowerSpinnerView sexSpinner, contactMethodSpinner;
     public String selectedDOB;
     public LocalSettings localSettings;
     public Set<String> listOfContacts = new HashSet<>();
-    public String contactMethod;
-    private RangeSlider heightSlider;
+    public String contactMethod, selectedSex;
+    private RangeSlider heightSlider, weightSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,22 +41,27 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_questionnaire_personal);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        //firebase DB
-        mAuth = FirebaseAuth.getInstance();
-
-        // Get the UI elements
-        //nameInput = findViewById(R.id.nameInput);
+        // Initializing the buttons
         dateOfBirth = findViewById(R.id.dateOfBirthInput);
-        contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
-        countdownTimerInput = findViewById(R.id.countdownTimerInput);
-        addContactButton = findViewById(R.id.addContact);
         submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
+        addContactButton = findViewById(R.id.addContact);
+
+        // Initializing the spinners
+        contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
+        sexSpinner = findViewById(R.id.sexSpinner);
+
+        // Initializing the sliders and EditText
+        countdownTimerInput = findViewById(R.id.countdownTimerInput);
+        weightSlider = findViewById(R.id.weightSlider);
         heightSlider = findViewById(R.id.heightSlider);
 
         // Add click listeners to buttons
         dateOfBirth.setOnClickListener(this);
         addContactButton.setOnClickListener(this);
         submitQuestionnaireButton.setOnClickListener(this);
+
+        // Add click listener to countdown timer EditText
+        /*
         countdownTimerInput.setOnClickListener(this);
 
         countdownTimerInput.setInputType(InputType.TYPE_NULL);
@@ -107,25 +92,26 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             }
         });
 
-        // Setting the values of the height slider
-        heightSlider.setLabelFormatter(value -> {
-            int inches = (int)value + 46;
-            String height = inchToHeight(inches);
-            return height;
-        });
+         */
 
-        contactMethodSpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
-            @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
-                contactMethod = newItem;
-            }
-        });
+        // Setting the values of the height slider
+        heightSlider.setLabelFormatter(value -> valueToHeight(value));
+
+        // Getting the selected contact method
+        contactMethodSpinner.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>)
+                (oldIndex, oldItem, newIndex, newItem) -> contactMethod = newItem);
+
+        // Getting the selected sex
+        sexSpinner.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>)
+                (oldIndex, oldItem, newIndex, newItem) -> selectedSex = newItem);
 
     }
 
     /**
      * Method for converting inches to height values
      * */
-    public String inchToHeight(int inches){
+    public String valueToHeight(float value){
+        int inches = (int)value + 46;
         int feet = inches / 12;
         int inch = inches % 12;
         return String.valueOf(feet)+"'"+String.valueOf(inch)+"";
@@ -144,7 +130,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
                         Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                 );
                 datePickerDialog.show();
-
                 break;
 
             case R.id.addContact:
@@ -160,25 +145,17 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
 
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
-        //String name = nameInput.getText().toString().trim();
+
         String countdownTimer = countdownTimerInput.getText().toString().trim();
+        String height = valueToHeight(heightSlider.getValues().get(0));
+        String weight = String.valueOf(weightSlider.getValues().get(0));
 
-
-        //checks to see if any inputs are empty and alerts user.
-        /*
-        if (name.isEmpty()) {
-            nameInput.setError("Contact method is required!");
-            nameInput.requestFocus();
-            return;
-        }
-
-         */
-
-        /*if (selectedDOB.equals(null)) {
+        // checks to see if any inputs are empty and alerts user.
+        if (selectedDOB.equals(null)) {
             dateOfBirth.setError("Age is required!");
             dateOfBirth.requestFocus();
             return;
-        }*/
+        }
 
         if (countdownTimer.isEmpty()) {
             countdownTimerInput.setError("Countdown timer is required!");
@@ -186,30 +163,39 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return;
         }
 
-        //Log.d("added contacts test", "" + addedContacts.toString());
-
-        //questionnaireComplete("name", name);
-        questionnaireComplete("countdownTimer", countdownTimer);
+        // Saving the fields to local settings
+        questionnaireComplete("weight", weight);
+        questionnaireComplete("height", height);
+        questionnaireComplete("countdown timer", countdownTimer);
+        questionnaireComplete("sex", selectedSex);
         questionnaireComplete("age", selectedDOB);
         questionnaireComplete("preferred contact method", contactMethod);
 
-        Log.d("countdown timer Qp", "" + countdownTimer);
-
+        // Saving the contact list
         localSettings.setContactList(addedContacts);
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
         editor.putStringSet("contact method", localSettings.getContactList());
-        editor.apply();
+        if(editor.commit()){
+            Log.d("contacts status", "Successful");
+        } else{
+            Log.d("contacts status", "Failed");
+        }
 
-        Intent i = new Intent(this, QuestionnaireMedical.class);
-        startActivity(i);
+        // Moving to Questionnaire Medical
+        startActivity(new Intent(this, QuestionnaireMedical.class));
     }
 
     private void questionnaireComplete(String field, String value){
         localSettings.setField(field, value);
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getField(field));
-        editor.apply();
+        editor.putString(field, localSettings.getField(field));
+
+        if(editor.commit()){
+            Log.d(field.concat(" status"), "Successful");
+        } else{
+            Log.d(field.concat(" status"), "Failed");
+        }
     }
     
     @Override
