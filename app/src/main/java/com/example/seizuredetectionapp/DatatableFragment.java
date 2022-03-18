@@ -17,11 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import android.widget.Button;
@@ -40,12 +37,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,15 +52,17 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarOutputStream;
+
+import gherkin.lexer.Ca;
 
 
 /**
@@ -106,7 +101,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     int pdfHeight = 1080;
     int pdfWidth = 720;
     Bitmap bmp;
+    ArrayList<Calendar> dates;
+    Calendar dateCompare = Calendar.getInstance();
     private LocalSettings localSettings;
+
 
     LineChart lineChart;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
@@ -376,10 +374,26 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (view.getId()){
             case(R.id.showGraphYear):
-                ArrayList<String> JournalDates = new ArrayList<>();
-                JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
-
-                Log.d("journal checker", JournalDates.toString());
+                dateCompare.set(2, 0);
+                dates = getDates(dateCompare);
+                //Assign journals to months of current year and keep count in an array
+                //Array goes into generateChart
+                generateChart(view);
+                break;
+            case(R.id.showGraphMonth):
+                dateCompare.set(4, 0);
+                dates = getDates(dateCompare);
+                //Assign journals to weeks of current month and keep count in an array
+                //Array goes into generateChart
+                generateChart(view);
+                break;
+            case(R.id.showGraphWeek):
+                dateCompare.set(7, 2);
+                dates = getDates(dateCompare);
+                //Assign journals to days of current week and keep count in an array
+                //Array goes into generateChart
+                generateChart(view);
+                break;
             case(R.id.btnjournalExport):
                 try {
                     createPdf();
@@ -477,22 +491,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void generateChart(View root){
         //Implements the graph to view the timeline of the users journals
         lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-
-        ArrayList<String> JournalDates = new ArrayList<>();
-        myRef.child("Journals").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("Firebase", "Failed to connect to firebase");
-                }
-                else {
-                    JournalDates.add(String.valueOf(task.getResult().getValue()));
-                    Log.d("graph checker", JournalDates.toString());
-                    Toast.makeText(getContext(), JournalDates.get(0), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        //JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
+        lineChart.setTouchEnabled(false);
+        //remove once it doesn't interfere w/ swipe up
+        //lineChart.setVisibility(View.INVISIBLE);
 
         int dataPoints = 12;
         for(int i = 0; i < dataPoints; i++){
@@ -509,5 +510,53 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
         LineDataSet lineDataSet = new LineDataSet(yAxis, "Journal Entries");
         lineChart.setData(new LineData());
+    }
+
+    public ArrayList<Calendar> getDates(Calendar dateCompare){
+        ArrayList<Calendar> journalDates = new ArrayList<>();
+        Log.d("graph checker", dateCompare.toString());
+
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                //Log.d("child added", "child added " + snapshot);
+                SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy hh:ss");
+                Journal graphJournal = snapshot.getValue(Journal.class);
+                try {
+                    java.util.Date date = sdf.parse(graphJournal.dateAndTime);
+                    Calendar cDate = Calendar.getInstance();
+                    cDate.setTime(date);
+                    if(cDate.after(dateCompare)) {
+                        journalDates.add(cDate);
+                    }
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                //Log.d("graph checker", journalDates.toString());
+                //Toast.makeText(DatatableFragment.this.getContext(), journalDates.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return journalDates;
     }
 }
