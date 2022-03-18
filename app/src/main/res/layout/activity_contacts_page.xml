@@ -8,7 +8,7 @@
     tools:context=".ContactsPage">
 
     <Button
-        android:id="@+id/cancel_Button"
+        android:id="@+id/done_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -17,19 +17,18 @@
         android:layout_marginTop="2dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/button_bg"
-        android:text="Cancel"
+        android:text="Done"
         android:textSize="16dp"
         android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/done_Button"
+    <SearchView
+        android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
         android:background="@drawable/button_bg"
-        android:text="Done"
         android:textSize="16dp"
         android:textStyle="bold" />
 
@@ -37,7 +36,7 @@
         android:id="@+id/contactRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/cancel_Button"
+        android:layout_below="@id/done_Button"
         android:layout_alignParentBottom="true"
         tools:listitem="layout/item_contact">
 
