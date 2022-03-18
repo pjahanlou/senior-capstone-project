@@ -66,7 +66,7 @@ public class MainSettings extends AppCompatActivity implements View.OnClickListe
         email = currentUser.getEmail();
 
         SharedPreferences sharedPreferences = getSharedPreferences (LocalSettings.PREFERENCES, MODE_PRIVATE);
-        username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
+        username = sharedPreferences.getString("name", LocalSettings.name);
 
         // Initializing the views
         userPicture = findViewById(R.id.profileImage);

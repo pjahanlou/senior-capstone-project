@@ -3,14 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/listview_rounded_boarder.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/listview_rounded_border.xml" value="0.18385416666666668" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.22" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/custom_newuser_dialog.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.22" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/journal_item_listview.xml" value="0.25" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.103125" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_app_settings.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.25" />
@@ -22,8 +14,6 @@
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/signup_tab_fragment.xml" value="0.14130434782608695" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.13072916666666667" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.16" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/Questionnaire.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_contacts_page.xml" value="0.275" />
@@ -39,12 +29,11 @@
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.33" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/popup.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/add_contact_button_bg.xml" value="0.2263888888888889" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.33" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.21927083333333333" />
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.14722222222222223" />
         <entry key="app/src/main/res/drawable/dropdown_bg.xml" value="0.136328125" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/fadein.xml" value="0.17578125" />
         <entry key="app/src/main/res/drawable/navbar_selected.xml" value="0.13819444444444445" />
         <entry key="app/src/main/res/drawable/spinner_style.xml" value="0.136328125" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
