@@ -103,6 +103,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     Bitmap bmp;
     ArrayList<Calendar> dates;
     Calendar dateCompare = Calendar.getInstance();
+    private LocalSettings localSettings;
+
 
     LineChart lineChart;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
@@ -145,17 +147,20 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         // Retrieving the user info from shared preferences
         sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        isQuestionnaireComplete = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.questionnaireComplete);
+        isQuestionnaireComplete = sharedPreferences.getString("questionnaire bool", LocalSettings.questionnaireComplete);
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
-
-
         // Checking if the user has completed the questionnaire or not
-
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
 
+        // Logging the personal questionnaire data
+        Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
+        Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
+        Log.d("seizureFreq", ""+sharedPreferences.getString("seizureFrequencyPerMonth", ""));
+        Log.d("averageSeizure", ""+sharedPreferences.getString("seizureDuration", ""));
+        Log.d("longestSeizure", ""+sharedPreferences.getString("longestSeizure", ""));
 
         // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -258,7 +263,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
 
         //Populate ListView upon datatable start up
-
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

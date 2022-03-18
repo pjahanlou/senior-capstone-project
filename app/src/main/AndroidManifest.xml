@@ -19,7 +19,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".UpdateContacts"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Navbar"
             android:exported="true" />
@@ -37,7 +37,7 @@
             android:exported="false" />
         <activity
             android:name=".ContactsPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".TwitterLogin"
             android:exported="false" />
@@ -61,13 +61,14 @@
             android:exported="false" />
         <activity
             android:name=".QuestionnaireMedical"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".LoginPage"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

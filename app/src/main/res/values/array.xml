@@ -11,4 +11,15 @@
         <item>@string/journalSortDate</item>
         <item>@string/journalSortDuration</item>
     </array>
+
+    <array
+        name="sexDropdown">
+        <item>@string/male</item>
+        <item>@string/female</item>
+    </array>
+
+
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>

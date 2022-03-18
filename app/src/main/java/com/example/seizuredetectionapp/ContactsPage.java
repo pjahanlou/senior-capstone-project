@@ -54,10 +54,8 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
         recyclerView = findViewById(R.id.contactRecycler);
         checkPermission(v);
 
-        cancel = findViewById(R.id.cancel_Button);
         done = findViewById(R.id.done_Button);
 
-        cancel.setOnClickListener(this::onClick);
         done.setOnClickListener(this::onClick);
 
 
@@ -65,10 +63,6 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            // returns the user to the previous page ignoring the selected contacts
-            case R.id.cancel_Button: {
-                finish();
-            }
             // returns the user to the previous page with the selected contacts
             case R.id.done_Button: {
                 addedContacts = adapter.listOfContacts;
