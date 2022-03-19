@@ -1,5 +1,7 @@
 package com.example.seizuredetectionapp;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,10 +21,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.onlynight.waveview.WaveView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +62,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
 
     private Uri imageUri;
     File localFile = null;
+    private WaveView waveView;
 
     private StorageReference storageReference;
 
@@ -112,18 +118,16 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         } catch (IOException e) {
             e.printStackTrace();
         }
-        storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                BitmapFactory.Options opts = new BitmapFactory.Options();
-                opts.inSampleSize = 16;
-                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(), opts);
-                userPicture.setImageBitmap(bitmap);
-            }
+        storageReference.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inSampleSize = 16;
+            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(), opts);
+            userPicture.setImageBitmap(bitmap);
+            Toast.makeText(getContext(), "Picture Uploaded Successfully.", Toast.LENGTH_LONG).show();
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -167,6 +171,8 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         profileButton = root.findViewById(R.id.profileSettingsButton);
         appButton = root.findViewById(R.id.appSettingsButton);
         logoutButton = root.findViewById(R.id.logoutButton);
+        waveView = root.findViewById(R.id.imageView3);
+        waveView.start();
 
         // Adding click listeners to the buttons and imageview
         userPicture.setOnClickListener(this);
