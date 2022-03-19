@@ -8,6 +8,8 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -50,11 +52,9 @@
             android:visibility="visible"
             android:textColor="@color/black"
             android:textSize="30dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toTopOf="@id/progressBarCircle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line"/>
+            app:layout_constraintTop_toBottomOf="@id/imageView3"/>
 
         <TextView
             android:id="@+id/infoText"
@@ -67,24 +67,46 @@
             android:textSize="16sp"
             android:textAlignment="center"
             app:layout_constraintWidth_percent="0.7"
-            app:layout_constraintBottom_toTopOf="@id/progressBarCircle"
+            app:layout_constraintBottom_toTopOf="@id/progressBarCircleLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/helpRequest"/>
 
-        <ProgressBar
-            android:id="@+id/progressBarCircle"
-            style="?android:attr/progressBarStyleHorizontal"
+        <LinearLayout
             android:layout_width="270dp"
             android:layout_height="270dp"
-            android:background="@drawable/countdown_circle_2"
-            android:indeterminate="false"
-            android:max="100"
+            android:id="@+id/progressBarCircleLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressBarCircle"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="270dp"
+                android:layout_height="270dp"
+                android:background="@drawable/countdown_circle_2"
+                android:indeterminate="false"
+                android:max="100"
+                android:visibility="visible"
+                android:progress="100"
+                android:progressDrawable="@drawable/countdown_circle"
+                android:rotation="-90" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="30 Secs"
             android:visibility="visible"
-            android:progress="100"
-            android:progressDrawable="@drawable/countdown_circle"
-            android:rotation="-90"
-            app:layout_constraintVertical_bias="0.42"
+            android:textColor="@color/PaleVioletRed"
+            android:textSize="40sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,22 +124,6 @@
             app:rb_duration="3000"
             app:rb_scale="6">
         </com.skyfishjy.library.RippleBackground>
-
-        <TextView
-            android:id="@+id/textViewTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="30 Secs"
-            android:visibility="visible"
-            android:textColor="@color/PaleVioletRed"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintVertical_bias="0.44"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
@@ -156,7 +162,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarCircle"/>
+            app:layout_constraintTop_toBottomOf="@id/progressBarCircleLayout"/>
 
         <Button
             android:id="@+id/cancel"
