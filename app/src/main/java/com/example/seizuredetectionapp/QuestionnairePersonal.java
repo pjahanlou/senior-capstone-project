@@ -134,6 +134,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
 
             case R.id.addContact:
                 Intent intent = new Intent(this, ContactsPage.class);
+                intent.putExtra("settings page", false);
                 startActivity(intent);
                 break;
 

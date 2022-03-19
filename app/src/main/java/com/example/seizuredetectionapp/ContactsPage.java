@@ -38,14 +38,20 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
     ArrayList<ContactLayout> contactList = new ArrayList<ContactLayout>();
     ContactsAdapter adapter;
     View v;
-    Button cancel, done;
-    LocalSettings localSettings;
-
+    Button done;
+    private boolean settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_page);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            settings = extras.getBoolean("settings page");
+            Log.d("settings", ""+settings);
+        }
+
         // Stores our active xml for later use
         View v = getLayoutInflater().inflate(R.layout.activity_contacts_page, null);
         setContentView(v);
@@ -68,6 +74,9 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
                 addedContacts = adapter.listOfContacts;
                 //localSettings.setContactList(addedContacts);
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
+                if(settings){
+                    startActivity(new Intent(this, UpdateContacts.class));
+                }
                 finish();
             }
         }
