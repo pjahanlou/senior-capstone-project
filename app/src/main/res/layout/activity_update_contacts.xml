@@ -85,6 +85,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
+                <!--<androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/updatecontactRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/listView"
+                    android:layout_alignParentBottom="true"
+                    tools:listitem="layout/item_contact">
+
+                </androidx.recyclerview.widget.RecyclerView>-->
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button

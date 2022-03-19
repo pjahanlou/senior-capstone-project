@@ -1,5 +1,7 @@
 package com.example.seizuredetectionapp;
 
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
