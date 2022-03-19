@@ -28,9 +28,6 @@
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.18" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.33" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/popup.xml" value="0.2" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.33" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.21927083333333333" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/drawable/add_contact_button_bg.xml" value="0.2263888888888889" />
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.14722222222222223" />
@@ -39,6 +36,7 @@
         <entry key="app/src/main/res/drawable/fadein.xml" value="0.17578125" />
         <entry key="app/src/main/res/drawable/hint_bubble.xml" value="0.1423611111111111" />
         <entry key="app/src/main/res/drawable/navbar_selected.xml" value="0.13819444444444445" />
+        <entry key="app/src/main/res/drawable/search_bg.xml" value="0.19921875" />
         <entry key="app/src/main/res/drawable/spinner_style.xml" value="0.136328125" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
         <entry key="app/src/main/res/layout/activity_alert_page.xml" value="0.19305019305019305" />

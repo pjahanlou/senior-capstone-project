@@ -25,7 +25,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:isCircle="false"
+            app:period="4"
+            app:waveHeightPercent="0.85"
+            app:waveRange="15dp"
+            app:waveSpeed="5"
+            app:waveStrokeWidth="3dp"/>
 
+        <com.github.onlynight.waveview.WaveView
+            android:id="@+id/waveview"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:isCircle="false"
             app:period="4"
             app:waveHeightPercent="0.85"

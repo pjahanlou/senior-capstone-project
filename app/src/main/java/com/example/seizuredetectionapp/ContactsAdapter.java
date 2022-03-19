@@ -37,6 +37,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
         notifyDataSetChanged();
     }
 
+    public void setFilteredList(ArrayList<ContactLayout> filteredList){
+        this.contactList = filteredList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ContactsAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
