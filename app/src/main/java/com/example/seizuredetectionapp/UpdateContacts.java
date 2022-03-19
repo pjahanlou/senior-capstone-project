@@ -191,7 +191,9 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed(){
+
         saveUpdatedContacts();
+        finish();
     }
 
 }
