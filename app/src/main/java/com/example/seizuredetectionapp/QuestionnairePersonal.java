@@ -3,21 +3,31 @@ package com.example.seizuredetectionapp;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 import java.io.Serializable;
@@ -33,7 +43,8 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     public LocalSettings localSettings;
     public Set<String> listOfContacts = new HashSet<>();
     public String contactMethod, selectedSex;
-    private RangeSlider heightSlider, weightSlider;
+    private RangeSlider heightSlider, weightSlider, countdownTimerSlider;
+    private ImageView hintImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +56,14 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dateOfBirth = findViewById(R.id.dateOfBirthInput);
         submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
         addContactButton = findViewById(R.id.addContact);
+        hintImage = findViewById(R.id.hint);
 
         // Initializing the spinners
         contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
         sexSpinner = findViewById(R.id.sexSpinner);
 
         // Initializing the sliders and EditText
-        countdownTimerInput = findViewById(R.id.countdownTimerInput);
+        countdownTimerSlider = findViewById(R.id.countdownTimerInput);
         weightSlider = findViewById(R.id.weightSlider);
         heightSlider = findViewById(R.id.heightSlider);
 
@@ -59,40 +71,10 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dateOfBirth.setOnClickListener(this);
         addContactButton.setOnClickListener(this);
         submitQuestionnaireButton.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
-        // Add click listener to countdown timer EditText
-        /*
-        countdownTimerInput.setOnClickListener(this);
-
-        countdownTimerInput.setInputType(InputType.TYPE_NULL);
-        countdownTimerInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar snack = Snackbar.make(findViewById(R.id.constraintLayout), "What's good?",
-                        Snackbar.LENGTH_SHORT);
-                View view = snack.getView();
-                FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
-                params.gravity = Gravity.TOP;
-                view.setLayoutParams(params);
-                snack.show();
-            }
-        });
-        countdownTimerInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    Snackbar snack = Snackbar.make(findViewById(R.id.constraintLayout), "What's good?",
-                            Snackbar.LENGTH_SHORT);
-                    View view = snack.getView();
-                    FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
-                    params.gravity = Gravity.TOP;
-                    view.setLayoutParams(params);
-                    snack.show();
-                }
-            }
-        });
-
-         */
+        // Setting the values for Countdown timer slider
+        countdownTimerSlider.setLabelFormatter(value -> countdownTimerFormatter(value));
 
         // Setting the values of the height slider
         heightSlider.setLabelFormatter(value -> valueToHeight(value));
@@ -105,6 +87,13 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         sexSpinner.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>)
                 (oldIndex, oldItem, newIndex, newItem) -> selectedSex = newItem);
 
+    }
+
+    public String countdownTimerFormatter(float value){
+        if(value == 60){
+            return "1 Min";
+        }
+        return (int) value +" sec";
     }
 
     /**
@@ -141,13 +130,16 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             case R.id.submitQuestionairePersonal:
                 storeQuestionnaireData();
                 break;
+            case R.id.hint:
+                showHint();
+                break;
         }
     }
 
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
 
-        String countdownTimer = countdownTimerInput.getText().toString().trim();
+        String countdownTimer = String.valueOf(countdownTimerSlider.getValues().get(0));
         String height = valueToHeight(heightSlider.getValues().get(0));
         String weight = String.valueOf(weightSlider.getValues().get(0));
 
@@ -155,12 +147,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         if (selectedDOB.equals(null)) {
             dateOfBirth.setError("Age is required!");
             dateOfBirth.requestFocus();
-            return;
-        }
-
-        if (countdownTimer.isEmpty()) {
-            countdownTimerInput.setError("Countdown timer is required!");
-            countdownTimerInput.requestFocus();
             return;
         }
 
@@ -202,5 +188,30 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     @Override
     public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
         selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
+    }
+
+    /**
+     * method for displaying the new user dialog
+     */
+    private void showHint() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.countdown_timer_dialog);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

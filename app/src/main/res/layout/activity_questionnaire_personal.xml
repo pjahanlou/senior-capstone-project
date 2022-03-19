@@ -44,10 +44,9 @@
             android:id="@+id/innerLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent=".8"
             app:layout_constraintWidth_percent="0.8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -99,40 +98,6 @@
                 android:contentDescription="Height"
                 android:stepSize="1.0"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/heightSlider"
-                app:layout_constraintEnd_toEndOf="parent">
-                <TextView
-                    android:id="@+id/countdownTimerTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Countdown Timer"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    />
-            </LinearLayout>>
-
-            <EditText
-                android:id="@+id/countdownTimerInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingLeft="20dp"
-                android:paddingVertical="10dp"
-                android:layout_marginTop="10dp"
-                android:hint="Seconds"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/sexSpinner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/heightSlider" />
-
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/sexSpinner"
                 android:layout_width="match_parent"
@@ -157,10 +122,10 @@
                 app:spinner_popup_animation="bounce"
                 app:spinner_popup_background="@color/LightSteelBlue"
                 app:spinner_popup_elevation="14dp"
-                app:layout_constraintBottom_toTopOf="@+id/dateOfBirthInput"
+                app:layout_constraintBottom_toTopOf="@id/dateOfBirthInput"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/countdownTimerInput" />
+                app:layout_constraintTop_toBottomOf="@id/heightSlider" />
 
             <Button
                 android:id="@+id/dateOfBirthInput"
@@ -220,9 +185,8 @@
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toTopOf="@id/submitQuestionairePersonal"
+                app:layout_constraintBottom_toTopOf="@id/countdownTimerSlider"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/contactPreferenceSpinner" />
 
@@ -235,11 +199,72 @@
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/innerLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addContact" />
+                app:layout_constraintTop_toBottomOf="@id/countdownTimerSlider" />
+
+            <LinearLayout
+                android:id="@+id/countdownTimerSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/submitQuestionairePersonal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addContact"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/countdownTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Countdown Timer"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/countdownTimerSlider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addContact"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/submitQuestionairePersonal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addContact"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.slider.RangeSlider
+                        android:id="@+id/countdownTimerInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="0"
+                        android:valueTo="60"
+                        app:layout_constraintTop_toBottomOf="@+id/heightTitle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:theme="@style/SliderTheme"
+                        android:contentDescription="Height"
+                        android:stepSize="1.0"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/hint"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_more_info_foreground"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+            </LinearLayout>>
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
