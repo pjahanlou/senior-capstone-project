@@ -24,12 +24,14 @@ import android.os.Environment;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -90,7 +92,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     ListView journalList;
     ArrayList<Journal> journals = new ArrayList<>();
     ArrayList<JournalLayout> journalInfo = new ArrayList<>();
-    static ArrayAdapter sortedAdapter;
+    ArrayAdapter sortedAdapter;
     JournalAdapter adapter;
     Journal journal;
     FirebaseDatabase database;
@@ -190,9 +192,13 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //Buttons
         btnExport.setOnClickListener(this);
 
+        //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
         journalList.setAdapter(adapter);
+
         //item press listener
+        //TODO Replace edit and remove with three dots in listview
+        /*
         journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -238,6 +244,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 editOrRemove.show();
             }
         });
+    */
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -245,8 +252,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         //Peek Height
+        //TODO find a way to make it relative for each phone
         bottomSheetBehavior.setPeekHeight(210);
-
         //set journal to not be hideable
         bottomSheetBehavior.setHideable(false);
 
@@ -281,7 +288,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -363,7 +370,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         intent.putExtra("key", true);
         JournalLayout journalLayout = journalInfo.get(pos);
         Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
-
         intent.putExtra("id", journalLayout.getDateAndTime());
         startActivity(intent);
 
@@ -396,6 +402,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
+
 
     /**
      * method for displaying the new user dialog
@@ -475,7 +483,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void generateChart(View root){
         //Implements the graph to view the timeline of the users journals
         lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-
+        lineChart.setVisibility(View.INVISIBLE);
         ArrayList<String> JournalDates = new ArrayList<>();
         myRef.child("Journals").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -508,4 +516,5 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         LineDataSet lineDataSet = new LineDataSet(yAxis, "Journal Entries");
         lineChart.setData(new LineData());
     }
+
 }

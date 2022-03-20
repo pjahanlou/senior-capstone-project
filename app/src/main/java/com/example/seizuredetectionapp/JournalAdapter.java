@@ -2,10 +2,16 @@ package com.example.seizuredetectionapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,11 +45,26 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         TextView tvDateTime = (TextView) convertView.findViewById(R.id.lvDateAndTime);
         TextView tvDuration = (TextView) convertView.findViewById(R.id.lvDuration);
         TextView tvDescription = (TextView) convertView.findViewById(R.id.lvDescription);
+        ImageButton ibThreeDots = (ImageButton) convertView.findViewById(R.id.threeDots);
 
         tvDateTime.setText(dateAndTime);
         tvDuration.setText(duration);
         tvDescription.setText(description);
 
+        ibThreeDots.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(mContext, view, Gravity.END);
+                MenuInflater inflater = popup.getMenuInflater();
+                //inflate with view
+                inflater.inflate(R.menu.journal_three_dots_menu, popup.getMenu());
+                //set menu item click listener here
+                popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position, journal));
+                popup.show();
+            }
+        });
         return convertView;
     }
+
 }

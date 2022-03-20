@@ -6,12 +6,13 @@
     android:background="@drawable/listview_rounded_border">
 
     <ImageButton
+        android:id="@+id/threeDots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
-        android:src="@android:drawable/ic_dialog_dialer" />
-
+        android:theme="@style/threeDotImageView"/>
+       <!-- android:style="?android:attr/actionOverflowButtonStyle"-->
 
     <TextView
         android:id="@+id/lvDateAndTime"
@@ -21,7 +22,6 @@
         android:text="dateTime"
         android:textColor="@color/black"
         android:textSize="22sp" />
-
 
     <TextView
         android:id="@+id/lvDuration"
@@ -40,13 +40,5 @@
         android:textColor="@color/black"
         android:layout_below="@+id/lvDuration"
         android:textSize="18sp" />
-
-
-
-
-
-
-
-
 
 </RelativeLayout>

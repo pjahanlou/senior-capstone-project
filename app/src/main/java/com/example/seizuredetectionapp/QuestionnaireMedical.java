@@ -42,6 +42,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_questionnaire_medical);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+        /*
         seizureDurationMinutes = findViewById(R.id.seizureDurationMinutes);
         seizureDurationSeconds = findViewById(R.id.seizureDurationSeconds);
         heightFeet = findViewById(R.id.heightInputFeet);
@@ -50,11 +51,14 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         seizureFrequency = findViewById(R.id.seizureFrequency);
         seizureType = findViewById(R.id.seizureType);
         sexInput = findViewById(R.id.sexInput);
+
+         */
         seizureStartD = "";
         
         openDatePicker = findViewById(R.id.openDatePickerDialog);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
 
+        /*
         seizureDurationMinutes.setMinValue(0);
         seizureDurationMinutes.setMaxValue(60);
 
@@ -66,6 +70,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
 
         heightInches.setMinValue(0);
         heightInches.setMaxValue(11);
+
+         */
 
         openDatePicker.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
@@ -95,6 +101,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     }
 
     private void saveQuestionnaireMedicalToFirebase() {
+        /*
         String seizureDuration = String.valueOf(seizureDurationSeconds.getValue() + (seizureDurationMinutes.getValue() * 60));
         String height = String.valueOf(heightInches.getValue() + (heightFeet.getValue() * 12));
         String weight = weightInput.getText().toString().trim();
@@ -135,6 +142,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         localSettings.setWeight(weight);
         localSettings.setSeizureFrequency(seizureFrequencyPerMonth);
         questionnaireComplete();
+
+         */
         
     }
 

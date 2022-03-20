@@ -388,9 +388,10 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
         String seizureTrigger = "";
         String seizureDescription = "";
         String postSeizureDescription = "";
+        String severity = "";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription);
+                seizureTrigger, seizureDescription, postSeizureDescription, severity);
 
         userTable.child("Journals").push().setValue(newJournal)
                 .addOnCompleteListener(task -> {
