@@ -7,7 +7,7 @@
     android:background="@color/Platinum">
 
     <ImageButton
-        android:id="@+id/addContact_Button"
+        android:id="@+id/updateContact_Button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +29,7 @@
         android:orientation="vertical"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintStart_toEndOf="@id/addContact_Button"
+        app:layout_constraintStart_toEndOf="@id/updateContact_Button"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/contactEditViewName"
+            android:id="@+id/updatecontactEditViewName"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -49,13 +49,23 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/contactEditViewNumber"
+            android:id="@+id/updatecontactEditViewNumber"
             android:textColor="@color/black"
             android:textSize="14sp">
 
         </TextView>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_contact_arrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+    </ImageView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

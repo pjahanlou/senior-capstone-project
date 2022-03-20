@@ -36,7 +36,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
 
     private SwipeMenuListView listView;
     private Button changeContactListButton, saveButton;
-    private ArrayList<String> contacts = new ArrayList<>();
+    private ArrayList<UpdateContactLayout> contacts = new ArrayList<>();
     private ArrayAdapter adapter;
     private String[] contactValues;
     private LocalSettings localSettings;
@@ -79,8 +79,11 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         contactValues = savedContacts.toArray(new String[savedContacts.size()]);
 
         // convert string list to array list string
-        Collections.addAll(contacts, contactValues);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contacts);
+        for(String contact:contactValues){
+            UpdateContactLayout updateContactLayout = new UpdateContactLayout(contact);
+            contacts.add(updateContactLayout);
+        }
+        adapter = new UpdateContactAdapter(this, R.layout.item_update_contact, contacts);
         listView.setAdapter(adapter);
 
         //recyclerView = findViewById(R.id.updatecontactRecycler);
@@ -177,7 +180,10 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
 
     public void saveUpdatedContacts(){
         Log.d("new contacts", ""+contacts.toString());
-        Set<String> newContacts = new HashSet<>(contacts);
+        Set<String> newContacts = new HashSet<>();
+        for(UpdateContactLayout contactLayout:contacts){
+            newContacts.add(contactLayout.getNumber());
+        }
         localSettings.setContactList(newContacts);
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
         editor.putStringSet("contact method", localSettings.getContactList());
