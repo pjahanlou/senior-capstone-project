@@ -226,9 +226,13 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
         localSettings.setQuestionnaireComplete("0");
 
         SharedPreferences.Editor editor = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
-        editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
-        editor.apply();
+        editor.putString("name", localSettings.getName());
+        editor.putString("questionnaire bool", localSettings.getQuestionnaireComplete());
+        if(editor.commit()){
+            Log.d("questionnaire bool", "Successful");
+        } else{
+            Log.d("questionnaire bool", "Failed");
+        }
 
         return signupFlag;
     }

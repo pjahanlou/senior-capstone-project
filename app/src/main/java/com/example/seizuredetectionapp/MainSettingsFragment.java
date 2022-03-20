@@ -1,9 +1,13 @@
 package com.example.seizuredetectionapp;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,20 +16,28 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.onlynight.waveview.WaveView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +61,8 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private String username, email;
 
     private Uri imageUri;
+    File localFile = null;
+    private WaveView waveView;
 
     private StorageReference storageReference;
 
@@ -95,11 +109,26 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         email = currentUser.getEmail();
 
         // initializing firebase cloud storage
-        storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference("users/"+currentUserUID+".jpg");
 
         // Setting the user picture at the beginning
-        storageReference.child("images/"+currentUserUID).getDownloadUrl().addOnSuccessListener(uri -> userPicture.setImageURI(uri)).addOnFailureListener(exception -> {
-            Toast.makeText(getContext(), "Picture upload failed!", Toast.LENGTH_LONG).show();
+        try {
+            Log.d("tag", "made it here");
+            localFile = File.createTempFile("users", "jpg", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        storageReference.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inSampleSize = 16;
+            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(), opts);
+            userPicture.setImageBitmap(bitmap);
+            Toast.makeText(getContext(), "Picture Uploaded Successfully.", Toast.LENGTH_LONG).show();
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
+            }
         });
 
         // Retrieving the user name and updating the main page
@@ -119,7 +148,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
                         userPicture.setImageURI(imageUri);
 
                         // Uploading user image to firebase cloud storage
-                        storageReference.child("images/"+currentUserUID).putFile(imageUri)
+                        storageReference.putFile(imageUri)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     Toast.makeText(getContext(), "Picture uploaded successfully!", Toast.LENGTH_LONG).show();
                                 }).addOnFailureListener(e -> {
@@ -142,6 +171,8 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         profileButton = root.findViewById(R.id.profileSettingsButton);
         appButton = root.findViewById(R.id.appSettingsButton);
         logoutButton = root.findViewById(R.id.logoutButton);
+        waveView = root.findViewById(R.id.imageView3);
+        waveView.start();
 
         // Adding click listeners to the buttons and imageview
         userPicture.setOnClickListener(this);

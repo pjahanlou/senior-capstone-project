@@ -5,6 +5,7 @@ import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -29,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -38,14 +41,22 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
     ArrayList<ContactLayout> contactList = new ArrayList<ContactLayout>();
     ContactsAdapter adapter;
     View v;
-    Button cancel, done;
-    LocalSettings localSettings;
-
+    Button done;
+    private boolean settings;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_page);
+
+        // Checking to see if the previous activity was AppSettings
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            settings = extras.getBoolean("settings page");
+            Log.d("settings", ""+settings);
+        }
+
         // Stores our active xml for later use
         View v = getLayoutInflater().inflate(R.layout.activity_contacts_page, null);
         setContentView(v);
@@ -54,26 +65,65 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
         recyclerView = findViewById(R.id.contactRecycler);
         checkPermission(v);
 
-        cancel = findViewById(R.id.cancel_Button);
-        done = findViewById(R.id.done_Button);
+        // SearchView Initializing
+        searchView = findViewById(R.id.searchButton);
+        searchView.clearFocus();
 
-        cancel.setOnClickListener(this::onClick);
+        // Initializing done button
+        done = findViewById(R.id.done_Button);
         done.setOnClickListener(this::onClick);
 
+        // SearchView Behavior
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Filtering the contact list every time user types
+                filterList(s);
+                return false;
+            }
+        });
+
+
+    }
+
+    /**
+     * Method for filtering through the contact list based on user input
+     * If no users are found, a toast gets displayed
+     * */
+    private void filterList(String s) {
+        // Getting each of the contact layout for displaying
+        ArrayList<ContactLayout> filteredList = new ArrayList<>();
+        for(ContactLayout contact: contactList){
+            if(contact.getName().toLowerCase().contains(s.toLowerCase())){
+                filteredList.add(contact);
+            }
+        }
+
+        // If filtered list empty then show toast
+        if(filteredList.isEmpty()){
+            Toast.makeText(this, "No Contact found", Toast.LENGTH_LONG).show();
+        } else{
+            // Updating the adapter
+            adapter.setFilteredList(filteredList);
+        }
 
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
-            // returns the user to the previous page ignoring the selected contacts
-            case R.id.cancel_Button: {
-                finish();
-            }
             // returns the user to the previous page with the selected contacts
             case R.id.done_Button: {
+                // Checking to see which page is asking for the added contacts
                 addedContacts = adapter.listOfContacts;
-                //localSettings.setContactList(addedContacts);
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
+                if(settings){
+                    startActivity(new Intent(this, UpdateContacts.class));
+                }
                 finish();
             }
         }

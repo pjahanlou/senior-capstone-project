@@ -1,5 +1,7 @@
 package com.example.seizuredetectionapp;
 
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,7 +105,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 updateFieldInFirebase("name", nameTextView);
                 break;
             case R.id.submitNewCountdownTimer:
-                updateFieldInFirebase("countdownTimer", countdownTimerTextView);
+                updateFieldInFirebase("countdown timer", countdownTimerTextView);
                 break;
             case R.id.prefContactMethod:
 
@@ -142,7 +144,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         localSettings.setField(field, value);
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getField(field));
+        editor.putString(field, localSettings.getField(field));
         editor.apply();
 
     }

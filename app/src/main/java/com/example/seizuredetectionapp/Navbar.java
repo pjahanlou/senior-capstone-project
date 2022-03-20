@@ -2,6 +2,7 @@ package com.example.seizuredetectionapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
@@ -16,6 +17,8 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -38,6 +41,8 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navbar);
 
+        //runFadeAnimation();
+
         // Initializing the views
         bottomNavigationView = findViewById(R.id.bottomNavbar);
         bottomNavigationView.setOnItemSelectedListener(navListener);
@@ -58,6 +63,14 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
         // Initialize swipe listener
         swipeListener = new SwipeListener(linearLayout);
 
+    }
+
+    private void runFadeAnimation() {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.slideinbottom);
+        a.reset();
+        LinearLayout ll = findViewById(R.id.linearLayout);
+        ll.clearAnimation();
+        ll.startAnimation(a);
     }
 
     public static BottomNavigationView getBottomNavigationView() {
