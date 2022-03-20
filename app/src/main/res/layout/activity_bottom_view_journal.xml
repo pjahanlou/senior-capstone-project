@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="20dp"
-    android:background="@color/LightSteelBlue"
+    android:background="@drawable/bottom_sheet_layout"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <RelativeLayout
@@ -24,14 +24,12 @@
             android:textColor="@color/black"
             android:textSize="30dp" />
 
-
         <Button
             android:id="@+id/btnjournalExport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
             android:text="export" />
-
 
         <com.skydoves.powerspinner.PowerSpinnerView
             android:layout_width="wrap_content"
@@ -56,14 +54,13 @@
             app:spinner_popup_elevation="14dp"
             android:layout_alignEnd="@id/title"/>
 
-
     </RelativeLayout>
-
 
     <ListView
         android:id="@+id/journalList"
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
         android:dividerHeight="5dp"
