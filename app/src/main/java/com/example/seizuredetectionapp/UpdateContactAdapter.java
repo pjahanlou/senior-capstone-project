@@ -19,58 +19,33 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UpdateContactAdapter extends RecyclerView.Adapter<ContactsAdapter.UserViewHolder> {
+public class UpdateContactAdapter extends ArrayAdapter<UpdateContactLayout> {
 
-    Set<String> listOfContacts = new HashSet<>();
-    View v;
-    Activity activity;
-    ArrayList<UpdateContactLayout> contactList;
+    private Context mContext;
+    int mResource;
+    public UpdateContactAdapter(@NonNull Context context, int resource, @NonNull ArrayList<UpdateContactLayout> objects) {
+        super(context, resource, objects);
+        mContext = context;
+        mResource = resource;
 
-    public UpdateContactAdapter(Activity activity, ArrayList<UpdateContactLayout> contactList, View v, Set<String> listOfContacts){
-        this.activity = activity;
-        this.contactList = contactList;
-        this.v = v;
-        this.listOfContacts = listOfContacts;
-        notifyDataSetChanged();
     }
 
+    @SuppressLint("ViewHolder")
     @NonNull
     @Override
-    public ContactsAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
-        return new ContactsAdapter.UserViewHolder(view);
-    }
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        String number = getItem(position).getNumber();
+        Log.d("number", ""+number);
 
-    @Override
-    public void onBindViewHolder(@NonNull ContactsAdapter.UserViewHolder holder, int position) {
-        UpdateContactLayout model = contactList.get(position);
+        UpdateContactLayout contactLayout = new UpdateContactLayout(number);
 
-        holder.phoneNumber.setText((model.getNumber()));
-    }
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        convertView = inflater.inflate(mResource, parent, false);
 
-    @Override
-    public int getItemCount() {
-        return contactList.size();
-    }
+        TextView contactNumber = (TextView) convertView.findViewById(R.id.updatecontactEditViewNumber);
 
-    public class UserViewHolder extends RecyclerView.ViewHolder{
-        TextView phoneNumber;
-        //Set<String> listOfContacts = new HashSet<>();
+        contactNumber.setText(number);
 
-        public UserViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            phoneNumber = itemView.findViewById(R.id.contactEditViewNumber);
-            itemView.findViewById(R.id.addContact_Button)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String textPhoneNumber = phoneNumber.getText().toString().trim();
-                            Log.d("demo", "button Clicked on contact: " + textPhoneNumber);
-                            listOfContacts.add(textPhoneNumber);
-                            Log.d("my check", "" + listOfContacts.toString());
-                        }
-                    });
-        }
+        return convertView;
     }
 }
