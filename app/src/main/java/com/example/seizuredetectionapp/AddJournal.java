@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
@@ -44,8 +48,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public static String updateTriggers;
     public static String updateDescription;
     public static String updatePostDescription;
+    public static String updateSeverity;
     private Journal editJournal;
     private String journalKey;
+    private RangeSlider severitySlider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +73,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         postDescription = findViewById(R.id.postdescription);
         btnSave =  findViewById(R.id.btnsave);
         btnClose =  findViewById(R.id.btnclose);
+        severitySlider = findViewById(R.id.severitySlider);
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -82,7 +89,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
             //Retrieving saved journal information and populating the EditText
             popJournalText();
         }
-
+        else{
+            //auto fill date and time to the current date and time
+            AddJournal.dateAndTime.setText(getCurrentTime());
+        }
         //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
@@ -118,6 +128,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String seizureTrigger = triggers.getText().toString().trim();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
+        String severity = severitySlider.getValues().get(0).toString();
 
 
 
@@ -136,7 +147,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
 
         Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription);
+                seizureTrigger, seizureDescription, postSeizureDescription, severity);
 
         // Sends HashMap of entry to Firebase DB
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -168,6 +179,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String seizureTrigger = triggers.getText().toString().trim();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
+        String severity = severitySlider.getValues().get(0).toString();
 
         if(dateTime.isEmpty()){
             dateAndTime.requestFocus();
@@ -204,6 +216,11 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(!previousValue.equals(postSeizureDescription)){
             updateFieldInFirebase("postDescription", postSeizureDescription);
         }
+        previousValue = editJournal.severity;
+        if(!previousValue.equals(severity)){
+            updateFieldInFirebase("severity", severity);
+        }
+
     }
 
     public void popJournalText(){
@@ -228,6 +245,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.updateTriggers = editJournal.triggers;
                     AddJournal.updateDescription = editJournal.description;
                     AddJournal.updatePostDescription = editJournal.postDescription;
+                    AddJournal.updateSeverity = editJournal.severity;
 
                     //Set EditText to existing saved values
                     AddJournal.dateAndTime.setText(AddJournal.updateDateTime);
@@ -237,6 +255,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
+                    //TODO set slider to existing value
 
                 }
             }
@@ -259,6 +278,14 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 Log.d(field, task.getException().toString());
             }
         });
+    }
+
+    private String getCurrentTime(){
+        //gets current time and date
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+                format(Calendar.getInstance().getTime());
+
+        return timeStamp;
     }
 
 }
