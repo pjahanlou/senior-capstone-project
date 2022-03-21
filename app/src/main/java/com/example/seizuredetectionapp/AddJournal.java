@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,16 +23,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hootsuite.nachos.NachoTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
+
+import cucumber.api.java.cs.A;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
-    static EditText dateAndTime, mood, typeOfSeizure, duration, triggers, description, postDescription;
+    static EditText dateAndTime, mood, typeOfSeizure, duration, description, postDescription;
+    static NachoTextView triggers;
     Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
@@ -97,6 +105,21 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
+        //Triggers suggestions
+        String[] suggestions = new String[]{"Stress", "Missed Medication",
+                "Caffeine",
+                "Anxiety",
+                "Recreational Drugs",
+                "Alcohol",
+                "Lack of Sleep",
+                "Dehydration",
+                "Skipped Meal",
+                "Flashing Lights",
+                "Flickering Lights",
+                "Hormones" };
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,suggestions);
+        triggers.setAdapter(adapter2);
+
     }
 
     @Override
@@ -125,7 +148,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String moodType = mood.getText().toString().trim();
         String seizureType = typeOfSeizure.getText().toString().trim();
         String durationOfSeizure = duration.getText().toString().trim();
-        String seizureTrigger = triggers.getText().toString().trim();
+        List<String> seizureTrigger = triggers.getChipValues();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
         String severity = severitySlider.getValues().get(0).toString();
@@ -176,7 +199,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String moodType = mood.getText().toString().trim();
         String seizureType = typeOfSeizure.getText().toString().trim();
         String durationOfSeizure = duration.getText().toString().trim();
-        String seizureTrigger = triggers.getText().toString().trim();
+        //TODO
+        //String seizureTrigger = triggers.getText().toString().trim();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
         String severity = severitySlider.getValues().get(0).toString();
@@ -204,10 +228,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(!previousValue.equals(durationOfSeizure)){
             updateFieldInFirebase("durationOfSeizure", durationOfSeizure);
         }
-        previousValue = editJournal.triggers;
+        /*previousValue = editJournal.triggers;
         if(!previousValue.equals(seizureTrigger)){
             updateFieldInFirebase("triggers", seizureTrigger);
-        }
+        }*/
         previousValue = editJournal.description;
         if(!previousValue.equals(seizureDescription)){
             updateFieldInFirebase("description", seizureDescription);
@@ -242,7 +266,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.updateMood = editJournal.mood;
                     AddJournal.updateTypeOfSeizure = editJournal.typeOfSeizure;
                     AddJournal.updateDuration = editJournal.durationOfSeizure;
-                    AddJournal.updateTriggers = editJournal.triggers;
+                    //TODO
+                    //AddJournal.updateTriggers = editJournal.triggers;
                     AddJournal.updateDescription = editJournal.description;
                     AddJournal.updatePostDescription = editJournal.postDescription;
                     AddJournal.updateSeverity = editJournal.severity;
@@ -252,7 +277,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.mood.setText(updateMood);
                     AddJournal.typeOfSeizure.setText(updateTypeOfSeizure);
                     AddJournal.duration.setText(updateDuration);
-                    AddJournal.triggers.setText(updateTriggers);
+                    //TODO
+                    //AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
                     //TODO set slider to existing value

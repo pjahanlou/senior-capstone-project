@@ -422,7 +422,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         String moodType = "";
         String seizureType = "";
         String durationOfSeizure = "";
-        String seizureTrigger = "";
+        List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
         String postSeizureDescription = "";
         String severity = "";
