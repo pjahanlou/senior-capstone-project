@@ -33,13 +33,13 @@ public class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListene
             case R.id.editItem:
                 Log.d("here", String.valueOf(position));
                 Log.d("journal",journalLayout.getDateAndTime());
-                /*
+
                 Intent intent = new Intent(getContext(), AddJournal.class);
                 intent.putExtra("key", true);
                 query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
                 intent.putExtra("id", journalLayout.getDateAndTime());
                 //startActivity(intent);
-                */
+
 
                 return true;
             case R.id.deleteItem:
