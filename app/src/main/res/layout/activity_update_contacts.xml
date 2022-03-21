@@ -14,6 +14,7 @@
         android:background="@drawable/button_bg"
         android:text="Save"
         android:layout_marginTop="5dp"
+        android:textAllCaps="false"
         android:layout_marginLeft="5dp">
     </Button>>
 
@@ -101,7 +102,8 @@
                 android:id="@+id/changeContactList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Change Contacts List"
+                android:text="Add Contacts"
+                android:textAllCaps="false"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:background="@drawable/button_bg"
