@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Questionnaire implements Serializable{
@@ -20,6 +21,7 @@ public class Questionnaire implements Serializable{
     public String sex;
     public static Set<String> addedContacts = new HashSet<>();
     public String seizureDuration, height, weight, seizureFrequencyPerMonth, seizureStart;
+    public static Map<String, String> contactMap = new HashMap<>();
 
     public Questionnaire(){
     }
@@ -36,7 +38,8 @@ public class Questionnaire implements Serializable{
                          String seizureFrequencyPerMonth,
                          String seizureStart,
                          String seizureT,
-                         String sex
+                         String sex,
+                         HashMap<String, String> contactMap
             ){
         this.name = name;
         this.addedContacts = addedContacts;
@@ -50,6 +53,7 @@ public class Questionnaire implements Serializable{
         this.seizureStart = seizureStart;
         this.seizureT = seizureT;
         this.sex = sex;
+        this.contactMap = contactMap;
     }
 
     @NonNull
