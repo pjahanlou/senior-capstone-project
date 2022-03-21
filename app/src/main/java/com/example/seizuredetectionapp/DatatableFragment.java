@@ -198,7 +198,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
         journalList.setAdapter(adapter);
-
         //item press listener
         //TODO Replace edit and remove with three dots in listview
         /*
