@@ -58,9 +58,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,6 +80,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int DAY_OF_WEEK = 7;
+    private static final int WEEK_OF_MONTH  = 5;
+    private static final int MONTH_OF_YEAR = 2;
     private Dialog dialog;
     private String isQuestionnaireComplete;
     private Set<String> contactList = new HashSet<String>();
@@ -180,7 +185,24 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-        generateChart(root);
+        dateCompare = Calendar.getInstance();
+        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
+        dates = getDates(dateCompare);
+        //Assign journals to days of current week and keep count in an array
+        int entries[] = new int[8];
+        for (int k = 0; k <= 7; k++){
+            entries[k] = 0;
+        }
+        for (float i = 1; i<= dates.size(); i++){
+            entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
+            //yAxis.add(new Entry(DAY_OF_WEEK, i));
+        }
+        for (int j = 1; j <= 7; j++){
+            yAxis.add(new Entry(j, entries[j]));
+        }
+        Log.d("graph check", "current entries" + Arrays.toString(entries));
+        //Array goes into generateChart
+        generateChart(root, 7);
 
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
@@ -382,25 +404,41 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (view.getId()){
             case(R.id.showGraphYear):
-                dateCompare.set(2, 0);
+                dateCompare = Calendar.getInstance();
+                dateCompare.set(MONTH_OF_YEAR, 0);
                 dates = getDates(dateCompare);
                 //Assign journals to months of current year and keep count in an array
                 //Array goes into generateChart
-                generateChart(view);
+                //generateChart(view, 12);
                 break;
             case(R.id.showGraphMonth):
-                dateCompare.set(4, 0);
-                dates = getDates(dateCompare);
+                /*
+                dateCompare = Calendar.getInstance();
+                dateCompare.set(WEEK_OF_MONTH, 0);
+                dates = getDates(dateCompare);*/
                 //Assign journals to weeks of current month and keep count in an array
                 //Array goes into generateChart
-                generateChart(view);
+                generateChart(view, 5);
                 break;
             case(R.id.showGraphWeek):
-                dateCompare.set(7, 2);
+                dateCompare = Calendar.getInstance();
+                dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
                 dates = getDates(dateCompare);
                 //Assign journals to days of current week and keep count in an array
+                int entries[] = new int[8];
+                for (int k = 0; k <= 7; k++){
+                    entries[k] = 0;
+                }
+                for (float i = 0; i<= dates.size(); i++){
+                    entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
+                    //yAxis.add(new Entry(DAY_OF_WEEK, i));
+                }
+                for (int j = 1; j <= 7; j++){
+                    yAxis.add(new Entry(j-1, entries[j]));
+                }
+                Log.d("graph check", "current entries " + Arrays.toString(entries));
                 //Array goes into generateChart
-                generateChart(view);
+                //generateChart(view, 7, yAxis);
                 break;
             case(R.id.btnjournalExport):
                 try {
@@ -498,16 +536,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         document.close();
     }
 
-    public void generateChart(View root){
+    public void generateChart(View root, int dataPoints){//, ArrayList<Entry> yAxis
         //Implements the graph to view the timeline of the users journals
         lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-        lineChart.setTouchEnabled(false);
+        //lineChart.setTouchEnabled(false);
         //remove once it doesn't interfere w/ swipe up
         //lineChart.setVisibility(View.INVISIBLE);
 
-        int dataPoints = 12;
         for(int i = 0; i < dataPoints; i++){
-            //git journals retrieved from firebase here
             yAxis.add(new Entry(i, i));
             xAxis.add(i, String.valueOf(i));
         }
@@ -524,20 +560,24 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     public ArrayList<Calendar> getDates(Calendar dateCompare){
         ArrayList<Calendar> journalDates = new ArrayList<>();
-        Log.d("graph checker", dateCompare.toString());
+        Log.d("dateCompare checker", dateCompare.toString());
 
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 //Log.d("child added", "child added " + snapshot);
-                SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy hh:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
                 Journal graphJournal = snapshot.getValue(Journal.class);
+                //Log.d("journal", graphJournal.dateAndTime);
                 try {
-                    java.util.Date date = sdf.parse(graphJournal.dateAndTime);
-                    Calendar cDate = Calendar.getInstance();
+                    java.util.Date date = dateFormat.parse(graphJournal.dateAndTime);
+                    //Log.d("journal checker", date.toString());
+                    Calendar cDate = new GregorianCalendar();
                     cDate.setTime(date);
-                    if(cDate.after(dateCompare)) {
+
+                    Log.d("compare checker", cDate.getTimeInMillis() + " >= " + dateCompare.getTimeInMillis() + " = " + String.valueOf(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()));
+                    if(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()) {
                         journalDates.add(cDate);
                     }
                 } catch (ParseException ex) {
@@ -567,6 +607,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             }
         });
+        Log.d("getgraph checker", journalDates.toString());
         return journalDates;
     }
 }
