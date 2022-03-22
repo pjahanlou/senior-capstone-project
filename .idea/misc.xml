@@ -51,6 +51,9 @@
         <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.14722222222222223" />
         <entry key="app/src/main/res/drawable/dropdown_bg.xml" value="0.136328125" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.2" />
+        <entry key="app/src/main/res/drawable/fadein.xml" value="0.17578125" />
+        <entry key="app/src/main/res/drawable/hint_bubble.xml" value="0.1423611111111111" />
+        <entry key="app/src/main/res/drawable/ic_delete_contact_arrow.xml" value="0.160546875" />
         <entry key="app/src/main/res/drawable/navbar_selected.xml" value="0.13819444444444445" />
         <entry key="app/src/main/res/drawable/spinner_style.xml" value="0.136328125" />
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />

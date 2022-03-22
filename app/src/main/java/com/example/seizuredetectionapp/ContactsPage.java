@@ -1,6 +1,7 @@
 package com.example.seizuredetectionapp;
 
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+import static com.example.seizuredetectionapp.Questionnaire.contactMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,6 +27,8 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +36,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -39,11 +44,13 @@ import java.util.Set;
 public class ContactsPage extends AppCompatActivity implements Serializable {
     RecyclerView recyclerView;
     ArrayList<ContactLayout> contactList = new ArrayList<ContactLayout>();
+    Map<String, String> contactMapSave = new HashMap<>();
     ContactsAdapter adapter;
     View v;
     Button done;
     private boolean settings;
     private SearchView searchView;
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +127,31 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
             case R.id.done_Button: {
                 // Checking to see which page is asking for the added contacts
                 addedContacts = adapter.listOfContacts;
+                contactMap = adapter.contactMap;
+                contactMapSave = adapter.contactMap;
+                saveContactMap(contactMapSave);
+                // Saving the contact hashmap to local settings
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
                 if(settings){
                     startActivity(new Intent(this, UpdateContacts.class));
                 }
                 finish();
             }
+        }
+    }
+
+    /**
+     * Method for saving the contact hashmap to shared preferences
+     * */
+    private void saveContactMap(Map<String, String> inputMap) {
+        SharedPreferences pSharedPref = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
+        if (pSharedPref != null){
+            JSONObject jsonObject = new JSONObject(inputMap);
+            String jsonString = jsonObject.toString();
+            pSharedPref.edit()
+                    .remove("contact map")
+                    .putString("contact map", jsonString)
+                    .apply();
         }
     }
 
