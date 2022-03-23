@@ -53,7 +53,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public static String updateMood;
     public static String updateTypeOfSeizure;
     public static String updateDuration;
-    public static String updateTriggers;
+    public static List<String> updateTriggers;
     public static String updateDescription;
     public static String updatePostDescription;
     public static String updateSeverity;
@@ -143,34 +143,42 @@ public class AddJournal extends Activity implements View.OnClickListener {
     //method for retrieving info written and saving to firebase
     public void saveInformation()
     {
+        List<String> saveTriggers = new ArrayList<String>();
         //retrieving text from text boxes
-        String datetime = dateAndTime.getText().toString().trim();
-        String moodType = mood.getText().toString().trim();
-        String seizureType = typeOfSeizure.getText().toString().trim();
-        String durationOfSeizure = duration.getText().toString().trim();
-        List<String> seizureTrigger = triggers.getChipValues();
-        String seizureDescription = description.getText().toString().trim();
-        String postSeizureDescription = postDescription.getText().toString().trim();
-        String severity = severitySlider.getValues().get(0).toString();
+        String saveDateAndTime = dateAndTime.getText().toString().trim();
+        String saveMood = mood.getText().toString().trim();
+        String saveTypeOfSeizure = typeOfSeizure.getText().toString().trim();
+        String saveDuration = duration.getText().toString().trim();
+        saveTriggers = triggers.getChipValues();
+        String saveDescription = description.getText().toString().trim();
+        String savePostDescription = postDescription.getText().toString().trim();
+        String saveSeverity = severitySlider.getValues().get(0).toString();
+
+        Log.d("WOOHOHOOHOHOOH", saveTriggers.toString());
 
 
-
-        if(datetime.isEmpty()){
+        if(saveDateAndTime.isEmpty()){
             dateAndTime.requestFocus();
             Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(seizureDescription.isEmpty()){
-            seizureDescription = "None";
+        if(saveDescription.isEmpty()){
+            saveDescription = "None";
         }
 
-        if(durationOfSeizure.isEmpty()){
-            durationOfSeizure = "0";
+        if(saveDuration.isEmpty()){
+            saveDuration = "0";
         }
 
-        Journal journal = new Journal(datetime, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription, severity);
+        /*if(saveTriggers.isEmpty()){
+            saveTriggers.add("None");
+        }*/
+
+
+
+        Journal journal = new Journal(saveDateAndTime, saveMood, saveTypeOfSeizure, saveDuration,
+                saveTriggers, saveDescription, savePostDescription, saveSeverity);
 
         // Sends HashMap of entry to Firebase DB
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -199,8 +207,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String moodType = mood.getText().toString().trim();
         String seizureType = typeOfSeizure.getText().toString().trim();
         String durationOfSeizure = duration.getText().toString().trim();
-        //TODO
-        //String seizureTrigger = triggers.getText().toString().trim();
+        List<String> seizureTrigger = triggers.getChipValues();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
         String severity = severitySlider.getValues().get(0).toString();
@@ -211,8 +218,19 @@ public class AddJournal extends Activity implements View.OnClickListener {
             return;
         }
 
+        updateFieldInFirebase("dateAndTime", dateTime, editJournal.dateAndTime);
+        updateFieldInFirebase("mood",moodType, editJournal.mood);
+        updateFieldInFirebase("typeOfSeizure",seizureType, editJournal.typeOfSeizure);
+        updateFieldInFirebase("durationOfSeizure",durationOfSeizure, editJournal.durationOfSeizure);
+        updateTriggerInFirebase("triggers",seizureTrigger,editJournal.triggers);
+        updateFieldInFirebase("description",seizureDescription, editJournal.description);
+        updateFieldInFirebase("postDescription", postSeizureDescription, editJournal.postDescription);
+        updateFieldInFirebase("severity",severity, editJournal.severity);
+
+        /*
         //This needs to be changed
         String previousValue = editJournal.dateAndTime;
+        List<String> previousTriggers;
         if(!previousValue.equals(dateTime)){
             updateFieldInFirebase("dateAndTime", dateTime);
         }
@@ -228,10 +246,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(!previousValue.equals(durationOfSeizure)){
             updateFieldInFirebase("durationOfSeizure", durationOfSeizure);
         }
-        /*previousValue = editJournal.triggers;
-        if(!previousValue.equals(seizureTrigger)){
-            updateFieldInFirebase("triggers", seizureTrigger);
-        }*/
+        previousTriggers = editJournal.triggers;
+        if(!previousTriggers.equals(seizureTrigger)){
+            updateFieldInFirebase("triggers", seizureTrigger.toString());
+        }
         previousValue = editJournal.description;
         if(!previousValue.equals(seizureDescription)){
             updateFieldInFirebase("description", seizureDescription);
@@ -244,6 +262,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(!previousValue.equals(severity)){
             updateFieldInFirebase("severity", severity);
         }
+
+         */
 
     }
 
@@ -266,8 +286,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.updateMood = editJournal.mood;
                     AddJournal.updateTypeOfSeizure = editJournal.typeOfSeizure;
                     AddJournal.updateDuration = editJournal.durationOfSeizure;
-                    //TODO
-                    //AddJournal.updateTriggers = editJournal.triggers;
+                    AddJournal.updateTriggers = editJournal.triggers;
                     AddJournal.updateDescription = editJournal.description;
                     AddJournal.updatePostDescription = editJournal.postDescription;
                     AddJournal.updateSeverity = editJournal.severity;
@@ -277,8 +296,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.mood.setText(updateMood);
                     AddJournal.typeOfSeizure.setText(updateTypeOfSeizure);
                     AddJournal.duration.setText(updateDuration);
-                    //TODO
-                    //AddJournal.triggers.setText(updateTriggers);
+                    AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
                     //TODO set slider to existing value
@@ -293,18 +311,34 @@ public class AddJournal extends Activity implements View.OnClickListener {
         });
     }
 
-    private void updateFieldInFirebase(String field, String newValue){
-        DatabaseReference journalTable = userTable.child("Journals");
-
-        journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Log.d(field, "Updated");
+    private void updateFieldInFirebase(String field, String newValue, String previousValue){
+        if(previousValue != null) {
+            if (!previousValue.equals(newValue)) {
+                DatabaseReference journalTable = userTable.child("Journals");
+                journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(field, "Updated");
+                    } else {
+                        Log.d(field, task.getException().toString());
+                    }
+                });
             }
-            else{
-                Log.d(field, task.getException().toString());
-            }
-        });
+        }
     }
+
+    private void updateTriggerInFirebase(String field, List<String> newValue, List<String> previousValue) {
+                DatabaseReference journalTable = userTable.child("Journals");
+                journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(field, "Updated");
+                    } else {
+                        Log.d(field, task.getException().toString());
+                    }
+                });
+
+
+    }
+
 
     private String getCurrentTime(){
         //gets current time and date
