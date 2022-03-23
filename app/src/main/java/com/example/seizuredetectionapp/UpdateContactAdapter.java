@@ -34,16 +34,20 @@ public class UpdateContactAdapter extends ArrayAdapter<UpdateContactLayout> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        String name = getItem(position).getName();
         String number = getItem(position).getNumber();
+        Log.d("name", name);
         Log.d("number", ""+number);
 
-        UpdateContactLayout contactLayout = new UpdateContactLayout(number);
+        UpdateContactLayout contactLayout = new UpdateContactLayout(name, number);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
 
+        TextView contactName = convertView.findViewById(R.id.updatecontactEditViewName);
         TextView contactNumber = (TextView) convertView.findViewById(R.id.updatecontactEditViewNumber);
 
+        contactName.setText(name);
         contactNumber.setText(number);
 
         return convertView;

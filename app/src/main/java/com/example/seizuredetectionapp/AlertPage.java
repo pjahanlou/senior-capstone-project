@@ -385,7 +385,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
         String moodType = "";
         String seizureType = "";
         String durationOfSeizure = "";
-        String seizureTrigger = "";
+        List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
         String postSeizureDescription = "";
         String severity = "";

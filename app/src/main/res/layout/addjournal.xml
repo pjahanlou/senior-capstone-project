@@ -81,8 +81,9 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
-
+        <!--
         <EditText
+        will remove once i get nacho working
             android:id="@+id/triggers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,6 +95,23 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
+               -->
+                <com.hootsuite.nachos.NachoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/triggers"
+                    android:layout_below="@id/triggersTitle"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp"
+                    app:chipHeight="30dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:paddingLeft="20dp"
+                    android:background="@color/white"
+                    android:hint="Example: Stress, Missed Medication"
+                    android:textColorHint="@color/black"
+                    />
 
         <EditText
             android:id="@+id/description"

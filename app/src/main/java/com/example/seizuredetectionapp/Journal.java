@@ -1,15 +1,17 @@
 package com.example.seizuredetectionapp;
 
-public class Journal {
-    public String dateAndTime, mood, typeOfSeizure, durationOfSeizure, triggers, description, postDescription, severity;
+import java.util.List;
 
+public class Journal {
+    public String dateAndTime, mood, typeOfSeizure, durationOfSeizure, description, postDescription, severity;
+    public List<String> triggers;
     public Journal()
     {
 
     }
 
     public Journal(String dateAndTime,String mood,String typeOfSeizure,String durationOfSeizure,
-                   String triggers,String description,String postDescription, String severity)
+                   List<String> triggers,String description,String postDescription, String severity)
         {
             this.dateAndTime = dateAndTime;
             this.mood = mood;
