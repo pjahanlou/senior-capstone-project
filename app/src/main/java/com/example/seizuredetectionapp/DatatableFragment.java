@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,10 +160,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
         // Checking if the user has completed the questionnaire or not
+        //this still crashes my build for some reason
+        /*
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-
+    */
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
         Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
@@ -199,7 +203,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
         Log.d("graph check", "current entries" + Arrays.toString(entries));
         //Array goes into generateChart
-        generateChart(root, 7);
+        //generateChart(root, 7);
 
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
@@ -214,58 +218,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //Buttons
         btnExport.setOnClickListener(this);
 
+
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
         journalList.setAdapter(adapter);
-        //item press listener
-        //TODO Replace edit and remove with three dots in listview
-        /*
-        journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                //Dialog popup for choosing edit or remove journal
-                AlertDialog.Builder editOrRemove = new AlertDialog.Builder(getContext());
-                editOrRemove.setTitle("Do you want to edit or remove this journal?");
-                editOrRemove.setMessage("Edit or Remove?");
-                editOrRemove.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Toast.makeText(Datatable.this, "Edited", Toast.LENGTH_SHORT).show();
-                        editJournal(pos);
-
-                    }
-                });
-
-                editOrRemove.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int j) {
-                        //Confirmation on removing journal
-                        AlertDialog.Builder confirmRemove = new AlertDialog.Builder(getContext());
-                        confirmRemove.setTitle("Are you sure you want to remove this journal?");
-                        confirmRemove.setMessage("Yes or No");
-                        confirmRemove.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                removeJournal(pos);
-                                Toast.makeText(getContext(), "Removed.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        confirmRemove.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(getContext(), "Canceled.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        confirmRemove.show();
-
-                    }
-                });
-                editOrRemove.show();
-            }
-        });
-    */
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -383,17 +339,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
         journalList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-    }
-
-    public void editJournal(int pos){
-        //create new AddJournal intent and pass the dateAndTime to the newly created activity
-        Intent intent = new Intent(getContext(), AddJournal.class);
-        intent.putExtra("key", true);
-        JournalLayout journalLayout = journalInfo.get(pos);
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
-        intent.putExtra("id", journalLayout.getDateAndTime());
-        startActivity(intent);
-
     }
 
     @Override
@@ -607,4 +552,5 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         Log.d("getgraph checker", journalDates.toString());
         return journalDates;
     }
+
 }
