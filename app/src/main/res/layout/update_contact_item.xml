@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/LightSteelBlue">
 
+
+
     <TextView
         android:id="@+id/contactNum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="dateTime"
+        android:text="Phone Number"
         android:textSize="20sp"
         android:textColor="@color/black"/>
 

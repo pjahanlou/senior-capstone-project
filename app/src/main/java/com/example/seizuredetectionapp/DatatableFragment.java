@@ -17,13 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,8 +43,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,15 +56,19 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarOutputStream;
+
+import gherkin.lexer.Ca;
 
 
 /**
@@ -79,6 +82,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int DAY_OF_WEEK = 7;
+    private static final int WEEK_OF_MONTH  = 5;
+    private static final int MONTH_OF_YEAR = 2;
     private Dialog dialog;
     private String isQuestionnaireComplete;
     private Set<String> contactList = new HashSet<String>();
@@ -88,7 +94,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     ListView journalList;
     ArrayList<Journal> journals = new ArrayList<>();
     ArrayList<JournalLayout> journalInfo = new ArrayList<>();
-    static ArrayAdapter sortedAdapter;
+    ArrayAdapter sortedAdapter;
     JournalAdapter adapter;
     Journal journal;
     FirebaseDatabase database;
@@ -104,6 +110,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     int pdfHeight = 1080;
     int pdfWidth = 720;
     Bitmap bmp;
+    ArrayList<Calendar> dates;
+    Calendar dateCompare = Calendar.getInstance();
+    private LocalSettings localSettings;
+
 
     LineChart lineChart;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
@@ -146,20 +156,22 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         // Retrieving the user info from shared preferences
         sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        isQuestionnaireComplete = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.questionnaireComplete);
+        isQuestionnaireComplete = sharedPreferences.getString("questionnaire bool", LocalSettings.questionnaireComplete);
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
-
-
         // Checking if the user has completed the questionnaire or not
-
+        //this still crashes my build for some reason
         /*
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-
-         */
-
+    */
+        // Logging the personal questionnaire data
+        Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
+        Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
+        Log.d("seizureFreq", ""+sharedPreferences.getString("seizureFrequencyPerMonth", ""));
+        Log.d("averageSeizure", ""+sharedPreferences.getString("seizureDuration", ""));
+        Log.d("longestSeizure", ""+sharedPreferences.getString("longestSeizure", ""));
 
         // Initializing Firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -174,7 +186,24 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-        generateChart(root);
+        dateCompare = Calendar.getInstance();
+        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
+        dates = getDates(dateCompare);
+        //Assign journals to days of current week and keep count in an array
+        int entries[] = new int[8];
+        for (int k = 0; k <= 7; k++){
+            entries[k] = 0;
+        }
+        for (float i = 1; i<= dates.size(); i++){
+            entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
+            //yAxis.add(new Entry(DAY_OF_WEEK, i));
+        }
+        for (int j = 1; j <= 7; j++){
+            yAxis.add(new Entry(j, entries[j]));
+        }
+        Log.d("graph check", "current entries" + Arrays.toString(entries));
+        //Array goes into generateChart
+        //generateChart(root, 7);
 
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
@@ -182,58 +211,17 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
         sortDropDown = root.findViewById(R.id.sortDropdown);
+        graphDisplayYear = root.findViewById(R.id.showGraphYear);
+        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
+        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
 
         //Buttons
         btnExport.setOnClickListener(this);
 
+
+        //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
         journalList.setAdapter(adapter);
-        //item press listener
-        journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                //Dialog popup for choosing edit or remove journal
-                AlertDialog.Builder editOrRemove = new AlertDialog.Builder(getContext());
-                editOrRemove.setTitle("Do you want to edit or remove this journal?");
-                editOrRemove.setMessage("Edit or Remove?");
-                editOrRemove.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Toast.makeText(Datatable.this, "Edited", Toast.LENGTH_SHORT).show();
-                        editJournal(pos);
-
-                    }
-                });
-
-                editOrRemove.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int j) {
-                        //Confirmation on removing journal
-                        AlertDialog.Builder confirmRemove = new AlertDialog.Builder(getContext());
-                        confirmRemove.setTitle("Are you sure you want to remove this journal?");
-                        confirmRemove.setMessage("Yes or No");
-                        confirmRemove.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                removeJournal(pos);
-                                Toast.makeText(getContext(), "Removed.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        confirmRemove.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(getContext(), "Canceled.", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        confirmRemove.show();
-
-                    }
-                });
-                editOrRemove.show();
-            }
-        });
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -241,8 +229,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         //Peek Height
+        //TODO find a way to make it relative for each phone
         bottomSheetBehavior.setPeekHeight(210);
-
         //set journal to not be hideable
         bottomSheetBehavior.setHideable(false);
 
@@ -277,7 +265,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -353,22 +341,47 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         adapter.notifyDataSetChanged();
     }
 
-    public void editJournal(int pos){
-        //create new AddJournal intent and pass the dateAndTime to the newly created activity
-        Intent intent = new Intent(getContext(), AddJournal.class);
-        intent.putExtra("key", true);
-        JournalLayout journalLayout = journalInfo.get(pos);
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
-
-        intent.putExtra("id", journalLayout.getDateAndTime());
-        startActivity(intent);
-
-    }
-
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
+            case(R.id.showGraphYear):
+                dateCompare = Calendar.getInstance();
+                dateCompare.set(MONTH_OF_YEAR, 0);
+                dates = getDates(dateCompare);
+                //Assign journals to months of current year and keep count in an array
+                //Array goes into generateChart
+                //generateChart(view, 12);
+                break;
+            case(R.id.showGraphMonth):
+                /*
+                dateCompare = Calendar.getInstance();
+                dateCompare.set(WEEK_OF_MONTH, 0);
+                dates = getDates(dateCompare);*/
+                //Assign journals to weeks of current month and keep count in an array
+                //Array goes into generateChart
+                generateChart(view, 5);
+                break;
+            case(R.id.showGraphWeek):
+                dateCompare = Calendar.getInstance();
+                dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
+                dates = getDates(dateCompare);
+                //Assign journals to days of current week and keep count in an array
+                int entries[] = new int[8];
+                for (int k = 0; k <= 7; k++){
+                    entries[k] = 0;
+                }
+                for (float i = 0; i<= dates.size(); i++){
+                    entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
+                    //yAxis.add(new Entry(DAY_OF_WEEK, i));
+                }
+                for (int j = 1; j <= 7; j++){
+                    yAxis.add(new Entry(j-1, entries[j]));
+                }
+                Log.d("graph check", "current entries " + Arrays.toString(entries));
+                //Array goes into generateChart
+                //generateChart(view, 7, yAxis);
+                break;
             case(R.id.btnjournalExport):
                 try {
                     createPdf();
@@ -387,6 +400,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
+
+
 
     /**
      * method for displaying the new user dialog
@@ -463,20 +478,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         document.close();
     }
 
-    public void generateChart(View root){
+    public void generateChart(View root, int dataPoints){//, ArrayList<Entry> yAxis
         //Implements the graph to view the timeline of the users journals
         lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-        graphDisplayYear = root.findViewById(R.id.showGraphYear);
-        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
-        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
+        //lineChart.setTouchEnabled(false);
+        //remove once it doesn't interfere w/ swipe up
+        //lineChart.setVisibility(View.INVISIBLE);
 
-        //ArrayList<String> JournalDates = new ArrayList<>();
-
-        //JournalDates.add(myRef.child("Journals").orderByChild("dateAndTime").toString());
-        //Log.d("journal checker", JournalDates.toString());
-        int dataPoints = 12;
         for(int i = 0; i < dataPoints; i++){
-            //git journals retrieved from firebase here
             yAxis.add(new Entry(i, i));
             xAxis.add(i, String.valueOf(i));
         }
@@ -490,4 +499,58 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         LineDataSet lineDataSet = new LineDataSet(yAxis, "Journal Entries");
         lineChart.setData(new LineData());
     }
+
+    public ArrayList<Calendar> getDates(Calendar dateCompare){
+        ArrayList<Calendar> journalDates = new ArrayList<>();
+        Log.d("dateCompare checker", dateCompare.toString());
+
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                //Log.d("child added", "child added " + snapshot);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+                Journal graphJournal = snapshot.getValue(Journal.class);
+                //Log.d("journal", graphJournal.dateAndTime);
+                try {
+                    java.util.Date date = dateFormat.parse(graphJournal.dateAndTime);
+                    //Log.d("journal checker", date.toString());
+                    Calendar cDate = new GregorianCalendar();
+                    cDate.setTime(date);
+
+                    Log.d("compare checker", cDate.getTimeInMillis() + " >= " + dateCompare.getTimeInMillis() + " = " + String.valueOf(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()));
+                    if(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()) {
+                        journalDates.add(cDate);
+                    }
+                } catch (ParseException ex) {
+                    Log.v("Exception", ex.getLocalizedMessage());
+                }
+                //Log.d("graph checker", journalDates.toString());
+                //Toast.makeText(DatatableFragment.this.getContext(), journalDates.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        Log.d("getgraph checker", journalDates.toString());
+        return journalDates;
+    }
+
 }

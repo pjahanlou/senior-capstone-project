@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserViewHolder>{
-    Set<String> listOfContacts = new HashSet<>();
+    static Set<String> listOfContacts = new HashSet<>();
+    static Map<String, String> contactMap = new HashMap<>();
     View v;
     Activity activity;
     ArrayList<ContactLayout> contactList;
@@ -34,6 +36,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
         this.contactList = contactList;
         this.v = v;
         this.listOfContacts = listOfContacts;
+        notifyDataSetChanged();
+    }
+
+    public void setFilteredList(ArrayList<ContactLayout> filteredList){
+        this.contactList = filteredList;
         notifyDataSetChanged();
     }
 
@@ -57,9 +64,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
         return contactList.size();
     }
 
-    public class UserViewHolder extends RecyclerView.ViewHolder{
+    public static class UserViewHolder extends RecyclerView.ViewHolder{
         TextView name, phoneNumber;
-        //Set<String> listOfContacts = new HashSet<>();
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +79,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
                     String textName = name.getText().toString().trim();
                     String textPhoneNumber = phoneNumber.getText().toString().trim();
                     Log.d("demo", "button Clicked on contact: " + textPhoneNumber);
+                    contactMap.put(textPhoneNumber, textName);
                     listOfContacts.add(textPhoneNumber);
                     Log.d("my check", "" + listOfContacts.toString());
                 }
