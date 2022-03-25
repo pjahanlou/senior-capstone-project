@@ -223,9 +223,4 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         seizureStartD = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        seizureStartD = (month + 1) + "/" + dayOfMonth + "/" + year;
-    }
 }

@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -183,11 +184,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         } else{
             Log.d(field.concat(" status"), "Failed");
         }
-    }
-    
-    @Override
-    public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
-        selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 
     /**
