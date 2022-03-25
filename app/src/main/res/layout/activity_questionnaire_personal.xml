@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionnaireMedical">
+    tools:context=".QuestionnairePersonal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -18,12 +18,21 @@
         app:layout_constraintVertical_bias="1" >
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/imageView3"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:layout_constraintVertical_bias="0"
+            android:elevation="7dp"
+            android:src="@drawable/app_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="10dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,119 +40,233 @@
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/vie_bg" />
 
-        <EditText
-            android:id="@+id/nameInput"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:hint="@string/enter_name"
-            android:inputType="textPersonName"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.502"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.133" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <Spinner
-            android:id="@+id/contactPreferenceSpinner"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:entries="@array/Contact_Preference"
-            android:inputType="textPersonName"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.633" />
+            <TextView
+                android:id="@+id/weightTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weight"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/innerLayout"
+                app:layout_constraintBottom_toTopOf="@id/weightSlider"/>
 
-        <Button
-            android:id="@+id/dateOfBirthInput"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:ems="10"
-            android:hint="Enter Date of Birth"
-            android:inputType="text"
-            android:background="@drawable/button_bg"
-            android:textColor="@color/Platinum"
-            android:textColorHint="@color/Platinum"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:paddingLeft="20dp"
-            android:textAlignment="textStart"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.3" />
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/weightSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="40"
+                android:valueTo="400"
+                android:value="100"
+                app:layout_constraintTop_toBottomOf="@id/weightTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                android:theme="@style/SliderTheme"
+                android:contentDescription="Weight"/>
 
-        <EditText
-            android:id="@+id/countdownTimerInput"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_bg"
-            android:ems="10"
-            android:hint="@string/Input_countdown_time"
-            android:inputType="text"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.467" />
+            <TextView
+                android:id="@+id/heightTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Height"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heightSlider"
+                app:layout_constraintBottom_toTopOf="@id/weightSlider"/>
 
-        <Button
-            android:id="@+id/addContact"
-            android:layout_width="200dp"
-            android:layout_height="48dp"
-            android:background="@drawable/button_bg"
-            android:text="@string/Add_Contact"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.8" />
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/heightSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="0.0"
+                android:valueTo="50.0"
+                app:layout_constraintTop_toBottomOf="@+id/heightTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                android:theme="@style/SliderTheme"
+                android:contentDescription="Height"
+                android:stepSize="1.0"/>
 
-        <Button
-            android:id="@+id/submitQuestionairePersonal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"
-            android:text="Submit"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintHorizontal_bias="0.94"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
-            app:layout_constraintVertical_bias="0.972" />
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/sexSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:inputType="textPersonName"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:ems="10"
+                android:hint="Sex"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:textColor="@color/Platinum"
+                android:textColorHint="@color/Platinum"
+                android:textSize="16dp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_padding="8dp"
+                app:spinner_divider_color="@color/purple_500"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="1dp"
+                app:spinner_item_array="@array/sexDropdown"
+                app:spinner_popup_animation="bounce"
+                app:spinner_popup_background="@color/LightSteelBlue"
+                app:spinner_popup_elevation="14dp"
+                app:layout_constraintBottom_toTopOf="@id/dateOfBirthInput"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heightSlider" />
+
+            <Button
+                android:id="@+id/dateOfBirthInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Date of Birth"
+                android:inputType="text"
+                android:background="@drawable/button_bg"
+                android:textColor="@color/Platinum"
+                android:textColorHint="@color/Platinum"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/contactPreferenceSpinner"
+                app:layout_constraintTop_toBottomOf="@id/sexSpinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                 />
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/contactPreferenceSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:inputType="textPersonName"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:ems="10"
+                android:hint="Contact Method"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/Platinum"
+                android:textColorHint="@color/Platinum"
+                android:textSize="16dp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_divider_color="@color/purple_500"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="1dp"
+                app:spinner_item_array="@array/prefContactMethodOptions"
+                app:spinner_popup_animation="bounce"
+                app:spinner_popup_background="@color/LightSteelBlue"
+                app:spinner_popup_elevation="14dp"
+                app:layout_constraintBottom_toTopOf="@id/addContact"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateOfBirthInput" />
+
+            <Button
+                android:id="@+id/addContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:text="Emergency Contacts"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toTopOf="@id/countdownTimerSlider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contactPreferenceSpinner" />
+
+            <Button
+                android:id="@+id/submitQuestionairePersonal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:text="Next"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="@id/innerLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/countdownTimerSlider" />
+
+            <LinearLayout
+                android:id="@+id/countdownTimerSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/submitQuestionairePersonal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addContact"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/countdownTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Countdown Timer"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/countdownTimerSlider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addContact"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/submitQuestionairePersonal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addContact"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.slider.RangeSlider
+                        android:id="@+id/countdownTimerInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="0"
+                        android:valueTo="60"
+                        app:layout_constraintTop_toBottomOf="@+id/heightTitle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:theme="@style/SliderTheme"
+                        android:contentDescription="Height"
+                        android:stepSize="1.0"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/hint"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_more_info_foreground"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+            </LinearLayout>>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

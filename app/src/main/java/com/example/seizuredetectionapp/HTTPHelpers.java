@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HTTPHelpers {
-	public static final String MYURL = "http://127.0.0.1:8080/";
+	public static final String MYURL = "http://104.237.129.207:8080/";
 
 	private static HttpURLConnection setupConn(String path, String params, String method) {
 		// Create a http request to the server

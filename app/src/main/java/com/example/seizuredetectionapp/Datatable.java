@@ -52,7 +52,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     private String currentUserUID;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-    private Spinner sortSpinner;
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
@@ -68,11 +67,10 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
         myRef = database.getReference("Users").child(currentUserUID);
 
         //ui elements
-        btnAddJournal = findViewById(R.id.btnjournaladd);
+        btnAddJournal = findViewById(R.id.btnjournalExport);
         btnSettings = findViewById(R.id.settings);
         btnHelpRequest = findViewById(R.id.helpRequest);
         journalList = findViewById(R.id.journalList);
-        sortSpinner = findViewById(R.id.sortSpinner);
 
         //Buttons
         btnAddJournal.setOnClickListener(this);
@@ -81,9 +79,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
 
         //item press listener
         journalList.setOnItemClickListener(this);
-
-        //spinner
-        sortSpinner.setOnItemSelectedListener(this);
 
         // send those journals to listview
         sortedAdapter = new ArrayAdapter<>(Datatable.this, R.layout.listview_textformat, sortedJournalInfo);
@@ -174,7 +169,6 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     }
 
     private void sortJournals(){
-        String selectedSortOption = sortSpinner.getSelectedItem().toString().trim();
         ArrayList<String> journalInfo = new ArrayList<>();
 
         //Populate ListView
@@ -222,7 +216,7 @@ public class Datatable extends AppCompatActivity implements View.OnClickListener
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
-            case(R.id.btnjournaladd):
+            case(R.id.btnjournalExport):
                 intent = new Intent(Datatable.this, AddJournal.class);
                 startActivity(intent);
                 break;

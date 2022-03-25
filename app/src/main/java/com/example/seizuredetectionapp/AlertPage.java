@@ -73,7 +73,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
 
     public static String userCountdownTime = "30";
     public static String preferredContactMethod;
-    public static ArrayList<String> contactList;
+    public static Set<String> contactList;
     private static String seizureMessage = "Help! I'm having a seizure!";
     private static String cancelMessage = "Get Punked! I didn't have a seizure";
 
@@ -310,7 +310,7 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
      * TODO: Add the other ways of contacting
      * TODO: Add their location in message
      */
-    private static void alertContactList(String contactMethod, ArrayList<String> contactList, String message) {
+    private static void alertContactList(String contactMethod, Set<String> contactList, String message) {
         switch (contactMethod){
             case "text message":
 
@@ -385,12 +385,13 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
         String moodType = "";
         String seizureType = "";
         String durationOfSeizure = "";
-        String seizureTrigger = "";
+        List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
         String postSeizureDescription = "";
+        String severity = "";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription);
+                seizureTrigger, seizureDescription, postSeizureDescription, severity);
 
         userTable.child("Journals").push().setValue(newJournal)
                 .addOnCompleteListener(task -> {

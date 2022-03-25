@@ -66,6 +66,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textAlignment="center"
+            android:layout_marginTop="5dp"
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toTopOf="@id/progressBarCircle"

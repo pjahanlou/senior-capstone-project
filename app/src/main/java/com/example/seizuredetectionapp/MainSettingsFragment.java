@@ -1,27 +1,43 @@
 package com.example.seizuredetectionapp;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.onlynight.waveview.WaveView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,14 +57,17 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private Button profileButton, appButton, logoutButton;
 
     private FirebaseUser currentUser;
-
+    private String currentUserUID;
     private String username, email;
 
     private Uri imageUri;
+    File localFile = null;
+    private WaveView waveView;
 
     private StorageReference storageReference;
 
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    private LocalSettings localSettings;
 
 
     // TODO: Rename and change types of parameters
@@ -85,16 +104,37 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // initializing firebase cloud storage
-        storageReference = FirebaseStorage.getInstance().getReference();
-
         // Getting user info
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserUID = currentUser.getUid();
         email = currentUser.getEmail();
 
+        // initializing firebase cloud storage
+        storageReference = FirebaseStorage.getInstance().getReference("users/"+currentUserUID+".jpg");
+
+        // Setting the user picture at the beginning
+        try {
+            Log.d("tag", "made it here");
+            localFile = File.createTempFile("users", "jpg", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        storageReference.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inSampleSize = 16;
+            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath(), opts);
+            userPicture.setImageBitmap(bitmap);
+            Toast.makeText(getContext(), "Picture Uploaded Successfully.", Toast.LENGTH_LONG).show();
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
+            }
+        });
+
         // Retrieving the user name and updating the main page
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
-        username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("name", localSettings.name);
 
         // Handling picture uploading in the main settings
         someActivityResultLauncher = registerForActivityResult(
@@ -132,6 +172,8 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         profileButton = root.findViewById(R.id.profileSettingsButton);
         appButton = root.findViewById(R.id.appSettingsButton);
         logoutButton = root.findViewById(R.id.logoutButton);
+        waveView = root.findViewById(R.id.imageView3);
+        waveView.start();
 
         // Adding click listeners to the buttons and imageview
         userPicture.setOnClickListener(this);

@@ -1,8 +1,15 @@
 package com.example.seizuredetectionapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +23,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 public class AppSettings extends AppCompatActivity implements View.OnClickListener{
 
@@ -25,6 +34,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
     private Button submitNewName, submitNewCountdownTimer, submitNewAge,
         submitNewSeizureDuration, submitNewHeight, submitNewWeight,
         submitNewSeizureFrequency, changeContactList;
+    private PowerSpinnerView prefContactMethodDropDown;
 
     private String currentUserUID;
     private FirebaseDatabase database;
@@ -43,9 +53,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         localSettings = (LocalSettings) getApplication();
 
         // Initializing Firebase
-        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        database = FirebaseDatabase.getInstance();
-        settingsTable = database.getReference("Users").child(currentUserUID).child("Settings");
+        // currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // database = FirebaseDatabase.getInstance();
+        // settingsTable = database.getReference("Users").child(currentUserUID).child("Settings");
 
         // initializing the text views
         nameTextView = findViewById(R.id.nameTextView);
@@ -66,7 +76,10 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         submitNewSeizureFrequency = findViewById(R.id.submitNewSeizureFrequency);
         changeContactList = findViewById(R.id.changeContactList);
 
-        // Adding event listeners to the buttons
+        // Initializing the dropdown
+        prefContactMethodDropDown = findViewById(R.id.prefContactMethod);
+        
+        // Adding event listeners to the buttons and dropdowns
         submitNewName.setOnClickListener(this);
         submitNewCountdownTimer.setOnClickListener(this);
         submitNewAge.setOnClickListener(this);
@@ -75,6 +88,16 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         submitNewWeight.setOnClickListener(this);
         submitNewSeizureFrequency.setOnClickListener(this);
         changeContactList.setOnClickListener(this);
+
+        prefContactMethodDropDown.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
+            @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
+                localSettings.setPreferredContactMethod(newItem);
+                Log.d("pref", ""+newItem);
+                SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+                editor.putString(LocalSettings.DEFAULT, localSettings.getPreferredContactMethod());
+                editor.apply();
+            }
+        });
 
     }
 
@@ -85,7 +108,10 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 updateFieldInFirebase("name", nameTextView);
                 break;
             case R.id.submitNewCountdownTimer:
-                updateFieldInFirebase("countdownTimer", countdownTimerTextView);
+                updateFieldInFirebase("countdown timer", countdownTimerTextView);
+                break;
+            case R.id.prefContactMethod:
+
                 break;
             case R.id.submitNewAge:
                 updateFieldInFirebase("age", ageTextView);
@@ -103,6 +129,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 updateFieldInFirebase("seizureFrequencyPerMonth", seizureFrequencyTextView);
                 break;
             case R.id.changeContactList:
+                startActivity(new Intent(AppSettings.this, UpdateContacts.class));
                 break;
         }
     }
@@ -116,25 +143,11 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
-        /*
-        settingsTable.child(field).setValue(newField).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Toast.makeText(AppSettings.this, field + " updated.", Toast.LENGTH_LONG).show();
-                Log.d(field, "Updated successfully");
-            }
-            else{
-                Toast.makeText(AppSettings.this, field + " update failed!", Toast.LENGTH_LONG).show();
-                Log.d(field, task.getException().toString());
-            }
-        });
-
-         */
-
         // Writing the new user data to shared preferences
         localSettings.setField(field, value);
 
         SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getField(field));
+        editor.putString(field, localSettings.getField(field));
         editor.apply();
 
     }

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Platinum"
     android:layout_gravity="top"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <Button
             android:id="@+id/btnsave"
             android:layout_width="wrap_content"
@@ -78,8 +81,9 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
-
+        <!--
         <EditText
+        will remove once i get nacho working
             android:id="@+id/triggers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +95,23 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
+               -->
+                <com.hootsuite.nachos.NachoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/triggers"
+                    android:layout_below="@id/triggersTitle"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp"
+                    app:chipHeight="30dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:paddingLeft="20dp"
+                    android:background="@color/white"
+                    android:hint="Example: Stress, Missed Medication"
+                    android:textColorHint="@color/black"
+                    />
 
         <EditText
             android:id="@+id/description"
@@ -117,20 +138,21 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/triggersTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/duration"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="Triggers"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/triggersTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/duration"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Triggers"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
         <TextView
             android:id="@+id/descriptionTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/triggers"
@@ -142,6 +164,7 @@
 
         <TextView
             android:id="@+id/postdescriptionTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/description"
@@ -153,6 +176,7 @@
 
         <TextView
             android:id="@+id/durationTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/typeofseizure"
@@ -164,6 +188,7 @@
 
         <TextView
             android:id="@+id/typeOfSeizureTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mood"
@@ -175,6 +200,7 @@
 
         <TextView
             android:id="@+id/moodTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/datetime"
@@ -186,14 +212,37 @@
 
         <TextView
             android:id="@+id/dateAndTimeTitle"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="16sp"
+            android:layout_below="@id/btnsave"
             android:layout_marginLeft="20dp"
             android:paddingTop="10dp"
-            android:layout_below="@id/btnsave"
-            android:text="Date and Time" />
+            android:text="Date and Time"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/severityTitle"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/postdescription"
+            android:text="Severity"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"/>
 
-
-</RelativeLayout>
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/severitySlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/severityTitle"
+            android:theme="@style/SliderTheme"
+            android:valueFrom = "0"
+            android:valueTo = "10"
+            android:stepSize = "1"
+            android:contentDescription="Severity"
+            />
+        </RelativeLayout>
+</ScrollView>

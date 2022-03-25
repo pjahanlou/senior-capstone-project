@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import android.app.Application;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LocalSettings extends Application {
@@ -12,12 +13,16 @@ public class LocalSettings extends Application {
     public static String countdownTimer;
     public static String age;
     public static String seizureDuration;
+    public static String longestSeizure;
     public static String height;
     public static String weight;
     public static String seizureFrequency;
     public static String questionnaireComplete;
-    public static Set<String> contactList;
+    public static Set<String> contactList = new HashSet<>();
+    public static Set<String> seizureTypes = new HashSet<>();
     public static String preferredContactMethod;
+    public static String sex;
+    public static String firstSeizureDate;
 
     // A wrapper function for the app settings activity
     public static String getField(String field) {
@@ -27,14 +32,26 @@ public class LocalSettings extends Application {
             case "name":
                 fieldValue = getName();
                 break;
-            case "countdownTimer":
+            case "countdown timer":
                 fieldValue = getCountdownTimer();
                 break;
             case "age":
                 fieldValue = getAge();
                 break;
+            case "sex":
+                fieldValue = getSex();
+                break;
             case "seizureDuration":
                 fieldValue = getSeizureDuration();
+                break;
+            case "longestSeizure":
+                fieldValue = getLongestSeizure();
+                break;
+            case "questionnaire bool":
+                fieldValue = getQuestionnaireComplete();
+                break;
+            case "firstSeizure":
+                fieldValue = getFirstSeizureDate();
                 break;
             case "height":
                 fieldValue = getHeight();
@@ -45,6 +62,8 @@ public class LocalSettings extends Application {
             case "seizureFrequencyPerMonth":
                 fieldValue = getSeizureFrequency();
                 break;
+            case "preferred contact method":
+                fieldValue = getPreferredContactMethod();
         }
 
         return fieldValue;
@@ -56,14 +75,26 @@ public class LocalSettings extends Application {
             case "name":
                 setName(value);
                 break;
-            case "countdownTimer":
+            case "countdown timer":
                 setCountdownTimer(value);
                 break;
             case "age":
                 setAge(value);
                 break;
+            case "sex":
+                setSex(value);
+                break;
             case "seizureDuration":
                 setSeizureDuration(value);
+                break;
+            case "questionnaire bool":
+                setQuestionnaireComplete(value);
+                break;
+            case "longestSeizure":
+                setLongestSeizure(value);
+                break;
+            case "firstSeizure":
+                setFirstSeizureDate(value);
                 break;
             case "height":
                 setHeight(value);
@@ -73,6 +104,9 @@ public class LocalSettings extends Application {
                 break;
             case "seizureFrequencyPerMonth":
                 setSeizureFrequency(value);
+                break;
+            case "preferred contact method":
+                setPreferredContactMethod(value);
                 break;
         }
     }
@@ -157,5 +191,37 @@ public class LocalSettings extends Application {
 
     public static void setPreferredContactMethod(String preferredContactMethod) {
         LocalSettings.preferredContactMethod = preferredContactMethod;
+    }
+
+    public static String getSex() {
+        return sex;
+    }
+
+    public static void setSex(String sex) {
+        LocalSettings.sex = sex;
+    }
+
+    public static String getLongestSeizure() {
+        return longestSeizure;
+    }
+
+    public static void setLongestSeizure(String longestSeizure) {
+        LocalSettings.longestSeizure = longestSeizure;
+    }
+
+    public static String getFirstSeizureDate() {
+        return firstSeizureDate;
+    }
+
+    public static void setFirstSeizureDate(String firstSeizureDate) {
+        LocalSettings.firstSeizureDate = firstSeizureDate;
+    }
+
+    public static Set<String> getSeizureTypes() {
+        return seizureTypes;
+    }
+
+    public static void setSeizureTypes(Set<String> seizureTypes) {
+        LocalSettings.seizureTypes = seizureTypes;
     }
 }

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".LocalSettings"
@@ -20,6 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".UpdateContacts"
+            android:exported="true" />
         <activity
             android:name=".Navbar"
             android:exported="true" />
@@ -37,7 +42,7 @@
             android:exported="false" />
         <activity
             android:name=".ContactsPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".TwitterLogin"
             android:exported="false" />
@@ -67,7 +72,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginPage"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

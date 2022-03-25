@@ -159,34 +159,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
          */
 
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(60000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationCallback mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if (location != null) {
-                        Log.d("location", " location "+ location);
-                    }
-                }
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        }
-        fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-
         Log.d("User Address", userAddress+" this");
 
         // Set necessary data and start the countdown timer
@@ -218,7 +190,23 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     }
 
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        LocationRequest mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationCallback mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        userAddress = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                        Log.d("location", " location "+ userAddress);
+                    }
+                }
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -226,23 +214,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
         }
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if(location != null){
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        userAddress += addresses.get(0).getCountryName();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
+        fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
     }
 
     @Override
@@ -344,12 +317,10 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        preferredContactMethod = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getPreferredContactMethod());
-        // contactList = sharedPreferences.getStringSet(LocalSettings.DEFAULT, LocalSettings.getContactList());
-        userCountdownTime = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.getCountdownTimer());
-        if(userCountdownTime.equals("0")){
-            userCountdownTime = "30";
-        }
+        preferredContactMethod = sharedPreferences.getString("preferred contact method", LocalSettings.getPreferredContactMethod());
+        contactList = sharedPreferences.getStringSet("contact method", LocalSettings.getContactList());
+        userCountdownTime = sharedPreferences.getString("countdown timer", LocalSettings.getCountdownTimer());
+        Log.d("countdown time", ""+userCountdownTime);
 
         start();
 
@@ -372,13 +343,15 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Add their location in message
      */
     private void alertContactList(String contactMethod, Set<String> contactList, String message) {
+        getLocation();
+
         switch (contactMethod){
             case "text message":
 
                 /*for(String contactPerson:contactList){
                     Set<String> names = contactPerson.keySet();
                     String name = names.iterator().next();
-                    smsManager.sendTextMessage(contactPerson.get(name), null, message, null, null);
+                    smsManager.sendTextMessage(contactPerson.get(name), null, message+"\n"+userAddress, null, null);
                 }*/
                 break;
 
@@ -449,12 +422,13 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         String moodType = "";
         String seizureType = "";
         String durationOfSeizure = "";
-        String seizureTrigger = "";
+        List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
         String postSeizureDescription = "";
+        String severity = "";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
-                seizureTrigger, seizureDescription, postSeizureDescription);
+                seizureTrigger, seizureDescription, postSeizureDescription, severity);
 
         userTable.child("Journals").push().setValue(newJournal)
                 .addOnCompleteListener(task -> {

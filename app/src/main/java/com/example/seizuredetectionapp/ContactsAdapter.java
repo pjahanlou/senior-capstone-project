@@ -11,24 +11,36 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserViewHolder>{
-    public ArrayList<String> listOfContacts;
+    static Set<String> listOfContacts = new HashSet<>();
+    static Map<String, String> contactMap = new HashMap<>();
     View v;
     Activity activity;
     ArrayList<ContactLayout> contactList;
 
-    public ContactsAdapter(Activity activity, ArrayList<ContactLayout> contactList, View v, ArrayList<String> listOfContacts){
+    public ContactsAdapter(Activity activity, ArrayList<ContactLayout> contactList, View v, Set<String> listOfContacts){
         this.activity = activity;
         this.contactList = contactList;
         this.v = v;
         this.listOfContacts = listOfContacts;
+        notifyDataSetChanged();
+    }
+
+    public void setFilteredList(ArrayList<ContactLayout> filteredList){
+        this.contactList = filteredList;
         notifyDataSetChanged();
     }
 
@@ -52,7 +64,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
         return contactList.size();
     }
 
-    public class UserViewHolder extends RecyclerView.ViewHolder{
+    public static class UserViewHolder extends RecyclerView.ViewHolder{
         TextView name, phoneNumber;
 
         public UserViewHolder(@NonNull View itemView) {
@@ -61,16 +73,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
             name = itemView.findViewById(R.id.contactEditViewName);
             phoneNumber = itemView.findViewById(R.id.contactEditViewNumber);
             itemView.findViewById(R.id.addContact_Button)
-
             .setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String textName = name.getText().toString().trim();
                     String textPhoneNumber = phoneNumber.getText().toString().trim();
                     Log.d("demo", "button Clicked on contact: " + textPhoneNumber);
-                    if(listOfContacts.contains(textPhoneNumber) == false){
-                        listOfContacts.add(textPhoneNumber);
-                    }
+                    contactMap.put(textPhoneNumber, textName);
+                    listOfContacts.add(textPhoneNumber);
+                    Log.d("my check", "" + listOfContacts.toString());
                 }
             });
         }

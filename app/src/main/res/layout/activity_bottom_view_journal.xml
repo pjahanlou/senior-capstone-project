@@ -8,8 +8,9 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="20dp"
-    android:background="@color/LightSteelBlue"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    android:background="@drawable/bottom_sheet_layout"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    >
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -25,31 +26,47 @@
             android:textSize="30dp" />
 
         <Button
-            android:id="@+id/btnjournaladd"
+            android:id="@+id/btnjournalExport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
-            android:text="add" />
+            android:text="export" />
 
-
-        <Spinner
-            android:id="@+id/sortSpinner"
+        <com.skydoves.powerspinner.PowerSpinnerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/title"
-            android:background="@android:drawable/btn_dropdown"
-            android:entries="@array/spinnerItems"
-            android:spinnerMode="dropdown" />
+            android:id="@+id/sortDropdown"
+            android:background="@drawable/button_bg"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:hint="Sort by"
+            android:padding="12dp"
+            android:textColor="@color/Platinum"
+            android:textColorHint="@color/Platinum"
+            android:textSize="16dp"
+            app:spinner_arrow_gravity="end"
+            app:spinner_arrow_padding="4dp"
+            app:spinner_divider_color="@color/purple_500"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="1dp"
+            app:spinner_item_array="@array/journalSortDropDown"
+            app:spinner_popup_animation="bounce"
+            app:spinner_popup_background="@color/LightSteelBlue"
+            app:spinner_popup_elevation="14dp"
+            android:layout_alignEnd="@id/title"/>
 
     </RelativeLayout>
 
-
     <ListView
         android:id="@+id/journalList"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
-        android:dividerHeight="10dp"
-         />
+        android:dividerHeight="5dp"
+        android:layout_margin="0dp">
+
+    </ListView>
 
 </LinearLayout>

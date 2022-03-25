@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -180,6 +187,28 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                                         Toast.makeText(getActivity(), "Check your email to verify your account", Toast.LENGTH_LONG).show();
                                         SignupTabFragment.signupFlag = true;
 
+                                        RequestQueue queue = Volley.newRequestQueue(getContext());
+                                        queue.start();
+
+                                        StringRequest stringRequest = new StringRequest(Request.Method.GET, HTTPHelpers.MYURL,
+                                                new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
+                                                        // Add response key to firebase
+                                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                .child("userkey").setValue(response);
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Log.e("Volley Error", error.toString());
+                                                Toast.makeText(getActivity(), "Could not get user key!", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+                                        queue.add(stringRequest);
+
                                     }
                                     else{
                                         Toast.makeText(getActivity(), "User sign up failed!", Toast.LENGTH_LONG).show();
@@ -197,9 +226,13 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
         localSettings.setQuestionnaireComplete("0");
 
         SharedPreferences.Editor editor = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE).edit();
-        editor.putString(LocalSettings.DEFAULT, localSettings.getName());
-        editor.putString(LocalSettings.DEFAULT, localSettings.getQuestionnaireComplete());
-        editor.apply();
+        editor.putString("name", localSettings.getName());
+        editor.putString("questionnaire bool", localSettings.getQuestionnaireComplete());
+        if(editor.commit()){
+            Log.d("questionnaire bool", "Successful");
+        } else{
+            Log.d("questionnaire bool", "Failed");
+        }
 
         return signupFlag;
     }
