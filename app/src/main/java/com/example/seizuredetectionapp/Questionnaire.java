@@ -42,7 +42,6 @@ public class Questionnaire implements Serializable{
                          HashMap<String, String> contactMap
             ){
         this.name = name;
-        this.addedContacts = addedContacts;
         this.countdownTimer = countdownTimer;
         this.dateOfBirth = dateOfBirth;
         this.contactMethod = contactMethod;

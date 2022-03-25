@@ -22,11 +22,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.material.slider.RangeSlider;
 import com.hootsuite.nachos.NachoTextView;
 import com.royrodriguez.transitionbutton.TransitionButton;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +43,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
+
 
 
     @Override
@@ -212,6 +217,11 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         } else{
             Log.d(field, "Failed");
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        seizureStartD = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 
     @Override

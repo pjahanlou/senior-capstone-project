@@ -2,7 +2,7 @@ package com.example.seizuredetectionapp;
 
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
-import android.app.DatePickerDialog;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -204,7 +204,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);
-
+      
         gotIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,5 +213,10 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         });
 
         dialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
+        selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 }
