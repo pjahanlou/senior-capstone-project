@@ -67,6 +67,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private StorageReference storageReference;
 
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    private LocalSettings localSettings;
 
 
     // TODO: Rename and change types of parameters
@@ -132,8 +133,8 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         });
 
         // Retrieving the user name and updating the main page
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
-        username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("name", localSettings.name);
 
         // Handling picture uploading in the main settings
         someActivityResultLauncher = registerForActivityResult(
