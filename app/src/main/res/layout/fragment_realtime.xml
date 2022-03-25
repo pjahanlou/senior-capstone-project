@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <Button
         android:id="@+id/btnshowEDA"
         android:layout_width="wrap_content"

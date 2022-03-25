@@ -170,11 +170,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         // Checking if the user has completed the questionnaire or not
         //this still crashes my build for some reason
-        /*
         if(isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-    */
+
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
         Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
@@ -197,13 +196,13 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         dateCompare = Calendar.getInstance();
         dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-        dates = getDates(dateCompare);
+        getDates(dateCompare);
         //Assign journals to days of current week and keep count in an array
         int entries[] = new int[8];
         for (int k = 0; k <= 7; k++){
             entries[k] = 0;
         }
-        for (float i = 1; i<= dates.size(); i++){
+        for (float i = 1; i<= journalDates.size(); i++){
             entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
             //yAxis.add(new Entry(DAY_OF_WEEK, i));
         }

@@ -127,7 +127,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
             }
         });
 
