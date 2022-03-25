@@ -140,7 +140,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
 
-        String countdownTimer = String.valueOf(countdownTimerSlider.getValues().get(0));
+        String countdownTimer = String.valueOf(Math.round(countdownTimerSlider.getValues().get(0)));
         String height = valueToHeight(heightSlider.getValues().get(0));
         String weight = String.valueOf(weightSlider.getValues().get(0));
 
