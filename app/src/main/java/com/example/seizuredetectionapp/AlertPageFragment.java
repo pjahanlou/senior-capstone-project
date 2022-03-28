@@ -419,8 +419,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private void saveJournal(){
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
                 format(Calendar.getInstance().getTime());
-        String moodType = "";
-        String seizureType = "";
+        List<String> moodType = new ArrayList<String>();
+        List<String> seizureType = new ArrayList<String>();
         String durationOfSeizure = "";
         List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
