@@ -173,7 +173,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         if(isQuestionnaireComplete != null && isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
-
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
         Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
