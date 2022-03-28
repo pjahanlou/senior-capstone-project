@@ -135,11 +135,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // Asking all the permissions
-        // TODO: move to questionnaire page in the future
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.SEND_SMS, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
-
         // database configurations for writing journals to firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();

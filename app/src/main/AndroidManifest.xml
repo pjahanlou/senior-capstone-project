@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.seizuredetectionapp">
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
@@ -22,6 +24,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".UsualLocations"
+            android:exported="false" />
+        <activity
+            android:name=".TextPermission"
+            android:exported="false" />
+        <activity
+            android:name=".LocationPermission"
+            android:exported="false" />
+        <activity
+            android:name=".ContactPermission"
+            android:exported="true" />
         <activity
             android:name=".UpdateContacts"
             android:exported="true" />

@@ -34,6 +34,7 @@ import com.royrodriguez.transitionbutton.TransitionButton;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -108,7 +109,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                     submitQuestionnaireMedical.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
                         @Override
                         public void onAnimationStopEnd() {
-                            Intent intent = new Intent(getBaseContext(), Navbar.class);
+                            Intent intent = new Intent(getBaseContext(), LocationPermission.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivity(intent);
                         }
