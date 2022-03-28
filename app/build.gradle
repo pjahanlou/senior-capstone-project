@@ -81,4 +81,7 @@ dependencies {
 
     // https://github.com/PhilJay/MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // https://developer.android.com/jetpack/androidx/releases/work WorkManager dependency
+    implementation "androidx.work:work-runtime:2.7.1"
 }
