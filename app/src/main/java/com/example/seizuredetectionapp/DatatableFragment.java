@@ -170,7 +170,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         // Checking if the user has completed the questionnaire or not
         //this still crashes my build for some reason
-        if(isQuestionnaireComplete != null & isQuestionnaireComplete.equals("0")){
+        if(isQuestionnaireComplete != null && isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
 
