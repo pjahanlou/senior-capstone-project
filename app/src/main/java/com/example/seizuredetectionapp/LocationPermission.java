@@ -1,16 +1,22 @@
 package com.example.seizuredetectionapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class LocationPermission extends AppCompatActivity implements View.OnClickListener{
 
+    private static final int FINE_LOCATION_PERMISSION_CODE = 100;
+    private static final int COARSE_LOCATION_PERMISSION_CODE = 101;
     private Button sureButton, notSureButton;
 
     @Override
@@ -31,19 +37,54 @@ public class LocationPermission extends AppCompatActivity implements View.OnClic
     public void onClick(View view){
         switch(view.getId()){
             case R.id.acceptLocationPermission:
-                getLocationPermission();
+                checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, FINE_LOCATION_PERMISSION_CODE);
+                // checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, COARSE_LOCATION_PERMISSION_CODE);
                 break;
             case R.id.rejectLocationPermission:
+                startActivity(new Intent(this, TextPermission.class));
                 break;
         }
-        startActivity(new Intent(this, TextPermission.class));
     }
 
     /**
      * Method for accepting location permission
      * */
-    private void getLocationPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
+    private void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(this, new String[] { permission }, requestCode);
+        }
+        else {
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, TextPermission.class));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+
+        if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Fine Location Permission Granted", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Fine Location Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            startActivity(new Intent(this, TextPermission.class));
+        }
+        else if (requestCode == COARSE_LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Coarse Location Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Coarse Location Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
