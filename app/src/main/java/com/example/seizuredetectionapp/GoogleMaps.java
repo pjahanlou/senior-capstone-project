@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -52,19 +53,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback {
+public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlacesClient placesClient;
     private List<AutocompletePrediction> predictionList;
+    private ArrayList<String> locations = new ArrayList<>();
 
     private Location mLastKnownLocation;
     private LocationCallback locationCallback;
 
     private MaterialSearchBar materialSearchBar;
     private View mapView;
-    private FloatingActionButton saveLocationsButton;
+    private Button saveLocationsButton;
 
     private final float DEFAULT_ZOOM = 15;
 
@@ -74,7 +76,10 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback 
         setContentView(R.layout.activity_google_maps);
 
         materialSearchBar = findViewById(R.id.searchBar);
-        saveLocationsButton = findViewById(R.id.fab_locations);
+        saveLocationsButton = findViewById(R.id.saveLocations);
+
+        // Click Listener for location button
+        saveLocationsButton.setOnClickListener(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -173,6 +178,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback 
                     if (latLngOfPlace != null) {
                         String location = materialSearchBar.getText();
                         mMap.addMarker(new MarkerOptions().position(latLngOfPlace).title(location));
+                        locations.add(location);
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngOfPlace, 10));
                     }
                 }).addOnFailureListener(e -> {
@@ -193,6 +199,18 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback 
         });
     }
 
+    @Override
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.saveLocations:
+                Log.d("locations", locations.toString());
+                Intent intent = new Intent(this, UsualLocations.class);
+                intent.putExtra("locations", locations); // getText() SHOULD NOT be static!!!
+                startActivity(intent);
+                break;
+        }
+    }
+
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -205,7 +223,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback 
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 0, 40, 180);
+            layoutParams.setMargins(0, 0, 40, 270);
         }
 
         //check if gps is enabled or not and then request user to enable it
