@@ -47,7 +47,6 @@
         android:outlineProvider="bounds"
         app:mt_placeholder="Search a place"/>
 
-    <!--
     <Button
         android:id="@+id/saveLocations"
         android:layout_width="match_parent"
@@ -63,22 +62,6 @@
         android:text="Save Locations"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-
-        />
-        -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_locations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/purple_500"
-        android:src="@drawable/ic_baseline_add_new_location"
-        android:elevation="35dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         />
 
 </RelativeLayout>

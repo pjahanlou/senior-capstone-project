@@ -1,9 +1,12 @@
 package com.example.seizuredetectionapp;
 
+import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UsualLocations extends AppCompatActivity implements View.OnClickListener{
 
@@ -27,6 +32,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
     private ArrayList<UsualLocationsLayout> locations = new ArrayList<>();
     private UsualLocationsAdapter adapter;
+
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,29 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         saveLocationButton.setOnClickListener(this);
         addLocationButton.setOnClickListener(this);
 
-        // Connecting adaoter to listview
+        // Pulling from local settings
+        Set<String> savedLocations  = pullFromLocalSettings();
+
+        // Locations selected in the GoogleMaps page
+        ArrayList<String> receivedLocations = getIntent().getExtras().getStringArrayList("locations");
+        if(receivedLocations != null){
+            Log.d("usual locations", receivedLocations.toString());
+        }
+
+        // Merging the saved locations and received locations
+        if(savedLocations != null){
+            Set<String> receivedLocationsSet = new HashSet<>(receivedLocations);
+            savedLocations.addAll(receivedLocationsSet);
+            Log.d("merged locations", savedLocations.toString());
+        }
+
+        // Converting to UsualLocationsLayout ArrayList
+        for(String location:savedLocations){
+            UsualLocationsLayout usualLocationsLayout = new UsualLocationsLayout(location);
+            locations.add(usualLocationsLayout);
+        }
+
+        // Connecting adapter to listview
         adapter = new UsualLocationsAdapter(this, R.layout.item_usual_location, locations);
         swipeMenuListView.setAdapter(adapter);
 
@@ -74,8 +103,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         swipeMenuListView.setOnMenuItemClickListener((position, menu, index) -> {
             switch (index) {
                 case 0:
-                    // Delete contact
-                    // adapter.notifyDataSetChanged();
+                    // Delete location
+                    locations.remove(position);
+                    adapter.notifyDataSetChanged();
                     break;
             }
             // false : close the menu; true : not close the menu
@@ -85,6 +115,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view){
+        // Save their location when save locations and add new location buttons are clicked
+        pushToLocalSettings();
+
         switch(view.getId()){
             case R.id.saveLocationButton:
                 startActivity(new Intent(this, Navbar.class));
@@ -93,6 +126,42 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(this, GoogleMaps.class));
                 break;
         }
+    }
+
+    public Set<String> convertAdapterToSet(){
+        Set<String> locationsSet = new HashSet<>();
+
+        for(UsualLocationsLayout locationsLayout:locations){
+            locationsSet.add(locationsLayout.getAddress());
+        }
+
+        return locationsSet;
+    }
+
+    public void pushToLocalSettings(){
+        // Converting locations array to a set
+        Set<String> locationsSet = convertAdapterToSet();
+
+        // Saving the locations list
+        localSettings.setLocations(locationsSet);
+        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
+        editor.putStringSet("locations", localSettings.getLocations());
+
+        // Logging the status of push
+        if(editor.commit()){
+            Log.d("locations status", "Successful");
+        } else{
+            Log.d("locations status", "Failed");
+        }
+    }
+
+    public Set<String> pullFromLocalSettings(){
+        Set<String> locations = new HashSet<>();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        locations = sharedPreferences.getStringSet("locations", LocalSettings.getLocations());
+
+        return locations;
     }
 
     public static int dp2px(Context context, float dp) {
