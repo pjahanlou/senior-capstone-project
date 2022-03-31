@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -86,8 +87,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view){
         switch(view.getId()){
             case R.id.saveLocationButton:
+                startActivity(new Intent(this, Navbar.class));
                 break;
             case R.id.addNewLocationButton:
+                startActivity(new Intent(this, GoogleMaps.class));
                 break;
         }
     }
