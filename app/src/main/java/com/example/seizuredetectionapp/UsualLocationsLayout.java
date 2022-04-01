@@ -2,22 +2,43 @@ package com.example.seizuredetectionapp;
 
 public class UsualLocationsLayout {
 
-    private String address;
+    private String street;
+    private String city;
+    private String stateAndCountry;
 
-    public UsualLocationsLayout(String address){
-        this.address = address;
+    public UsualLocationsLayout(String street, String city, String stateAndCountry){
+
+        this.street = street;
+        this.city = city;
+        this.stateAndCountry = stateAndCountry;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStateAndCountry() {
+        return stateAndCountry;
+    }
+
+    public void setStateAndCountry(String stateAndCountry) {
+        this.stateAndCountry = stateAndCountry;
     }
 
     public String toString(){
-        return this.address;
+        return this.street + " " + this.city + " " + this.stateAndCountry ;
     }
 
 }
