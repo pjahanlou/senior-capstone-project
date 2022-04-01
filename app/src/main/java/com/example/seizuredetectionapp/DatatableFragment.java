@@ -188,15 +188,18 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         // Retrieving the user info from shared preferences
-        sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
-        isQuestionnaireComplete = sharedPreferences.getString("questionnaire bool", LocalSettings.questionnaireComplete);
+        sharedPreferences = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        isQuestionnaireComplete = sharedPreferences.getString("questionnaire bool", localSettings.getQuestionnaireComplete());
         Log.d("boolQ", ""+isQuestionnaireComplete);
 
         // Checking if the user has completed the questionnaire or not
         //this still crashes my build for some reason
+
         if(isQuestionnaireComplete != null && isQuestionnaireComplete.equals("0")){
             showNewUserDialog();
         }
+
+
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
         Log.d("firstSeizure", ""+sharedPreferences.getString("firstSeizure", ""));
