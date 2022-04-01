@@ -209,13 +209,11 @@
                     android:contentDescription="Longest Seizure"/>
             </LinearLayout>>
 
-            <com.royrodriguez.transitionbutton.TransitionButton
+            <Button
                 android:id="@+id/submitQuestionnaireMedical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit"
-                app:defaultColor="@color/purple_500"
-                app:loaderColor="@color/LightSteelBlue"
                 android:textColor="@android:color/white"
                 android:background="@drawable/button_bg"
                 android:textStyle="bold"
