@@ -13,7 +13,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <!-- I don't think this app is going to production
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    -->
     <application
         android:name=".LocalSettings"
         android:allowBackup="true"
