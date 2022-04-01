@@ -21,6 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +54,13 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         Set<String> savedLocations  = pullFromLocalSettings();
 
         // Locations selected in the GoogleMaps page
-        ArrayList<String> receivedLocations = getIntent().getExtras().getStringArrayList("locations");
+        ArrayList<String> receivedLocations = new ArrayList<>();
+        try {
+            receivedLocations = getIntent().getExtras().getStringArrayList("locations");
+        } catch (Throwable e1){
+            e1.printStackTrace();
+        }
+
         if(receivedLocations != null){
             Log.d("usual locations", receivedLocations.toString());
         }
@@ -67,7 +74,11 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         // Converting to UsualLocationsLayout ArrayList
         for(String location:savedLocations){
-            UsualLocationsLayout usualLocationsLayout = new UsualLocationsLayout(location);
+            String[] locationArray = location.split(",");
+            String street = locationArray[0];
+            String city = locationArray[1];
+            String stateAndCountry = locationArray[2] + "" + locationArray[3];
+            UsualLocationsLayout usualLocationsLayout = new UsualLocationsLayout(street, city, stateAndCountry);
             locations.add(usualLocationsLayout);
         }
 
@@ -132,7 +143,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         Set<String> locationsSet = new HashSet<>();
 
         for(UsualLocationsLayout locationsLayout:locations){
-            locationsSet.add(locationsLayout.getAddress());
+            String location = locationsLayout.getStreet() + " " + locationsLayout.getCity()
+                    + " " + locationsLayout.getStateAndCountry();
+            locationsSet.add(location);
         }
 
         return locationsSet;

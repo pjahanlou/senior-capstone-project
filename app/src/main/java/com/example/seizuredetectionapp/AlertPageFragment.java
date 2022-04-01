@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,12 +41,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.GeoPoint;
 import com.skyfishjy.library.RippleBackground;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -102,6 +105,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private Geocoder geocoder;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private Double userLatitude, userLongitude;
 
     private LocalSettings localSettings;
 
@@ -178,6 +182,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         callButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
 
+        getLocation();
+
         timerStatus = AlertPageFragment.TimerStatus.STARTED;
         startAlertPage();
 
@@ -195,6 +201,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
+                        userLatitude = location.getLatitude();
+                        userLongitude = location.getLongitude();
                         userAddress = getCompleteAddressString(location.getLatitude(), location.getLongitude());
                         Log.d("location", " location "+ userAddress);
                     }
@@ -338,16 +346,57 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Add their location in message
      */
     private void alertContactList(String contactMethod, Set<String> contactList, String message) {
-        getLocation();
+        // Setting the user location to userAddress variable
+        //getLocation();
+
+        // Pulling the usual locations from local settings
+        Set<String> usualLocations = pullLocationsFromLocalSettings();
+
+        String closestLocation = null;
+
+        // Checking if the user is near any of their usual locations
+        for(String location:usualLocations){
+            // Getting the coordinates of a usual location
+            LatLng latLng = getLocationFromAddress(location);
+            Log.d("latlng", latLng.toString());
+
+            // Setting coordinate points
+            Location userLocation = new Location("user location");
+            userLocation.setLatitude(userLatitude);
+            userLocation.setLongitude(userLongitude);
+
+            Location usualLocation = new Location("usual location");
+            usualLocation.setLatitude(latLng.latitude);
+            usualLocation.setLongitude(latLng.longitude);
+
+            // Calculating the distance
+            float distance = userLocation.distanceTo(usualLocation);
+            Log.d("distance", String.valueOf(distance));
+
+            // If the user is within half a mile of a usual location
+            if(distance <= 800){
+                closestLocation = location;
+            }
+        }
 
         switch (contactMethod){
             case "text message":
 
-                /*for(String contactPerson:contactList){
+                /*
+                for(String contactPerson:contactList){
                     Set<String> names = contactPerson.keySet();
                     String name = names.iterator().next();
-                    smsManager.sendTextMessage(contactPerson.get(name), null, message+"\n"+userAddress, null, null);
-                }*/
+                    if(closestLocation != null){
+                        smsManager.sendTextMessage(contactPerson.get(name), null,
+                                message+"\n"+userAddress+"\nthe user is within half mile radius of here: "
+                                    + closestLocation
+                                , null, null);
+                    } else{
+                        smsManager.sendTextMessage(contactPerson.get(name), null, message+"\n"+userAddress, null, null);
+                    }
+                }
+
+                 */
                 break;
 
             case "email":
@@ -365,6 +414,33 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
         // assigning values after converting to milliseconds
         timeCountInMilliSeconds = countdownTime * 1000;
+    }
+
+    /**
+     * Method for converting address to Coordinates
+     * */
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
     /**
@@ -467,6 +543,18 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 rippleBackground.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
         }
+    }
+
+    /**
+     * Method for pulling usual locations from local settings
+     * */
+    public Set<String> pullLocationsFromLocalSettings(){
+        Set<String> locations = new HashSet<>();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        locations = sharedPreferences.getStringSet("locations", LocalSettings.getLocations());
+
+        return locations;
     }
 
     /**

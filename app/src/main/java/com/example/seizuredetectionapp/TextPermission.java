@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class TextPermission extends AppCompatActivity implements View.OnClickListener{
 
     private static final int TEXT_PERMISSION_CODE = 102;
@@ -39,7 +41,8 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
                 checkPermission(Manifest.permission.SEND_SMS, TEXT_PERMISSION_CODE);
                 break;
             case R.id.rejectTextPermission:
-                startActivity(new Intent(this, UsualLocations.class));
+                Intent intent = new Intent(this, UsualLocations.class);
+                startActivity(intent);
                 break;
         }
     }

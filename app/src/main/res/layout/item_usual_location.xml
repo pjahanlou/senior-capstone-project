@@ -37,22 +37,33 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/addressTextView"
+            android:id="@+id/streetTextView"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:paddingTop="10dp"
-            android:paddingBottom="1dp">
+            android:paddingTop="5dp"
+            android:layout_marginLeft="5dp">
 
         </TextView>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/updatecontactEditViewNumber"
+            android:id="@+id/cityTextView"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="14sp">
+            android:paddingTop="5dp">
 
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stateCountryTextView"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:paddingTop="5dp">
         </TextView>
 
     </LinearLayout>
