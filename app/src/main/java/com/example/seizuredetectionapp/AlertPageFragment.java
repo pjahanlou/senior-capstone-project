@@ -44,13 +44,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.GeoPoint;
 import com.skyfishjy.library.RippleBackground;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -80,7 +86,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
     public String userCountdownTime = "30";
     public String preferredContactMethod;
-    public Set<String> contactList;
+    public Map<String, String> contactList = new HashMap<>();
     private String seizureMessage = "Help! I'm having a seizure!";
     private String cancelMessage = "Get Punked! I didn't have a seizure";
 
@@ -225,7 +231,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v){
         switch(v.getId()){
             case R.id.callnow:
-                alertContactList(preferredContactMethod, contactList, seizureMessage);
+                alertContactList(seizureMessage);
                 stopCountDownTimer();
                 changeUI(timerStatus);
                 saveJournal();
@@ -240,7 +246,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                     stopCountDownTimer();
                 }
                 if(timerStatus == AlertPageFragment.TimerStatus.STOPPED){
-                    alertContactList(preferredContactMethod, contactList, cancelMessage);
+                    alertContactList(cancelMessage);
                     timerStatus = AlertPageFragment.TimerStatus.STARTED;
                     changeUI(timerStatus);
                 }
@@ -321,12 +327,39 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         preferredContactMethod = sharedPreferences.getString("preferred contact method", LocalSettings.getPreferredContactMethod());
-        contactList = sharedPreferences.getStringSet("contact method", LocalSettings.getContactList());
         userCountdownTime = sharedPreferences.getString("countdown timer", LocalSettings.getCountdownTimer());
         Log.d("countdown time", ""+userCountdownTime);
 
+        // Pulling the contact list
+        contactList = loadContactMap();
+
         start();
 
+    }
+
+    /**
+     * Method for pulling the contact hashmap
+     * */
+    private Map<String, String> loadContactMap() {
+        Map<String, String> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        try {
+            if (pSharedPref != null) {
+                String jsonString = pSharedPref.getString("contact map", (new JSONObject()).toString());
+                if (jsonString != null) {
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    Iterator<String> keysItr = jsonObject.keys();
+                    while (keysItr.hasNext()) {
+                        String key = keysItr.next();
+                        String value = jsonObject.getString(key);
+                        outputMap.put(key, value);
+                    }
+                }
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return outputMap;
     }
 
     /**
@@ -345,7 +378,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Add the other ways of contacting
      * TODO: Add their location in message
      */
-    private void alertContactList(String contactMethod, Set<String> contactList, String message) {
+    private void alertContactList(String message) {
         // Setting the user location to userAddress variable
         //getLocation();
 
@@ -379,24 +412,28 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             }
         }
 
-        switch (contactMethod){
+        switch (preferredContactMethod){
             case "text message":
 
-                /*
-                for(String contactPerson:contactList){
-                    Set<String> names = contactPerson.keySet();
-                    String name = names.iterator().next();
+                Iterator hmIterator = contactList.entrySet().iterator();
+                while(hmIterator.hasNext()){
+                    Map.Entry contact = (Map.Entry)hmIterator.next();
+                    String name = (String) contact.getValue();
+                    String number = (String) contact.getKey();
                     if(closestLocation != null){
-                        smsManager.sendTextMessage(contactPerson.get(name), null,
-                                message+"\n"+userAddress+"\nthe user is within half mile radius of here: "
-                                    + closestLocation
+                        smsManager.sendTextMessage(number, null,
+                                    "Hello "+name+",\n"+
+                                        message+"\nwe have detected that they're here:"+userAddress+
+                                        "\nthe user is within half mile radius of here: "
+                                        + closestLocation
                                 , null, null);
                     } else{
-                        smsManager.sendTextMessage(contactPerson.get(name), null, message+"\n"+userAddress, null, null);
+                        smsManager.sendTextMessage(number, null, "Hello "+name+",\n"+
+                                message+"\nwe have detected that they're here:"+userAddress
+                                , null, null);
                     }
                 }
 
-                 */
                 break;
 
             case "email":
@@ -468,7 +505,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onFinish() {
-                alertContactList(preferredContactMethod, contactList, seizureMessage);
+                alertContactList(seizureMessage);
 
                 // save journal information to firebase
                 saveJournal();
