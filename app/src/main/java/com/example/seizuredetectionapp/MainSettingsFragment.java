@@ -35,11 +35,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.Color;
 
 import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +69,7 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     private StorageReference storageReference;
 
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    private LocalSettings localSettings;
 
 
     // TODO: Rename and change types of parameters
@@ -127,13 +130,13 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "No Picture Found.", Toast.LENGTH_LONG).show();
             }
         });
 
         // Retrieving the user name and updating the main page
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.getField("name"), Context.MODE_PRIVATE);
-        username = sharedPreferences.getString(LocalSettings.DEFAULT, LocalSettings.name);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        username = sharedPreferences.getString("name", localSettings.name);
 
         // Handling picture uploading in the main settings
         someActivityResultLauncher = registerForActivityResult(
@@ -190,6 +193,23 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.profileImage:
+                new MaterialTapTargetPrompt.Builder(this)
+                        .setTarget(R.id.profileImage)
+                        .setBackgroundColour(getResources().getColor(R.color.LightSteelBlue))
+                        .setPrimaryText("Send your first email")
+                        .setSecondaryText("Tap the envelope to start composing your first email")
+                        .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener()
+                        {
+                            @Override
+                            public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state)
+                            {
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
+                                {
+                                    // User has pressed the prompt target
+                                }
+                            }
+                        })
+                        .show();
                 selectImage();
                 break;
             case R.id.profileSettingsButton:

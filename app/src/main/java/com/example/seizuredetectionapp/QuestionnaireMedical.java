@@ -22,14 +22,19 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.material.slider.RangeSlider;
 import com.hootsuite.nachos.NachoTextView;
 import com.royrodriguez.transitionbutton.TransitionButton;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -39,6 +44,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
+
 
 
     @Override
@@ -86,33 +92,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         seizureTypeView.setAdapter(adapter);
 
         openDatePicker.setOnClickListener(this);
-
-        // Cool animation for the submit button
-        submitQuestionnaireMedical.setOnClickListener(v -> {
-            // Start the loading animation when the user tap the button
-            submitQuestionnaireMedical.startAnimation();
-
-            // Do your networking task or background work here.
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                boolean isSuccessful = true;
-                saveQuestionnaireMedical();
-
-                // Choose a stop animation if your call was succesful or not
-                if (isSuccessful) {
-                    submitQuestionnaireMedical.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
-                        @Override
-                        public void onAnimationStopEnd() {
-                            Intent intent = new Intent(getBaseContext(), Navbar.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            startActivity(intent);
-                        }
-                    });
-                } else {
-                    submitQuestionnaireMedical.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
-                }
-            }, 1000);
-        });
+        submitQuestionnaireMedical.setOnClickListener(this);
     }
 
     private String longestSeizureConvert(float value) {
@@ -126,7 +106,9 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     }
 
     private String averageSeizureConvert(float value) {
-        if((int)value == 1){
+        if((int) value == 0){
+            return "0 sec";
+        } else if((int)value == 1){
             return "5 Sec";
         } else if((int)value == 2) {
             return "30 Sec";
@@ -151,7 +133,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.openDatePickerDialog: {
+            case R.id.openDatePickerDialog:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this,
                         0,
@@ -162,7 +144,9 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 );
                 datePickerDialog.show();
                 break;
-            }
+            case R.id.submitQuestionnaireMedical:
+                saveQuestionnaireMedical();
+                break;
         }
     }
 
@@ -173,7 +157,25 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         String averageSeizure = averageSeizureConvert(averageSeizureDurationSlider.getValues().get(0));
         String longestSeizure = longestSeizureConvert(longestSeizureSlider.getValues().get(0));
 
+        if (seizureTypes == null) {
+            seizureTypeView.requestFocus();
+            seizureTypeView.setError("A seizure type is required!");
+            return;
+        }
+
         if (seizureStartD == "") {
+            openDatePicker.requestFocus();
+            openDatePicker.setError("A seizure start date is required!");
+            return;
+        }
+
+        if (seizureFreq == "0") {
+            openDatePicker.requestFocus();
+            openDatePicker.setError("A seizure start date is required!");
+            return;
+        }
+
+        if (averageSeizure == "0") {
             openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
             return;
@@ -197,7 +199,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         questionnaireComplete("questionnaire bool", "1");
 
         // Moving to Datatable fragment
-        startActivity(new Intent(this, Navbar.class));
+        startActivity(new Intent(this, LocationPermission.class));
         
     }
 

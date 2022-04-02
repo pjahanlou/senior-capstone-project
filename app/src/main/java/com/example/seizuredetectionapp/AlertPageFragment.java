@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,14 +41,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.GeoPoint;
 import com.skyfishjy.library.RippleBackground;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +86,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
     public String userCountdownTime = "30";
     public String preferredContactMethod;
-    public Set<String> contactList;
+    public Map<String, String> contactList = new HashMap<>();
     private String seizureMessage = "Help! I'm having a seizure!";
     private String cancelMessage = "Get Punked! I didn't have a seizure";
 
@@ -102,6 +111,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private Geocoder geocoder;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private Double userLatitude, userLongitude;
 
     private LocalSettings localSettings;
 
@@ -134,11 +144,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // Asking all the permissions
-        // TODO: move to questionnaire page in the future
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.SEND_SMS, Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
 
         // database configurations for writing journals to firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -183,6 +188,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         callButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
 
+        getLocation();
+
         timerStatus = AlertPageFragment.TimerStatus.STARTED;
         startAlertPage();
 
@@ -200,6 +207,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
+                        userLatitude = location.getLatitude();
+                        userLongitude = location.getLongitude();
                         userAddress = getCompleteAddressString(location.getLatitude(), location.getLongitude());
                         Log.d("location", " location "+ userAddress);
                     }
@@ -222,7 +231,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v){
         switch(v.getId()){
             case R.id.callnow:
-                alertContactList(preferredContactMethod, contactList, seizureMessage);
+                alertContactList(seizureMessage);
                 stopCountDownTimer();
                 changeUI(timerStatus);
                 saveJournal();
@@ -237,7 +246,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                     stopCountDownTimer();
                 }
                 if(timerStatus == AlertPageFragment.TimerStatus.STOPPED){
-                    alertContactList(preferredContactMethod, contactList, cancelMessage);
+                    alertContactList(cancelMessage);
                     timerStatus = AlertPageFragment.TimerStatus.STARTED;
                     changeUI(timerStatus);
                 }
@@ -318,12 +327,39 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         preferredContactMethod = sharedPreferences.getString("preferred contact method", LocalSettings.getPreferredContactMethod());
-        contactList = sharedPreferences.getStringSet("contact method", LocalSettings.getContactList());
         userCountdownTime = sharedPreferences.getString("countdown timer", LocalSettings.getCountdownTimer());
         Log.d("countdown time", ""+userCountdownTime);
 
+        // Pulling the contact list
+        contactList = loadContactMap();
+
         start();
 
+    }
+
+    /**
+     * Method for pulling the contact hashmap
+     * */
+    private Map<String, String> loadContactMap() {
+        Map<String, String> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = getActivity().getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        try {
+            if (pSharedPref != null) {
+                String jsonString = pSharedPref.getString("contact map", (new JSONObject()).toString());
+                if (jsonString != null) {
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    Iterator<String> keysItr = jsonObject.keys();
+                    while (keysItr.hasNext()) {
+                        String key = keysItr.next();
+                        String value = jsonObject.getString(key);
+                        outputMap.put(key, value);
+                    }
+                }
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return outputMap;
     }
 
     /**
@@ -342,17 +378,62 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Add the other ways of contacting
      * TODO: Add their location in message
      */
-    private void alertContactList(String contactMethod, Set<String> contactList, String message) {
-        getLocation();
+    private void alertContactList(String message) {
+        // Setting the user location to userAddress variable
+        //getLocation();
 
-        switch (contactMethod){
+        // Pulling the usual locations from local settings
+        Set<String> usualLocations = pullLocationsFromLocalSettings();
+
+        String closestLocation = null;
+
+        // Checking if the user is near any of their usual locations
+        for(String location:usualLocations){
+            // Getting the coordinates of a usual location
+            LatLng latLng = getLocationFromAddress(location);
+            Log.d("latlng", latLng.toString());
+
+            // Setting coordinate points
+            Location userLocation = new Location("user location");
+            userLocation.setLatitude(userLatitude);
+            userLocation.setLongitude(userLongitude);
+
+            Location usualLocation = new Location("usual location");
+            usualLocation.setLatitude(latLng.latitude);
+            usualLocation.setLongitude(latLng.longitude);
+
+            // Calculating the distance
+            float distance = userLocation.distanceTo(usualLocation);
+            Log.d("distance", String.valueOf(distance));
+
+            // If the user is within half a mile of a usual location
+            if(distance <= 800){
+                closestLocation = location;
+            }
+        }
+
+        switch (preferredContactMethod){
             case "text message":
 
-                /*for(String contactPerson:contactList){
-                    Set<String> names = contactPerson.keySet();
-                    String name = names.iterator().next();
-                    smsManager.sendTextMessage(contactPerson.get(name), null, message+"\n"+userAddress, null, null);
-                }*/
+                Iterator hmIterator = contactList.entrySet().iterator();
+                while(hmIterator.hasNext()){
+                    Map.Entry contact = (Map.Entry)hmIterator.next();
+                    String name = (String) contact.getValue();
+                    String number = (String) contact.getKey();
+                    if(closestLocation != null){
+                        smsManager.sendTextMessage(number, null,
+                                    "Hello "+name+",\n"+
+                                        message+"\nwe have detected that they're here:"+userAddress+
+                                        "\nthe user is within half mile radius of here: "
+                                        + closestLocation
+                                , null, null);
+                    } else{
+                        smsManager.sendTextMessage(number, null, "Hello "+name+",\n"+
+                                message+"\nwe have detected that they're here:"+userAddress
+                                , null, null);
+                    }
+                }
+
                 break;
 
             case "email":
@@ -370,6 +451,33 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
         // assigning values after converting to milliseconds
         timeCountInMilliSeconds = countdownTime * 1000;
+    }
+
+    /**
+     * Method for converting address to Coordinates
+     * */
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
     /**
@@ -397,7 +505,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onFinish() {
-                alertContactList(preferredContactMethod, contactList, seizureMessage);
+                alertContactList(seizureMessage);
 
                 // save journal information to firebase
                 saveJournal();
@@ -419,8 +527,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private void saveJournal(){
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
                 format(Calendar.getInstance().getTime());
-        String moodType = "";
-        String seizureType = "";
+        List<String> moodType = new ArrayList<String>();
+        List<String> seizureType = new ArrayList<String>();
         String durationOfSeizure = "";
         List<String> seizureTrigger = new ArrayList<String>();
         String seizureDescription = "";
@@ -472,6 +580,18 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 rippleBackground.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
         }
+    }
+
+    /**
+     * Method for pulling usual locations from local settings
+     * */
+    public Set<String> pullLocationsFromLocalSettings(){
+        Set<String> locations = new HashSet<>();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
+        locations = sharedPreferences.getStringSet("locations", LocalSettings.getLocations());
+
+        return locations;
     }
 
     /**

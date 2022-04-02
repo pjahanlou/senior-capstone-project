@@ -36,8 +36,10 @@
             android:paddingTop="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/vie_bg" />
       
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +48,6 @@
             android:layout_height="0dp"
             app:layout_constraintHeight_percent=".8"
             app:layout_constraintWidth_percent="0.8"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -168,7 +169,7 @@
                     android:id="@+id/averageSeizureDurationSlider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:valueFrom="1"
+                    android:valueFrom="0"
                     android:valueTo="11"
                     android:stepSize="1.0"
                     app:layout_constraintTop_toBottomOf="@id/averageSeizureDurationTitle"
@@ -208,13 +209,11 @@
                     android:contentDescription="Longest Seizure"/>
             </LinearLayout>>
 
-            <com.royrodriguez.transitionbutton.TransitionButton
+            <Button
                 android:id="@+id/submitQuestionnaireMedical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit"
-                app:defaultColor="@color/purple_500"
-                app:loaderColor="@color/LightSteelBlue"
                 android:textColor="@android:color/white"
                 android:background="@drawable/button_bg"
                 android:textStyle="bold"

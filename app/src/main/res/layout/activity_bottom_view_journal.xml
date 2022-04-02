@@ -29,43 +29,48 @@
             android:id="@+id/btnjournalExport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"
-            android:text="export" />
+            android:layout_marginBottom="10dp"
+            android:textSize="16dp"
+            android:background="@drawable/swipeup_button"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:text="Export" />
 
         <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/sortDropdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/sortDropdown"
-            android:background="@drawable/button_bg"
-            android:textStyle="bold"
+            android:layout_alignEnd="@id/title"
+            android:background="@drawable/swipeup_button"
             android:gravity="center"
             android:hint="Sort by"
             android:padding="12dp"
-            android:textColor="@color/Platinum"
-            android:textColorHint="@color/Platinum"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="16dp"
+            android:textStyle="bold"
             app:spinner_arrow_gravity="end"
             app:spinner_arrow_padding="4dp"
-            app:spinner_divider_color="@color/purple_500"
+            app:spinner_divider_color="@color/black"
             app:spinner_divider_show="true"
             app:spinner_divider_size="1dp"
             app:spinner_item_array="@array/journalSortDropDown"
             app:spinner_popup_animation="bounce"
-            app:spinner_popup_background="@color/LightSteelBlue"
-            app:spinner_popup_elevation="14dp"
-            android:layout_alignEnd="@id/title"/>
+            app:spinner_popup_background="@color/Platinum"
+            app:spinner_popup_elevation="14dp" />
 
     </RelativeLayout>
 
     <ListView
         android:id="@+id/journalList"
         android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:paddingTop="5dp"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
-        android:dividerHeight="5dp"
-        android:layout_margin="0dp">
+        android:dividerHeight="15dp"
+        android:layout_margin="0dp"
+        >
 
     </ListView>
 

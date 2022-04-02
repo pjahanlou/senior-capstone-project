@@ -107,9 +107,9 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                     Log.d("contact layout list", ""+contacts.toString());
                     contacts.remove(position);
                     Log.d("contact layout list", ""+contacts.toString());
-                    adapter = new UpdateContactAdapter(this, R.layout.item_update_contact, contacts);
-                    listView.setAdapter(adapter);
-                    //adapter.notifyDataSetChanged();
+                    //adapter = new UpdateContactAdapter(this, R.layout.item_update_contact, contacts);
+                    //listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                     break;
             }
             // false : close the menu; true : not close the menu

@@ -10,72 +10,77 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="100dp">
 
         <include layout="@layout/activity_bottom_view_journal" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.github.mikephil.charting.charts.LineChart
+            <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/timeLineDisplayGraph"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                app:layout_constraintVertical_bias="0"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/showGraphMonth"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.5"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <View
+                android:layout_height="3dp"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.87"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph"
+                android:background="@color/purple_500"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/showGraphMonth"
                 />
 
             <Button
                 android:id="@+id/showGraphYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg"
-                android:text="Past year"
-                app:layout_constraintVertical_bias="0.2"
-                app:layout_constraintHorizontal_bias=".9"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/cancel_button"
+                android:text="1Y"
+                android:textSize="18dp"
+                android:stateListAnimator="@null"
+                android:textColor="@color/purple_500"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toStartOf="@id/showGraphMonth"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph" />
 
             <Button
                 android:id="@+id/showGraphMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg"
-                android:text="Past month"
-                app:layout_constraintVertical_bias="0.2"
-                app:layout_constraintHorizontal_bias=".5"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/cancel_button"
+                android:text="1M"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@null"
+                android:textColor="@color/purple_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph" />
 
             <Button
                 android:id="@+id/showGraphWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg"
-                android:text="Past week"
-                app:layout_constraintVertical_bias="0.2"
-                app:layout_constraintHorizontal_bias=".1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/cancel_button"
+                android:text="1W"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@null"
+                android:textColor="@color/purple_500"
                 app:layout_constraintStart_toEndOf="@id/showGraphMonth"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

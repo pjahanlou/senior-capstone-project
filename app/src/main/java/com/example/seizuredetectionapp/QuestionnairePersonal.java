@@ -2,6 +2,7 @@ package com.example.seizuredetectionapp;
 
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -139,7 +140,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     private void storeQuestionnaireData() {
         Log.d("confirmation", "completed list: " + addedContacts);
 
-        String countdownTimer = String.valueOf(countdownTimerSlider.getValues().get(0));
+        String countdownTimer = String.valueOf(Math.round(countdownTimerSlider.getValues().get(0)));
         String height = valueToHeight(heightSlider.getValues().get(0));
         String weight = String.valueOf(weightSlider.getValues().get(0));
 
@@ -184,11 +185,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             Log.d(field.concat(" status"), "Failed");
         }
     }
-    
-    @Override
-    public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
-        selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
-    }
 
     /**
      * method for displaying the new user dialog
@@ -204,7 +200,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);
-
+      
         gotIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,5 +209,10 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         });
 
         dialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker,  int year, int month, int dayOfMonth) {
+        selectedDOB = (month + 1) + "/" + dayOfMonth + "/" + year;
     }
 }

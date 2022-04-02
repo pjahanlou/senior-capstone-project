@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GoogleMaps">
+
+
+
+    <include layout="@layout/content_map" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Platinum"
+    tools:context=".GoogleMaps">
+
+    <fragment
+        android:id="@+id/googleMap"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        />
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationSearchView"
+        android:queryHint="Search..."
+        android:iconifiedByDefault="false"
+
+        android:layout_margin="10dp"
+        android:elevation="5dp"
+        android:background="@drawable/search_bg"/>
+
+</RelativeLayout>
+-->

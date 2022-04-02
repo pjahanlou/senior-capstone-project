@@ -21,7 +21,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/Platinum">
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
@@ -32,14 +33,15 @@
             app:fabCradleRoundedCornerRadius="5dp"
             android:layout_gravity="bottom"
             android:theme="@style/AppThemeNavbar"
-            android:backgroundTint="@color/DarkBlue">
+            android:backgroundTint="@color/DarkBlue"
+            android:background="@color/Platinum">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
+                android:background="@color/Platinum"
                 app:menu="@menu/bottom_menu" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
@@ -51,6 +53,7 @@
             app:layout_anchor="@id/bottomAppBar"
             android:backgroundTint="@color/DarkOrange"
             android:src="@drawable/ic_event"
+            android:background="@drawable/swipeup_button"
             android:tint="@color/black"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
