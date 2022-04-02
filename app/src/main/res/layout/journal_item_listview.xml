@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/listview_rounded_border">
+    android:layout_height="150dp"
+    android:background="@drawable/listview_rounded_border"
+    android:elevation="5dp">
 
     <ImageButton
         android:id="@+id/threeDots"
@@ -11,23 +12,29 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
-        android:theme="@style/threeDotImageView"/>
+        android:theme="@style/threeDotImageView"
+        android:background="@android:color/transparent" />
        <!-- android:style="?android:attr/actionOverflowButtonStyle"-->
 
     <TextView
         android:id="@+id/lvDateAndTime"
-        android:layout_width="306dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="10dp"
         android:text="dateTime"
         android:textColor="@color/black"
         android:textSize="22sp" />
 
     <TextView
         android:id="@+id/lvDuration"
-        android:layout_width="306dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="duration"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_centerInParent="true"
         android:layout_below="@+id/lvDateAndTime"
         android:textColor="@color/black"
         android:textSize="18sp" />
@@ -38,6 +45,7 @@
         android:layout_height="wrap_content"
         android:text="description"
         android:textColor="@color/black"
+        android:layout_marginLeft="5dp"
         android:layout_below="@+id/lvDuration"
         android:textSize="18sp" />
 

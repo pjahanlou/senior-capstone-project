@@ -10,7 +10,12 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
+<<<<<<< Updated upstream
         android:layout_height="match_parent">
+=======
+        android:layout_height="match_parent"
+        android:elevation="100dp">
+>>>>>>> Stashed changes
 
         <include layout="@layout/activity_bottom_view_journal" />
 
