@@ -16,7 +16,15 @@ public class BackgroundProcess extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Context applicationContext = getApplicationContext();
+        // may or may not be needed:
+        // Context applicationContext = getApplicationContext();
+
+        // Request data from wearable on regular intervals
+
+        // add a listener to send data to server when receiving wearable data.
+
+        // add a listener to potentially start alert when receiving server data.
+
         return null;
     }
 
