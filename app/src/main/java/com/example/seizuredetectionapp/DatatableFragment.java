@@ -1,25 +1,37 @@
 package com.example.seizuredetectionapp;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.PackageManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.print.PrintAttributes;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +70,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -121,6 +134,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     List<Calendar> dates;
     Calendar dateCompare = Calendar.getInstance();
     private LocalSettings localSettings;
+    private static final int PERMISSION_REQUEST_CODE = 200;
 
 
     LineChart lineChart;
@@ -129,9 +143,19 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     ArrayList<String> xAxis = new ArrayList<>();
     List<Entry> yAxis = new ArrayList<>();
 
+    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if(isGranted) {
+
+        }
+        else{
+
+        }
+    });
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Object simplyPdfDocument;
 
     public DatatableFragment() {
         // Required empty public constructor
@@ -187,6 +211,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID);
+
+        //requestPermission();
 
     }
 
@@ -395,12 +421,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 generateChart(view, 7, journalDates);
                 break;
             case(R.id.btnjournalExport):
-                try {
-                    createPdf();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
-                }
+                checkPermissions1();
                 break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
@@ -451,42 +472,80 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     public void createPdf() throws IOException{
         //create pdf document
-        PdfDocument document = new PdfDocument();
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                ArrayList<Journal> listOfJournals = new ArrayList<>();
+                Journal journalToPdf = snapshot.getValue(Journal.class);
+                listOfJournals.add(journalToPdf);
+                PdfDocument document = new PdfDocument();
 
-        Paint paint = new Paint();
-        Paint title = new Paint();
 
-        //set pdf height and width
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pdfWidth,pdfHeight,1).create();
+                Paint paint = new Paint();
+                Paint title = new Paint();
 
-        //start pdf page
-        PdfDocument.Page page = document.startPage(pageInfo);
+                //set pdf height and width
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pdfWidth,pdfHeight,1).create();
 
-        Canvas canvas = page.getCanvas();
+                //start pdf page
+                PdfDocument.Page page = document.startPage(pageInfo);
 
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+                Canvas canvas = page.getCanvas();
 
-        //set size of text
-        title.setTextSize(20);
+                title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
 
-        canvas.drawText("Logged Journals", 100, 200, title);
+                //set size of text
+                title.setTextSize(20);
 
-        //close pdf page
-        document.finishPage(page);
+                canvas.drawText("Logged Journals", 100, 200, title);
+                int x = 10;
+                int y = 25;
+                //Iterates through each saved journal in firebase and draws each entry under each other
+                for(Journal journal: listOfJournals){
+                    page.getCanvas().drawText(String.valueOf(journal), x, y, paint);
+                    y+=paint.descent()-paint.ascent();
+                }
 
-        //downloads directory
-        File file = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+                //close pdf page
+                document.finishPage(page);
 
-        try{
-            //save file to downloads directory
-            document.writeTo(new FileOutputStream(file));
+                //downloads directory
+                File file = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)),"Journals.pdf");
 
-        }catch(IOException e){
-            Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+                try{
+                    //save file to downloads directory
+                    document.writeTo(new FileOutputStream(file));
 
-        }
-        document.close();
+                }catch(IOException e){
+                    Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+
+                }
+                document.close();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     public void generateChart(View root, int dataPoints, List<Calendar> dates){
@@ -596,5 +655,65 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //Log.d("getgraph checker", journalDates.toString());
         //return journalDates;
     }
+    /* my first attempt, still working with this
+    //checks saved permissions
+    private boolean checkPermission(){
+        int permission1 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE );
+        int permission2 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
+    }
 
+    //requests permission from user
+    private void requestPermission(){
+
+        ContextCompat.checkSelfPermission(DatatableFragment.this.getContext() , String.valueOf(new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}));
+    }
+    //
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(requestCode == PERMISSION_REQUEST_CODE){
+            if(grantResults.length > 0){
+                boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                if(writeStorage && readStorage){
+                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Denied..", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
+    */
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PERMISSION_REQUEST_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d("request permission", String.valueOf(grantResults[0]));
+                Log.d("request permission", String.valueOf(PackageManager.PERMISSION_GRANTED));
+                Toast.makeText(getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(getContext(),"Permission No..", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void checkPermissions1(){
+        int checkPermission = ContextCompat.checkSelfPermission(DatatableFragment.this.getContext(), WRITE_EXTERNAL_STORAGE);
+        if(checkPermission != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TESTING PERMISSIONS", "HERE");
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
+        }
+        else{
+            try {
+                createPdf();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
