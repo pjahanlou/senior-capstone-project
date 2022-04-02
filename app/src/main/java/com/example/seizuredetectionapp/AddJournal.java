@@ -38,8 +38,8 @@ import cucumber.api.java.cs.A;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
-    static EditText dateAndTime, mood, typeOfSeizure, duration, description, postDescription;
-    static NachoTextView triggers;
+    static EditText dateAndTime, duration, description, postDescription;
+    static NachoTextView triggers, mood, typeOfSeizure;
     Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
@@ -50,8 +50,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public static DatabaseReference userTable;
     private static String currentUserUID;
     public static String updateDateTime;
-    public static String updateMood;
-    public static String updateTypeOfSeizure;
+    public static List<String> updateMood;
+    public static List<String> updateTypeOfSeizure;
     public static String updateDuration;
     public static List<String> updateTriggers;
     public static String updateDescription;
@@ -106,7 +106,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnSave.setOnClickListener(this);
 
         //Triggers suggestions
-        String[] suggestions = new String[]{"Stress", "Missed Medication",
+        String[] triggerSuggestions = new String[]{"Stress", "Missed Medication",
                 "Caffeine",
                 "Anxiety",
                 "Recreational Drugs",
@@ -117,8 +117,32 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 "Flashing Lights",
                 "Flickering Lights",
                 "Hormones" };
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,suggestions);
-        triggers.setAdapter(adapter2);
+        String[] moodSuggestions = new String[]{"Happy", "Sad", "Angry",
+                "Depressed",
+                "Cheerful",
+                "Romantic",
+                "Irritable",
+                "Calm",
+                "Fearful",
+                "Tense",
+                "Lonely",
+                "Lighthearted",
+                "Humorous"};
+
+
+        String[] seizureSuggestions = new String[]{"Generalized tonic-clonic (GTC)"
+                ,"Tonic"
+                ,"Clonic"
+                ,"Absence"
+                ,"Myoclonic"
+                ,"Atonic"
+                ,"Infantile or Epileptic spasms"};
+        ArrayAdapter<String> adapterMood = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,moodSuggestions);
+        ArrayAdapter<String> adapterTriggers = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,triggerSuggestions);
+        ArrayAdapter<String> adapterTypeOfSeizure = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,seizureSuggestions);
+        triggers.setAdapter(adapterTriggers);
+        typeOfSeizure.setAdapter(adapterTypeOfSeizure);
+        mood.setAdapter(adapterMood);
 
     }
 
@@ -144,10 +168,12 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public void saveInformation()
     {
         List<String> saveTriggers = new ArrayList<String>();
+        List<String> saveMood = new ArrayList<String>();
+        List<String> saveTypeOfSeizure = new ArrayList<String>();
         //retrieving text from text boxes
         String saveDateAndTime = dateAndTime.getText().toString().trim();
-        String saveMood = mood.getText().toString().trim();
-        String saveTypeOfSeizure = typeOfSeizure.getText().toString().trim();
+        saveMood = mood.getChipValues();
+        saveTypeOfSeizure = typeOfSeizure.getChipValues();
         String saveDuration = duration.getText().toString().trim();
         saveTriggers = triggers.getChipValues();
         String saveDescription = description.getText().toString().trim();
@@ -204,8 +230,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
         //Retrieving new inputted information
         String dateTime = dateAndTime.getText().toString().trim();
-        String moodType = mood.getText().toString().trim();
-        String seizureType = typeOfSeizure.getText().toString().trim();
+        List<String> moodType = mood.getChipValues();
+        List<String> seizureType = typeOfSeizure.getChipValues();
         String durationOfSeizure = duration.getText().toString().trim();
         List<String> seizureTrigger = triggers.getChipValues();
         String seizureDescription = description.getText().toString().trim();
@@ -219,10 +245,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
 
         updateFieldInFirebase("dateAndTime", dateTime, editJournal.dateAndTime);
-        updateFieldInFirebase("mood",moodType, editJournal.mood);
-        updateFieldInFirebase("typeOfSeizure",seizureType, editJournal.typeOfSeizure);
+        updateListFieldInFirebase("mood",moodType, editJournal.mood);
+        updateListFieldInFirebase("typeOfSeizure",seizureType, editJournal.typeOfSeizure);
         updateFieldInFirebase("durationOfSeizure",durationOfSeizure, editJournal.durationOfSeizure);
-        updateTriggerInFirebase("triggers",seizureTrigger,editJournal.triggers);
+        updateListFieldInFirebase("triggers",seizureTrigger,editJournal.triggers);
         updateFieldInFirebase("description",seizureDescription, editJournal.description);
         updateFieldInFirebase("postDescription", postSeizureDescription, editJournal.postDescription);
         updateFieldInFirebase("severity",severity, editJournal.severity);
@@ -291,6 +317,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.updatePostDescription = editJournal.postDescription;
                     AddJournal.updateSeverity = editJournal.severity;
 
+                    //change duration and severity to float from string
+                    float fSev = Float.parseFloat(AddJournal.updateSeverity);
                     //Set EditText to existing saved values
                     AddJournal.dateAndTime.setText(AddJournal.updateDateTime);
                     AddJournal.mood.setText(updateMood);
@@ -326,7 +354,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
     }
 
-    private void updateTriggerInFirebase(String field, List<String> newValue, List<String> previousValue) {
+    private void updateListFieldInFirebase(String field, List<String> newValue, List<String> previousValue) {
                 DatabaseReference journalTable = userTable.child("Journals");
                 journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

@@ -42,33 +42,37 @@
             android:textColorHint="@color/black"
             android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/mood"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/moodTitle"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
+                <com.hootsuite.nachos.NachoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mood"
+                    android:layout_below="@id/moodTitle"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp"
+                    app:chipHeight="30dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:paddingLeft="20dp"
+                    android:background="@color/white"
+                    android:hint="Example: Sad, Happy"
+                    android:textColorHint="@color/black"/>
 
-        <EditText
-            android:id="@+id/typeofseizure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/typeOfSeizureTitle"
-            android:layout_marginTop="0dp"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
-
+                <com.hootsuite.nachos.NachoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/typeofseizure"
+                    android:layout_below="@id/typeOfSeizureTitle"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp"
+                    app:chipHeight="30dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:paddingLeft="20dp"
+                    android:background="@color/white"
+                    android:hint="Example: Tonic Clonic, Grand Mal"
+                    android:textColorHint="@color/black"/>
         <EditText
             android:id="@+id/duration"
             android:layout_width="match_parent"
@@ -81,21 +85,7 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
-        <!--
-        <EditText
-        will remove once i get nacho working
-            android:id="@+id/triggers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/triggersTitle"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
-               -->
+
                 <com.hootsuite.nachos.NachoTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

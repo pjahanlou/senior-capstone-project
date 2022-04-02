@@ -20,6 +20,7 @@ public class LocalSettings extends Application {
     public static String questionnaireComplete;
     public static Set<String> contactList = new HashSet<>();
     public static Set<String> seizureTypes = new HashSet<>();
+    public static Set<String> locations = new HashSet<>();
     public static String preferredContactMethod;
     public static String sex;
     public static String firstSeizureDate;
@@ -223,5 +224,13 @@ public class LocalSettings extends Application {
 
     public static void setSeizureTypes(Set<String> seizureTypes) {
         LocalSettings.seizureTypes = seizureTypes;
+    }
+
+    public static Set<String> getLocations() {
+        return locations;
+    }
+
+    public static void setLocations(Set<String> locations) {
+        LocalSettings.locations = locations;
     }
 }

@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.seizuredetectionapp">
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
@@ -13,7 +15,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    
+  <!-- I don't think this app is going to production
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    -->
+    
+  <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".LocalSettings"
         android:allowBackup="true"
@@ -22,6 +29,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".GoogleMaps"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
+
+        <activity
+            android:name=".UsualLocations"
+            android:exported="false" />
+        <activity
+            android:name=".TextPermission"
+            android:exported="false" />
+        <activity
+            android:name=".LocationPermission"
+            android:exported="false" />
+        <activity
+            android:name=".ContactPermission"
+            android:exported="true" />
         <activity
             android:name=".UpdateContacts"
             android:exported="true" />

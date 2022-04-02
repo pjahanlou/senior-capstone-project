@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LocationPermission"
+    android:background="@color/LightSteelBlue">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintVertical_bias=".03"
+        android:elevation="7dp"
+        android:src="@drawable/app_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/outerConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/vie_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent=".92"
+        app:layout_constraintVertical_bias="1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/vie_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/locationPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/allowLocation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/location_permission_pic">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/allowLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/locationPicture"
+                app:layout_constraintBottom_toTopOf="@id/allowLocationExplanation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Allow your location"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="24dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/allowLocationExplanation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@id/allowLocation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.7"
+                android:text="We will need your location to give you better experience"
+                android:textAlignment="center"
+                android:textColor="@color/DarkSlateGray"
+                android:textSize="16dp">
+            </TextView>
+
+            <Button
+                android:id="@+id/acceptLocationPermission"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Sure, I'd Like That"
+                android:textAllCaps="false"
+                android:layout_marginTop="40dp"
+                app:layout_constraintWidth_percent="0.8"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:background="@drawable/button_bg"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/rejectLocationPermission"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/allowLocationExplanation" />
+
+            <Button
+                android:id="@+id/rejectLocationPermission"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Not Sure"
+                android:textAllCaps="false"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@null"
+                app:layout_constraintWidth_percent="0.8"
+                android:textStyle="bold"
+                android:background="@drawable/cancel_button"
+                android:textColor="@color/purple_500"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/acceptLocationPermission" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
