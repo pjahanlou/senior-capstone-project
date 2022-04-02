@@ -1,5 +1,7 @@
 package com.example.seizuredetectionapp;
 
+
+import static java.lang.Math.round;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -7,7 +9,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,30 +36,22 @@ import android.print.PrintAttributes;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import android.widget.Button;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -77,9 +70,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -87,7 +78,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.lang.Integer;
 
 import gherkin.lexer.Ca;
 
@@ -136,9 +126,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private LocalSettings localSettings;
     private static final int PERMISSION_REQUEST_CODE = 200;
 
-
-    LineChart lineChart;
-    ArrayList<Calendar> journalDates = new ArrayList<>();
+    BarChart barChart;
+    ArrayList<Calendar> journalDates;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
     ArrayList<String> xAxis = new ArrayList<>();
     List<Entry> yAxis = new ArrayList<>();
@@ -222,25 +211,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
-        dateCompare = Calendar.getInstance();
-        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-        getDates(dateCompare);
-        //Assign journals to days of current week and keep count in an array
-        int entries[] = new int[8];
-        for (int k = 0; k <= 7; k++){
-            entries[k] = 0;
-        }
-        for (float i = 1; i<= journalDates.size(); i++){
-            entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1;
-            //yAxis.add(new Entry(DAY_OF_WEEK, i));
-        }
-        for (int j = 1; j <= 7; j++){
-            yAxis.add(new Entry(j, entries[j]));
-        }
-        Log.d("graph check", "current entries" + Arrays.toString(entries));
-        //Array goes into generateChart
-        //generateChart(root, 7);
-
         //ui elements
         btnExport = root.findViewById(R.id.btnjournalExport);
         btnSettings = root.findViewById(R.id.settings);
@@ -261,13 +231,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
         journalList.setAdapter(adapter);
-
-        //Generate Journal chart
-        dateCompare = Calendar.getInstance();
-        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-        getDates(dateCompare);
-        //Array goes into generateChart
-        //generateChart(root, 7, dates);
 
         //Bottom Swipe up setup
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
@@ -330,6 +293,15 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 sortJournals(newItem);
             }
         });
+
+        barChart = root.findViewById(R.id.timeLineDisplayGraph);
+        dateCompare = Calendar.getInstance();
+        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
+        getDates(dateCompare, root);
+        //Array goes into generateChart
+        Log.d("CalendarCheck", String.valueOf(journalDates));
+        //generateChart(root, journalDates);
+
         return root;
     }
 
@@ -410,15 +382,24 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 generateChart(view, 5, journalDates);*/
                 break;
             case(R.id.showGraphWeek):
+                Log.d("BUTTON CHECK", String.valueOf(journalDates));
                 dateCompare = Calendar.getInstance();
                 dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-                getDates(dateCompare);
+                getDates(dateCompare, view);
                 Log.d("getgraph checker", journalDates.toString());
-                // getDates(dateCompare) -> populate journalDates
-                // you can do whatever with your populated journalDATES
-                //Log.d("generate dates checker", String.valueOf(dates));
+
+                //assign Xaxis values
+                ArrayList<String> xAxisValues = new ArrayList<String>();
+                xAxisValues.add("Sun");
+                xAxisValues.add("Mon");
+                xAxisValues.add("Tue");
+                xAxisValues.add("Wed");
+                xAxisValues.add("Thu");
+                xAxisValues.add("Fri");
+                xAxisValues.add("Sat");
+
                 //dates goes into generateChart
-                generateChart(view, 7, journalDates);
+                //updateChart(view, 7, journalDates, xAxisValues);
                 break;
             case(R.id.btnjournalExport):
                 checkPermissions1();
@@ -548,62 +529,117 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    public void generateChart(View root, int dataPoints, List<Calendar> dates){
-        //Implements the graph to view the timeline of the users journals
-        lineChart = root.findViewById(R.id.timeLineDisplayGraph);
-        lineChart.setTouchEnabled(false);
-        //remove once it doesn't interfere w/ swipe up
-        //lineChart.setVisibility(View.INVISIBLE);
-        //Log.d("generate dates checker", String.valueOf(dates));
+    public void generateChart(View view, ArrayList<Calendar> dates){
+        ArrayList<Double> valueList = new ArrayList<Double>();
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        String title = " Recorded Seizures";
+        ArrayList<String> xAxisValues = new ArrayList<String>();
+        xAxisValues.clear();
+        //assign Xaxis values
+        xAxisValues.add("Sun");
+        xAxisValues.add("Mon");
+        xAxisValues.add("Tue");
+        xAxisValues.add("Wed");
+        xAxisValues.add("Thu");
+        xAxisValues.add("Fri");
+        xAxisValues.add("Sat");
 
-        //Assign journals to days of current week and keep count in an array
-        float entries[] = new float[dataPoints+1];
-        for (int k = 1; k <= dataPoints; k++){
-            entries[k] = 0;
+        Log.d("xAxis check", xAxisValues.toString());
+
+        //barChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
+
+        XAxis axisX = barChart.getXAxis();
+        axisX.setGranularity(1f);
+        axisX.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
+
+
+        for (int k = 0; k < 7; k++){
+            valueList.add(0.0);
         }
-        for (float i = 0; i< dates.size(); i++){
-            Log.d("graph check", "current entries " + dates.size());
-            entries[dates.get((int) i).get(DAY_OF_WEEK)] += 1; //MOST CONFUSING ERROR EVER
-            //yAxis.add(new Entry(DAY_OF_WEEK, i));
+
+        // add 1 to corresponding day for each JournalDate
+        for(int i = 0; i < dates.size(); i++){
+            valueList.set(dates.get(i).get(DAY_OF_WEEK), valueList.get(dates.get(i).get(DAY_OF_WEEK)) + 1.0);
         }
 
-        for (float j = 1; j <= dataPoints; j++){
-            if(entries[(int) j] != 0){
-                yAxis.add(new Entry(j-1, entries[(int) j]));
-            }
+//        valueList.add(1.0);
+//        valueList.add(2.0);
+//        valueList.add(3.0);
+//        valueList.add(1.0);
+//        valueList.add(5.0);
+//        valueList.add(6.0);
+//        valueList.add(1.0);
+
+        //fit the data into a bar
+        for (int i = 0; i < valueList.size(); i++) {
+            BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
+            entries.add(barEntry);
         }
-        Log.d("graph check", "current entries " + yAxis);
 
-        LineDataSet setPoints = new LineDataSet(yAxis, "hidden label");
-        setPoints.setAxisDependency(YAxis.AxisDependency.LEFT);
+        BarDataSet barDataSet = new BarDataSet(entries, title);
+        BarData data = new BarData(barDataSet);
+        barChart.setData(data);
 
-        List<ILineDataSet> lineDataSets = new ArrayList<ILineDataSet>();
-        lineDataSets.add(setPoints);
-        Log.d("check 1", "current entries " + lineDataSets);
-
-        LineData data = new LineData(lineDataSets);
-        lineChart.setData(data);
-        lineChart.invalidate();
-
-        // the labels that should be drawn on the XAxis
-        final String[] Bars = new String[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-
-        ValueFormatter formatter = new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return super.getFormattedValue(value);
-            }
-        };
-
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        xAxis.setValueFormatter(formatter);
+        barChart.notifyDataSetChanged();
+        barChart.animateXY(2000, 2000);
+        barChart.setDrawGridBackground(false);
+        barChart.setDrawValueAboveBar(false);
+        //llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.animateY(1400, Easing.EaseInOutSine);
+        barChart.invalidate();
     }
 
-    public void getDates(Calendar dateCompare){
-        //journalDates.clear();
-        //Log.d("dateCompare checker", dateCompare.toString());
+    public void updateChart(View view, int dataPoints, ArrayList<Calendar> dates, ArrayList<String> xAxis){
+        barChart.clear();
+        //BarChart barChart = JournalChart.getChart();
+        //Implements the graph to view the timeline of the users journals
+        //barChart.setTouchEnabled(false);
+        //remove once it doesn't interfere w/ swipe up
+        //barChart.setVisibility(View.INVISIBLE);
+        //Log.d("generate dates checker", String.valueOf(dates));
 
+        //convert dates to bar values
+        ArrayList<Double> valueList = new ArrayList<Double>();
+        //set each data point to zero
+        for (int k = 0; k < 7; k++){
+            valueList.add(0.0);
+        }
+
+        // add 1 to corresponding day for each JournalDate
+        for(int i = 0; i < dates.size(); i++){
+            valueList.set(dates.get(i).get(DAY_OF_WEEK), valueList.get(dates.get(i).get(DAY_OF_WEEK)) + 1.0);
+        }
+        /*
+        valueList.add(5.0);
+        valueList.add(2.0);
+        valueList.add(3.0);
+        valueList.add(5.0);
+        valueList.add(5.0);
+        valueList.add(6.0);
+        valueList.add(5.0);
+        */
+        // Start making entries
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        //fit the data into a bar
+        for (int i = 0; i < valueList.size(); i++) {
+            BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
+            entries.add(barEntry);
+        }
+        /*
+        XAxis axisX = barChart.getXAxis();
+        axisX.setGranularity(1f);
+        axisX.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));*/
+
+        BarDataSet barDataSet = new BarDataSet(entries, " Recorded Seizures");
+        BarData data = new BarData(barDataSet);
+        barChart.setData(data);
+
+        barChart.notifyDataSetChanged();
+    }
+
+    public void getDates(Calendar dateCompare, View view){
+        journalDates = new ArrayList<>();
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -621,15 +657,15 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
                     //Log.d("compare checker", cDate.getTimeInMillis() + " >= " + dateCompare.getTimeInMillis() + " = " + String.valueOf(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()));
                     if((cDate.getTimeInMillis() >= dateCompare.getTimeInMillis())) {
+                        Log.d("getgraph checker", String.valueOf(journalDates));
                         journalDates.add(cDate);
-                        //Log.d("getgraph checker", String.valueOf(cDate));
+
                     }
                 } catch (ParseException ex) {
                     Log.v("Exception", ex.getLocalizedMessage());
                 }
-                //Log.d("graph checker", journalDates.toString());
-                //Toast.makeText(DatatableFragment.this.getContext(), journalDates.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("child added", "child added end");
+                generateChart(view, journalDates);
             }
 
             @Override
@@ -652,8 +688,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             }
         });
-        //Log.d("getgraph checker", journalDates.toString());
-        //return journalDates;
+
+        //Log.d("graph complete checker", String.valueOf(journalDates));
+        //call generate function
+
     }
     /* my first attempt, still working with this
     //checks saved permissions

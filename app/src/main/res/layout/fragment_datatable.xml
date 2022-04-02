@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.github.mikephil.charting.charts.LineChart
+            <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/timeLineDisplayGraph"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
