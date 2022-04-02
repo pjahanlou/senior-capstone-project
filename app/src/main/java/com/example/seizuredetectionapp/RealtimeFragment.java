@@ -90,8 +90,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         graphType = GraphType.GraphType_EDA;
         updateGraph(true);
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_realtime, container, false);
+        return root;
     }
 
     @Override
@@ -152,12 +151,10 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getEntries() {
+        lineEntries.clear();
         Random r = new Random();
-        lineEntries.add(new Entry(1f, r.nextInt(10)));
-        lineEntries.add(new Entry(2f, r.nextInt(10)));
-        lineEntries.add(new Entry(3f, r.nextInt(10)));
-        lineEntries.add(new Entry(4f, r.nextInt(10)));
-        lineEntries.add(new Entry(5f, r.nextInt(10)));
-        lineEntries.add(new Entry(6f, r.nextInt(10)));
+        for (int i = 1; i <= 30; ++i) {
+            lineEntries.add(new Entry(i, r.nextInt(10)));
+        }
     }
 }
