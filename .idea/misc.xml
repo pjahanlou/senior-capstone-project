@@ -95,7 +95,7 @@
         <entry key="app/src/main/res/layout/content_map.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_newuser_dialog.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/fragment_alert_page.xml" value="0.10078125" />
-        <entry key="app/src/main/res/layout/fragment_datatable.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_datatable.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_main_settings.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_update_contact.xml" value="0.1691119691119691" />
