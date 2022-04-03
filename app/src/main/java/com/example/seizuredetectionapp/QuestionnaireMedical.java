@@ -40,7 +40,7 @@ import java.util.Set;
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     Button openDatePicker;
     String seizureStartD = "";
-    private TransitionButton submitQuestionnaireMedical;
+    private Button submitQuestionnaireMedical;
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
