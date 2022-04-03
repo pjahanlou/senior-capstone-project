@@ -25,7 +25,7 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
 
         // Initializing the Buttons
         sureButton = findViewById(R.id.acceptTextPermission);
-        notSureButton = findViewById(R.id.rejectWritePermission);
+        notSureButton = findViewById(R.id.rejectTextPermission);
 
         // Adding click listener to the buttons
         sureButton.setOnClickListener(this);
@@ -38,7 +38,7 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
             case R.id.acceptTextPermission:
                 checkPermission(Manifest.permission.SEND_SMS, TEXT_PERMISSION_CODE);
                 break;
-            case R.id.rejectWritePermission:
+            case R.id.rejectTextPermission:
                 Intent intent = new Intent(this, UsualLocations.class);
                 startActivity(intent);
                 break;
