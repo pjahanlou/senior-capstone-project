@@ -1,11 +1,26 @@
 package com.example.seizuredetectionapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -18,13 +33,35 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class ProfileSettings extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int EXTERNAL_STORAGE_PERMISSION_CODE = 69;
     private TextView changeEmailText, changeDisplayNameText;
-    private Button updateEmailButton, updateDisplayNameButton, changePasswordButton, deleteAccountButton;
+    private Button updateEmailButton, updateDisplayNameButton, changePasswordButton, deleteAccountButton, exportDataButton;
 
     private FirebaseUser currentUser;
+    private DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private String currentUserUID;
+
+    ArrayList<Journal> savedJournals = new ArrayList<>();
+
+    int pdfWidth = 1080;
+    int pdfHeight = 1920;
+
+    private static final int PERMISSION_REQUEST_CODE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +70,9 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
         // initializing firebase
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users").child(currentUserUID);
 
         // Initializing the views
         changeEmailText = findViewById(R.id.changeEmailText);
@@ -41,12 +81,14 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         updateDisplayNameButton = findViewById(R.id.submitNewDisplayName);
         changePasswordButton = findViewById(R.id.changePasswordButton);
         deleteAccountButton = findViewById(R.id.deleteAccountButton);
+        exportDataButton = findViewById(R.id.exportDataButton);
 
         // Setting the on click listeners
         updateEmailButton.setOnClickListener(this);
         updateDisplayNameButton.setOnClickListener(this);
         changePasswordButton.setOnClickListener(this);
         deleteAccountButton.setOnClickListener(this);
+        exportDataButton.setOnClickListener(this);
 
     }
 
@@ -66,8 +108,14 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 deleteAccount();
                 startActivity(new Intent(ProfileSettings.this, LoginPage.class));
                 break;
+            case R.id.exportDataButton:
+                checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_STORAGE_PERMISSION_CODE);
+                break;
+
         }
     }
+
+
 
     /**
      * Method for handling display name updates
@@ -154,6 +202,153 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                         Log.d(TAG, task.getException().toString());
                     }
                 });
+    }
+
+    /**
+     * Method for Creating and Saving Pdf to Local Directory
+     */
+    private void createPdf() throws IOException {
+        //create pdf document
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                ArrayList<Journal> listOfJournals = new ArrayList<>();
+                Journal journalToPdf = snapshot.getValue(Journal.class);
+                listOfJournals.add(journalToPdf);
+                PdfDocument document = new PdfDocument();
+
+                Paint paint = new Paint();
+                Paint title = new Paint();
+
+                //set pdf height and width
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pdfWidth, pdfHeight, 1).create();
+
+                //start pdf page
+                PdfDocument.Page page = document.startPage(pageInfo);
+
+                Canvas canvas = page.getCanvas();
+
+                title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+
+                //set size of text
+                title.setTextSize(20);
+
+                canvas.drawText("Logged Journals", 100, 200, title);
+                int x = 10;
+                int y = 25;
+                //Iterates through each saved journal in firebase and draws each entry under each other
+                for (Journal journal : listOfJournals) {
+                    page.getCanvas().drawText(String.valueOf(journal), x, y, paint);
+                    y += paint.descent() - paint.ascent();
+                }
+
+                //close pdf page
+                document.finishPage(page);
+
+                //downloads directory
+                File file = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)), "Journals.pdf");
+
+                try {
+                    //save file to downloads directory
+                    document.writeTo(new FileOutputStream(file));
+                    Toast.makeText(ProfileSettings.this, "PDF Saved.", Toast.LENGTH_SHORT).show();
+
+
+                } catch (IOException e) {
+                    Toast.makeText(ProfileSettings.this, "PDF Upload Failed.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+
+                }
+                document.close();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    /**
+     * Method for accepting location permission
+     * */
+    private void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            // Requesting the permission
+            ActivityCompat.requestPermissions(this, new String[] { permission }, requestCode);
+        }
+        else {
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                saveFileToExternalStorage("Journals","Journals");
+                Toast.makeText(this, "Pdf Saved.", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+
+        if (requestCode == EXTERNAL_STORAGE_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "External Storage Permission Granted", Toast.LENGTH_SHORT) .show();
+            }
+            else {
+                Toast.makeText(this, "External Storage Permission Denied", Toast.LENGTH_SHORT) .show();
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                saveFileToExternalStorage("Journals","Journals");
+                Toast.makeText(this, "Pdf Saved.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private void saveFileToExternalStorage(String displayName, String content) {
+        Uri externalUri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+
+        String relativeLocation = Environment.DIRECTORY_DOCUMENTS;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, displayName + ".pdf");
+        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/text");
+        contentValues.put(MediaStore.Files.FileColumns.TITLE, "Journals");
+        contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, System.currentTimeMillis() / 1000);
+        contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, relativeLocation);
+        contentValues.put(MediaStore.Files.FileColumns.DATE_TAKEN, System.currentTimeMillis());
+
+        Uri fileUri = getContentResolver().insert(externalUri, contentValues);
+        try {
+            OutputStream outputStream =  getContentResolver().openOutputStream(fileUri);
+            outputStream.write(content.getBytes());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

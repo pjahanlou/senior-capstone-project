@@ -50,7 +50,7 @@
                 app:layout_constraintBottom_toTopOf="@id/allowText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/text_permission_pic">
+                android:src="@drawable/readwrite_permission_pic">
             </ImageView>
 
             <TextView
@@ -61,7 +61,7 @@
                 app:layout_constraintBottom_toTopOf="@id/allowTextExplanation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="Allow your texts"
+                android:text="Allow Saving to Device"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="24dp">
@@ -76,14 +76,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintWidth_percent="0.7"
-                android:text="We will need your texts to give you better experience"
+                android:text="We can save your seizure data to a PDF"
                 android:textAlignment="center"
                 android:textColor="@color/DarkSlateGray"
                 android:textSize="16dp">
             </TextView>
 
             <Button
-                android:id="@+id/acceptTextPermission"
+                android:id="@+id/acceptWritePermission"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Sure, I'd Like That"
@@ -114,7 +114,7 @@
                 android:textColor="@color/purple_500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/acceptTextPermission" />
+                app:layout_constraintTop_toBottomOf="@id/acceptWritePermission" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
