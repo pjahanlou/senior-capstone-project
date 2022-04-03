@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -76,16 +77,27 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_realtime, container, false);
-//        graphView = root.findViewById(R.id.idGraphView);
+
+        // Buttons
+        btnEDA = root.findViewById(R.id.btnshowEDA);
+        btnMM = root.findViewById(R.id.btnshowMM);
+        btnEDA.setOnClickListener(this);
+        btnMM.setOnClickListener(this);
+
         lineChart = root.findViewById(R.id.lineChart);
         lineEntries = new ArrayList<>();
         getEntries();
-        lineDataSet = new LineDataSet(lineEntries, "");
+        lineDataSet = new LineDataSet(lineEntries, "Vitals");
         lineData = new LineData(lineDataSet);
         lineChart.setData(lineData);
         lineDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setValueTextSize(18f);
+
+        Description desc = new Description();
+        desc.setText("Electrodermal Activity");
+        desc.setTextSize(21.f);
+        lineChart.setDescription(desc);
 
         graphType = GraphType.GraphType_EDA;
         updateGraph(true);
@@ -118,20 +130,15 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
-//        Random r = new Random();
-//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
-//
-//        for (int i = 0; i < 60; ++i) {
-//            series.appendData(new DataPoint(i, r.nextInt(100)), true, 60);
-//        }
-//
-//        graphView.setTitle(s);
-//        graphView.setTitleColor(R.color.purple_200);
-//        graphView.setTitleTextSize(18);
-//        graphView.addSeries(series);
-
         getEntries();
+
+        Description desc = new Description();
+        desc.setText(s);
+        desc.setTextSize(21.f);
+        lineChart.setDescription(desc);
+
         lineChart.setData(lineData);
+        lineChart.invalidate();
 
         if (rfrsh) {
             refresh(1000);
@@ -150,6 +157,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         handler.postDelayed(runnable, milliseconds);
     }
 
+    // TODO; retrieve real-time data (need to refactor backend first) -John
     private void getEntries() {
         lineEntries.clear();
         Random r = new Random();
