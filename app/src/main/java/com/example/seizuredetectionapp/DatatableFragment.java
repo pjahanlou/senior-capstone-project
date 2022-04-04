@@ -129,14 +129,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     ArrayList<Calendar> journalDates;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
 
-    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if(isGranted) {
-
-        }
-        else{
-
-        }
-    });
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -198,7 +190,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID);
 
-        //requestPermission();
 
     }
 
@@ -236,6 +227,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         //Peek Height
         //TODO find a way to make it relative for each phone
+        // .getHeight() of the xml view and find a good dividen
         bottomSheetBehavior.setPeekHeight(210);
         //set journal to not be hideable
         bottomSheetBehavior.setHideable(false);
@@ -417,7 +409,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
                 break;
             case(R.id.btnjournalExport):
-                checkPermissions1();
                 break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
@@ -557,6 +548,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     }
 
     public void generateChart(View view, ArrayList<Calendar> dates, ArrayList<String> xAxisValues, int timeSpan){
+
         ArrayList<Double> valueList = new ArrayList<Double>();
         ArrayList<BarEntry> entries = new ArrayList<>();
         String title = " Recorded Seizures";
@@ -651,65 +643,5 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
-    /* my first attempt, still working with this
-    //checks saved permissions
-    private boolean checkPermission(){
-        int permission1 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE );
-        int permission2 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
-    }y
 
-    //requests permission from user
-    private void requestPermission(){
-
-        ContextCompat.checkSelfPermission(DatatableFragment.this.getContext() , String.valueOf(new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}));
-    }
-    //
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        if(requestCode == PERMISSION_REQUEST_CODE){
-            if(grantResults.length > 0){
-                boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                if(writeStorage && readStorage){
-                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Denied..", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        }
-    }
-    */
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSION_REQUEST_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d("request permission", String.valueOf(grantResults[0]));
-                Log.d("request permission", String.valueOf(PackageManager.PERMISSION_GRANTED));
-                Toast.makeText(getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(getContext(),"Permission No..", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public void checkPermissions1(){
-        int checkPermission = ContextCompat.checkSelfPermission(DatatableFragment.this.getContext(), WRITE_EXTERNAL_STORAGE);
-        if(checkPermission != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TESTING PERMISSIONS", "HERE");
-            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
-        }
-        else{
-            try {
-                createPdf();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
