@@ -234,5 +234,20 @@
             android:stepSize = "1"
             android:contentDescription="Severity"
             />
+
+        <Button
+            android:id="@+id/dateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/severitySlider"
+            android:background="@color/white"
+            android:text="Select Date and Time"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textAllCaps="false"
+            android:textAlignment="viewStart"
+            android:paddingLeft="20dp"
+            android:onClick="popDateAndTimePicker"/>
+
         </RelativeLayout>
 </ScrollView>
