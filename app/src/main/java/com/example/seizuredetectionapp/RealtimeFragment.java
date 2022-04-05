@@ -93,6 +93,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         lineDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setValueTextSize(18f);
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setLineWidth(3.f);
 
         Description desc = new Description();
         desc.setText("Electrodermal Activity");
