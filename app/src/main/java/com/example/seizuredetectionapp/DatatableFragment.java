@@ -39,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -124,6 +125,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     Calendar dateCompare = Calendar.getInstance();
     private LocalSettings localSettings;
     private static final int PERMISSION_REQUEST_CODE = 200;
+    private ImageView hintImage;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
@@ -208,13 +210,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         graphDisplayYear = root.findViewById(R.id.showGraphYear);
         graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
         graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
+        hintImage = root.findViewById(R.id.hintDatatable);
 
         //Buttons
         btnExport.setOnClickListener(this);
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
         graphDisplayWeek.setOnClickListener(this);
-
+        hintImage.setOnClickListener(this);
 
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
@@ -388,7 +391,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 int timeSpan = dateCompare.getActualMaximum(Calendar.WEEK_OF_MONTH);
                 for(int i = 1; i <= timeSpan; i++)
                     xAxisValues.add("Week " + i);
-                Log.d("MONTHSSS", String.valueOf(xAxisValues));
 
                 getDates(dateCompare, view, xAxisValues, WEEK_OF_MONTH);
                 break;
@@ -417,6 +419,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             case(R.id.helpRequest):
                 intent = new Intent(getContext(), AlertPage.class);
                 startActivity(intent);
+                break;
+            case R.id.hintDatatable:
+                showHint(view.getContext());
                 break;
         }
     }
@@ -566,4 +571,25 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
     }
 
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.fragment_datatable_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 }

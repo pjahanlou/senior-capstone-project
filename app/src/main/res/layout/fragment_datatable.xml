@@ -17,27 +17,27 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/timeLineDisplayGraph"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.5"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/timeLineDisplayGraph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintTop_toBottomOf="@id/hintDatatable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
-            <View
-                android:layout_height="3dp"
-                android:layout_width="0dp"
-                app:layout_constraintWidth_percent="0.87"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph"
-                android:background="@color/purple_500"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/showGraphMonth"
-                />
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="@id/showGraphMonth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph"
+        app:layout_constraintWidth_percent="0.87" />
 
             <Button
                 android:id="@+id/showGraphYear"
@@ -80,6 +80,15 @@
                 app:layout_constraintStart_toEndOf="@id/showGraphMonth"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph" />
+
+            <ImageView
+                android:id="@+id/hintDatatable"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_more_info_foreground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/timeLineDisplayGraph"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

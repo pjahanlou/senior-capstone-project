@@ -1,15 +1,20 @@
 package com.example.seizuredetectionapp;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.hootsuite.nachos.NachoTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,6 +66,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private Journal editJournal;
     private String journalKey;
     private RangeSlider severitySlider;
+    private ImageView hintImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +89,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnSave =  findViewById(R.id.btnsave);
         btnClose =  findViewById(R.id.btnclose);
         severitySlider = findViewById(R.id.severitySlider);
+        hintImage = findViewById(R.id.hintAddJournal);
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -104,6 +112,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
         //Triggers suggestions
         String[] triggerSuggestions = new String[]{"Stress", "Missed Medication",
@@ -160,6 +169,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Navbar.class));
+                break;
+            case R.id.hintAddJournal:
+                showHint(v.getContext());
                 break;
         }
     }
@@ -367,7 +379,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
     }
 
-
     private String getCurrentTime(){
         //gets current time and date
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
@@ -376,4 +387,25 @@ public class AddJournal extends Activity implements View.OnClickListener {
         return timeStamp;
     }
 
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 }
