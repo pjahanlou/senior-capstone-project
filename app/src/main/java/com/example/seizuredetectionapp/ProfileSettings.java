@@ -8,7 +8,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
@@ -24,7 +26,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +54,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
     private static final int EXTERNAL_STORAGE_PERMISSION_CODE = 69;
     private TextView changeEmailText, changeDisplayNameText;
     private Button updateEmailButton, updateDisplayNameButton, changePasswordButton, deleteAccountButton, exportDataButton;
+    private ImageView hintImage;
 
     private FirebaseUser currentUser;
     private DatabaseReference myRef;
@@ -82,6 +87,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         changePasswordButton = findViewById(R.id.changePasswordButton);
         deleteAccountButton = findViewById(R.id.deleteAccountButton);
         exportDataButton = findViewById(R.id.exportDataButton);
+        hintImage = findViewById(R.id.hintProfileSettings);
 
         // Setting the on click listeners
         updateEmailButton.setOnClickListener(this);
@@ -89,6 +95,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         changePasswordButton.setOnClickListener(this);
         deleteAccountButton.setOnClickListener(this);
         exportDataButton.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
     }
 
@@ -110,6 +117,9 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.exportDataButton:
                 checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_STORAGE_PERMISSION_CODE);
+                break;
+            case R.id.hintProfileSettings:
+                showHint(view.getContext());
                 break;
 
         }
@@ -349,6 +359,28 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 }
