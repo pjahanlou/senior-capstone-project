@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hootsuite.nachos.NachoTextView;
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +45,7 @@ import cucumber.api.java.cs.A;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
-    private static EditText duration, description, postDescription;
+    private static EditText  description, postDescription;
     private static NachoTextView triggers, mood, typeOfSeizure;
     Button btnClose, btnSave;
     Journal journal;
@@ -66,9 +67,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private Journal editJournal;
     private String journalKey;
     private RangeSlider severitySlider;
-    private static Button dateAndTime;
+    private static Button dateAndTime, duration;
     private int hour, minute, year, month, day;
-    private Calendar cal, cal1;
+    private int durHour = 0, durMinute = 0, durSecond = 0;
+    private Calendar cal, cal1, now;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         //get calendar
         cal = Calendar.getInstance();
         cal1 = Calendar.getInstance();
+        now = Calendar.getInstance();
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -116,6 +119,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        duration.setOnClickListener(this);
         //btnDate.setOnClickListener(this);
 
         //Triggers suggestions
@@ -174,6 +178,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 }
                 startActivity(new Intent(AddJournal.this, Navbar.class));
                 break;
+            case R.id.duration:
+                durationPicker();
+                break;
 
         }
     }
@@ -228,7 +235,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
             }
         });
-
     }
 
     /**
@@ -388,6 +394,34 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
         timePickerDialog.show();
+    }
+
+
+    public void durationPicker(){
+
+        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+            String dHour = "";
+            String dMinute = "";
+            String dSecond = "";
+            @Override
+            public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
+                durHour = hourOfDay;
+                durMinute = minute;
+                durSecond = seconds;
+                if(durHour != 0){
+                    dHour = String.format("%02d Hours ", durHour);
+                }
+                if(durMinute != 0){
+                    dMinute = String.format("%02d Minutes ", durMinute);
+                }
+                if(durSecond != 0){
+                    dSecond = String.format("%02d Seconds", durSecond);
+                }
+                duration.setText(dHour + dMinute + dSecond);
+            }
+        }, 0, 0, 0, true);
+        Log.d("test woohoo duration", ""+editJournal.durationOfSeizure);
+        mTimePicker.show();
     }
 
 }

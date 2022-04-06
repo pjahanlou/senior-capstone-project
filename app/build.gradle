@@ -96,7 +96,8 @@ dependencies {
 
     // https://developer.android.com/jetpack/androidx/releases/work WorkManager dependency
     implementation "androidx.work:work-runtime:2.7.1"
-
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.3.2'
 
+    // https://github.com/IvanKovac/TimePickerWithSeconds
+    implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
 }
