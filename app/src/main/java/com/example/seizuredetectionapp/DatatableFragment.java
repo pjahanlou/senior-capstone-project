@@ -39,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -48,10 +49,11 @@ import android.widget.Button;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -76,7 +78,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import gherkin.lexer.Ca;
@@ -94,7 +95,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int DAY_OF_WEEK = 7;
-    private static final int WEEK_OF_MONTH  = 5;
+    private static final int WEEK_OF_MONTH  = 4;
     private static final int MONTH_OF_YEAR = 2;
     private Dialog dialog;
     private String isQuestionnaireComplete;
@@ -121,25 +122,15 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     int pdfHeight = 1080;
     int pdfWidth = 720;
     Bitmap bmp;
-    List<Calendar> dates;
     Calendar dateCompare = Calendar.getInstance();
     private LocalSettings localSettings;
     private static final int PERMISSION_REQUEST_CODE = 200;
+    private ImageView hintImage;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
-    ArrayList<String> xAxis = new ArrayList<>();
-    List<Entry> yAxis = new ArrayList<>();
 
-    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if(isGranted) {
-
-        }
-        else{
-
-        }
-    });
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -201,7 +192,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID);
 
-        //requestPermission();
 
     }
 
@@ -220,13 +210,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         graphDisplayYear = root.findViewById(R.id.showGraphYear);
         graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
         graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
+        hintImage = root.findViewById(R.id.hintDatatable);
 
         //Buttons
         btnExport.setOnClickListener(this);
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
         graphDisplayWeek.setOnClickListener(this);
-
+        hintImage.setOnClickListener(this);
 
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
@@ -239,6 +230,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         //Peek Height
         //TODO find a way to make it relative for each phone
+        // .getHeight() of the xml view and find a good dividen
         bottomSheetBehavior.setPeekHeight(210);
         //set journal to not be hideable
         bottomSheetBehavior.setHideable(false);
@@ -295,12 +287,19 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         });
 
         barChart = root.findViewById(R.id.timeLineDisplayGraph);
-        dateCompare = Calendar.getInstance();
-        dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-        getDates(dateCompare, root);
+        dateCompare = normalizeDates(DAY_OF_WEEK);
+
+        //assign Xaxis values
+        ArrayList<String> xAxisValues = new ArrayList<String>();
+        xAxisValues.add("Sun");
+        xAxisValues.add("Mon");
+        xAxisValues.add("Tue");
+        xAxisValues.add("Wed");
+        xAxisValues.add("Thu");
+        xAxisValues.add("Fri");
+        xAxisValues.add("Sat");
+        getDates(dateCompare, root, xAxisValues, DAY_OF_WEEK);
         //Array goes into generateChart
-        Log.d("CalendarCheck", String.valueOf(journalDates));
-        //generateChart(root, journalDates);
 
         return root;
     }
@@ -362,34 +361,45 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Intent intent;
+        ArrayList<String> xAxisValues = new ArrayList<String>();
         switch (view.getId()){
             case(R.id.showGraphYear):
-                /*
-                dateCompare = Calendar.getInstance();
-                dateCompare.set(MONTH_OF_YEAR, 0);
-                dates = getDates(dateCompare);
-                //Assign journals to months of current year and keep count in an array
-                //Array goes into generateChart
-                //generateChart(view, 12, journalDates);*/
-                break;
-            case(R.id.showGraphMonth):
-                /*
-                dateCompare = Calendar.getInstance();
-                dateCompare.set(WEEK_OF_MONTH, 0);
-                dates = getDates(dateCompare);
-                //Assign journals to weeks of current month and keep count in an array
-                //Array goes into generateChart
-                generateChart(view, 5, journalDates);*/
-                break;
-            case(R.id.showGraphWeek):
-                Log.d("BUTTON CHECK", String.valueOf(journalDates));
-                dateCompare = Calendar.getInstance();
-                dateCompare.add(DAY_OF_WEEK, -dateCompare.get(DAY_OF_WEEK)+1);
-                getDates(dateCompare, view);
-                Log.d("getgraph checker", journalDates.toString());
+                dateCompare = normalizeDates(MONTH_OF_YEAR);
 
                 //assign Xaxis values
-                ArrayList<String> xAxisValues = new ArrayList<String>();
+                xAxisValues = new ArrayList<String>();
+                xAxisValues.add("Jan");
+                xAxisValues.add("Feb");
+                xAxisValues.add("Mar");
+                xAxisValues.add("Apr");
+                xAxisValues.add("May");
+                xAxisValues.add("Jun");
+                xAxisValues.add("Jul");
+                xAxisValues.add("Aug");
+                xAxisValues.add("Sep");
+                xAxisValues.add("Oct");
+                xAxisValues.add("Nov");
+                xAxisValues.add("Dec");
+
+                getDates(dateCompare, view, xAxisValues, MONTH_OF_YEAR);
+                break;
+            case(R.id.showGraphMonth):
+                dateCompare = normalizeDates(WEEK_OF_MONTH);
+
+                //assign Xaxis values
+                xAxisValues = new ArrayList<String>();
+                int timeSpan = dateCompare.getActualMaximum(Calendar.WEEK_OF_MONTH);
+                for(int i = 1; i <= timeSpan; i++)
+                    xAxisValues.add("Week " + i);
+
+                getDates(dateCompare, view, xAxisValues, WEEK_OF_MONTH);
+                break;
+            case(R.id.showGraphWeek):
+
+                dateCompare = normalizeDates(DAY_OF_WEEK);
+
+                //assign Xaxis values
+                xAxisValues = new ArrayList<String>();
                 xAxisValues.add("Sun");
                 xAxisValues.add("Mon");
                 xAxisValues.add("Tue");
@@ -398,11 +408,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 xAxisValues.add("Fri");
                 xAxisValues.add("Sat");
 
-                //dates goes into generateChart
-                //updateChart(view, 7, journalDates, xAxisValues);
+                getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
                 break;
             case(R.id.btnjournalExport):
-                checkPermissions1();
                 break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
@@ -412,9 +420,24 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 intent = new Intent(getContext(), AlertPage.class);
                 startActivity(intent);
                 break;
+            case R.id.hintDatatable:
+                showHint(view.getContext());
+                break;
         }
     }
 
+    private Calendar normalizeDates(Integer timeValue){
+        dateCompare = Calendar.getInstance();
+        dateCompare.add(timeValue, -dateCompare.get(timeValue)+1);
+        dateCompare.set(Calendar.HOUR_OF_DAY, 0);
+        dateCompare.set(Calendar.MINUTE, 0);
+        dateCompare.set(Calendar.SECOND, 0);
+        dateCompare.set(Calendar.MILLISECOND, 0);
+
+        if(timeValue == MONTH_OF_YEAR)
+            dateCompare.set(timeValue, 0);
+        return dateCompare;
+    }
 
     /**
      * method for displaying the new user dialog
@@ -451,124 +474,20 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         dialog.show();
     }
 
-    public void createPdf() throws IOException{
-        //create pdf document
-        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                ArrayList<Journal> listOfJournals = new ArrayList<>();
-                Journal journalToPdf = snapshot.getValue(Journal.class);
-                listOfJournals.add(journalToPdf);
-                PdfDocument document = new PdfDocument();
+    public void generateChart(View view, ArrayList<Calendar> dates, ArrayList<String> xAxisValues, int timeSpan){
 
-
-                Paint paint = new Paint();
-                Paint title = new Paint();
-
-                //set pdf height and width
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pdfWidth,pdfHeight,1).create();
-
-                //start pdf page
-                PdfDocument.Page page = document.startPage(pageInfo);
-
-                Canvas canvas = page.getCanvas();
-
-                title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-
-                //set size of text
-                title.setTextSize(20);
-
-                canvas.drawText("Logged Journals", 100, 200, title);
-                int x = 10;
-                int y = 25;
-                //Iterates through each saved journal in firebase and draws each entry under each other
-                for(Journal journal: listOfJournals){
-                    page.getCanvas().drawText(String.valueOf(journal), x, y, paint);
-                    y+=paint.descent()-paint.ascent();
-                }
-
-                //close pdf page
-                document.finishPage(page);
-
-                //downloads directory
-                File file = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)),"Journals.pdf");
-
-                try{
-                    //save file to downloads directory
-                    document.writeTo(new FileOutputStream(file));
-
-                }catch(IOException e){
-                    Toast.makeText(DatatableFragment.this.getContext(), "PDF Upload Failed.", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-
-                }
-                document.close();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
-    public void generateChart(View view, ArrayList<Calendar> dates){
         ArrayList<Double> valueList = new ArrayList<Double>();
         ArrayList<BarEntry> entries = new ArrayList<>();
         String title = " Recorded Seizures";
-        ArrayList<String> xAxisValues = new ArrayList<String>();
-        xAxisValues.clear();
-        //assign Xaxis values
-        xAxisValues.add("Sun");
-        xAxisValues.add("Mon");
-        xAxisValues.add("Tue");
-        xAxisValues.add("Wed");
-        xAxisValues.add("Thu");
-        xAxisValues.add("Fri");
-        xAxisValues.add("Sat");
 
-        Log.d("xAxis check", xAxisValues.toString());
-
-        //barChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
-
-        XAxis axisX = barChart.getXAxis();
-        axisX.setGranularity(1f);
-        axisX.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));
-
-
-        for (int k = 0; k < 7; k++){
+        for (int k = 0; k < xAxisValues.size(); k++){
             valueList.add(0.0);
         }
 
-        // add 1 to corresponding day for each JournalDate
+        // add 1 to corresponding column for each JournalDate
         for(int i = 0; i < dates.size(); i++){
-            valueList.set(dates.get(i).get(DAY_OF_WEEK), valueList.get(dates.get(i).get(DAY_OF_WEEK)) + 1.0);
+            valueList.set((dates.get(i).get(timeSpan)-1), valueList.get(dates.get(i).get(timeSpan)-1) + 1.0);
         }
-
-//        valueList.add(1.0);
-//        valueList.add(2.0);
-//        valueList.add(3.0);
-//        valueList.add(1.0);
-//        valueList.add(5.0);
-//        valueList.add(6.0);
-//        valueList.add(1.0);
 
         //fit the data into a bar
         for (int i = 0; i < valueList.size(); i++) {
@@ -577,181 +496,100 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         BarDataSet barDataSet = new BarDataSet(entries, title);
+        //barDataSet.setDrawValues(false);
+        barDataSet.setColor(Color.parseColor("#B0C4DE"));
         BarData data = new BarData(barDataSet);
+
         barChart.setData(data);
 
         barChart.notifyDataSetChanged();
         barChart.animateXY(2000, 2000);
         barChart.setDrawGridBackground(false);
-        barChart.setDrawValueAboveBar(false);
-        //llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+
+        XAxis axisX = barChart.getXAxis();
+        axisX.setGranularity(1f);
+        axisX.setDrawGridLines(false);
+        axisX.setLabelCount(25);
+        axisX.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
+
+        YAxis axisY = barChart.getAxisLeft();
+        if(timeSpan == DAY_OF_WEEK){
+            axisY.setAxisMaximum(10f);
+        }if(timeSpan == WEEK_OF_MONTH){
+            axisY.setAxisMaximum(25f);
+        }if(timeSpan == MONTH_OF_YEAR){
+            axisY.setAxisMaximum(50f);
+        }
+
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawAxisLine(false);
+        rightAxis.setDrawLabels(false);
+
+
+        barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         barChart.animateY(1400, Easing.EaseInOutSine);
         barChart.invalidate();
     }
 
-    public void updateChart(View view, int dataPoints, ArrayList<Calendar> dates, ArrayList<String> xAxis){
-        barChart.clear();
-        //BarChart barChart = JournalChart.getChart();
-        //Implements the graph to view the timeline of the users journals
-        //barChart.setTouchEnabled(false);
-        //remove once it doesn't interfere w/ swipe up
-        //barChart.setVisibility(View.INVISIBLE);
-        //Log.d("generate dates checker", String.valueOf(dates));
-
-        //convert dates to bar values
-        ArrayList<Double> valueList = new ArrayList<Double>();
-        //set each data point to zero
-        for (int k = 0; k < 7; k++){
-            valueList.add(0.0);
-        }
-
-        // add 1 to corresponding day for each JournalDate
-        for(int i = 0; i < dates.size(); i++){
-            valueList.set(dates.get(i).get(DAY_OF_WEEK), valueList.get(dates.get(i).get(DAY_OF_WEEK)) + 1.0);
-        }
-        /*
-        valueList.add(5.0);
-        valueList.add(2.0);
-        valueList.add(3.0);
-        valueList.add(5.0);
-        valueList.add(5.0);
-        valueList.add(6.0);
-        valueList.add(5.0);
-        */
-        // Start making entries
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        //fit the data into a bar
-        for (int i = 0; i < valueList.size(); i++) {
-            BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
-            entries.add(barEntry);
-        }
-        /*
-        XAxis axisX = barChart.getXAxis();
-        axisX.setGranularity(1f);
-        axisX.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xAxisValues));*/
-
-        BarDataSet barDataSet = new BarDataSet(entries, " Recorded Seizures");
-        BarData data = new BarData(barDataSet);
-        barChart.setData(data);
-
-        barChart.notifyDataSetChanged();
-    }
-
-    public void getDates(Calendar dateCompare, View view){
+    public void getDates(Calendar dateCompare, View view, ArrayList<String> xAxisValues, int timeSpan){
         journalDates = new ArrayList<>();
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d("child added", "child added start");
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm");
                 Journal graphJournal = snapshot.getValue(Journal.class);
-                //Log.d("journal", graphJournal.dateAndTime);
                 try {
                     java.util.Date date = dateFormat.parse(graphJournal.dateAndTime);
-                    //Log.d("journal checker", date.toString());
                     Calendar cDate = new GregorianCalendar();
                     cDate.setTime(date);
-                    //Log.d("Logic Check 1", String.valueOf(cDate));
 
-                    //Log.d("compare checker", cDate.getTimeInMillis() + " >= " + dateCompare.getTimeInMillis() + " = " + String.valueOf(cDate.getTimeInMillis() >= dateCompare.getTimeInMillis()));
                     if((cDate.getTimeInMillis() >= dateCompare.getTimeInMillis())) {
-                        Log.d("getgraph checker", String.valueOf(journalDates));
+                        Log.d("getgraph checker", String.valueOf(cDate));
+                        Log.d("getgraph checker", String.valueOf(cDate.get(WEEK_OF_MONTH)));
                         journalDates.add(cDate);
-
                     }
                 } catch (ParseException ex) {
                     Log.v("Exception", ex.getLocalizedMessage());
                 }
-                Log.d("child added", "child added end");
-                generateChart(view, journalDates);
+                generateChart(view, journalDates, xAxisValues, timeSpan);
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
 
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.fragment_datatable_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
 
-        //Log.d("graph complete checker", String.valueOf(journalDates));
-        //call generate function
-
-    }
-    /* my first attempt, still working with this
-    //checks saved permissions
-    private boolean checkPermission(){
-        int permission1 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE );
-        int permission2 = ContextCompat.checkSelfPermission(localSettings.getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    //requests permission from user
-    private void requestPermission(){
-
-        ContextCompat.checkSelfPermission(DatatableFragment.this.getContext() , String.valueOf(new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}));
-    }
-    //
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        if(requestCode == PERMISSION_REQUEST_CODE){
-            if(grantResults.length > 0){
-                boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                if(writeStorage && readStorage){
-                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(DatatableFragment.this.getContext(),"Permission Denied..", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        }
-    }
-    */
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSION_REQUEST_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d("request permission", String.valueOf(grantResults[0]));
-                Log.d("request permission", String.valueOf(PackageManager.PERMISSION_GRANTED));
-                Toast.makeText(getContext(),"Permission Granted..", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(getContext(),"Permission No..", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public void checkPermissions1(){
-        int checkPermission = ContextCompat.checkSelfPermission(DatatableFragment.this.getContext(), WRITE_EXTERNAL_STORAGE);
-        if(checkPermission != PackageManager.PERMISSION_GRANTED) {
-            Log.d("TESTING PERMISSIONS", "HERE");
-            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE},PERMISSION_REQUEST_CODE);
-        }
-        else{
-            try {
-                createPdf();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        dialog.show();
     }
 }
