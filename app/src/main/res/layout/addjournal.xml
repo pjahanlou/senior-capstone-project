@@ -27,7 +27,7 @@
             android:background="@drawable/button_bg"
             android:text="Exit" />
 
-
+<!--
         <EditText
             android:id="@+id/datetime"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="16sp" />
-
+-->
                 <com.hootsuite.nachos.NachoTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -236,18 +236,20 @@
             />
 
         <Button
-            android:id="@+id/dateButton"
+            android:id="@+id/datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/severitySlider"
+            android:layout_below="@+id/dateAndTimeTitle"
             android:background="@color/white"
-            android:text="Select Date and Time"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            android:textAllCaps="false"
-            android:textAlignment="viewStart"
+            android:hint="Enter Date and Time"
             android:paddingLeft="20dp"
-            android:onClick="popDateAndTimePicker"/>
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp"
+            android:textAlignment="textStart"
+            android:onClick="datePicker"/>
 
         </RelativeLayout>
 </ScrollView>
