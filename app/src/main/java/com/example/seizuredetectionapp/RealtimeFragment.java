@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,6 +42,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnMM;
     GraphView graphView;
     private Dialog dialog;
+//    private RippleBackground pulser;
 
     LineChart lineChart;
     LineData lineData;
@@ -84,6 +87,9 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         btnEDA.setOnClickListener(this);
         btnMM.setOnClickListener(this);
 
+//        pulser = root.findViewById(R.id.realtimeRipple);
+//        pulser.setVisibility(View.VISIBLE);
+
         lineChart = root.findViewById(R.id.lineChart);
         lineEntries = new ArrayList<>();
         getEntries();
@@ -103,6 +109,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         graphType = GraphType.GraphType_EDA;
         updateGraph(true);
+//        pulser.startRippleAnimation();
 
         return root;
     }
