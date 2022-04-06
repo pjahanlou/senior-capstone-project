@@ -1,21 +1,24 @@
 package com.example.seizuredetectionapp;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,14 +41,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import cucumber.api.java.cs.A;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
-    static EditText dateAndTime, duration, description, postDescription;
-    static NachoTextView triggers, mood, typeOfSeizure;
+    private static EditText duration, description, postDescription;
+    private static NachoTextView triggers, mood, typeOfSeizure;
     Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
@@ -66,7 +70,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private Journal editJournal;
     private String journalKey;
     private RangeSlider severitySlider;
-    private ImageView hintImage;
+    private static Button dateAndTime;
+    private int hour, minute, year, month, day;
+    private Calendar cal, cal1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,33 +92,36 @@ public class AddJournal extends Activity implements View.OnClickListener {
         triggers = findViewById(R.id.triggers);
         description = findViewById(R.id.description);
         postDescription = findViewById(R.id.postdescription);
-        btnSave =  findViewById(R.id.btnsave);
-        btnClose =  findViewById(R.id.btnclose);
+        btnSave = findViewById(R.id.btnsave);
+        btnClose = findViewById(R.id.btnclose);
         severitySlider = findViewById(R.id.severitySlider);
         hintImage = findViewById(R.id.hintAddJournal);
+
+        //get calendar
+        cal = Calendar.getInstance();
+        cal1 = Calendar.getInstance();
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
         edit = false;
-        if(extras != null){
+        if (extras != null) {
             edit = extras.getBoolean("key");
             ID = extras.getString("id");
-            Log.d("journal ID","id" + ID);
+            Log.d("journal ID", "id" + ID);
             Log.d("edit boolean", "" + edit.toString());
         }
         Log.d("edit boolean 2", "" + edit.toString());
-        if(edit){
+        if (edit) {
             //Retrieving saved journal information and populating the EditText
             popJournalText();
-        }
-        else{
+        } else {
             //auto fill date and time to the current date and time
             AddJournal.dateAndTime.setText(getCurrentTime());
         }
         //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
-        hintImage.setOnClickListener(this);
+        //btnDate.setOnClickListener(this);
 
         //Triggers suggestions
         String[] triggerSuggestions = new String[]{"Stress", "Missed Medication",
@@ -125,7 +134,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 "Skipped Meal",
                 "Flashing Lights",
                 "Flickering Lights",
-                "Hormones" };
+                "Hormones"};
+
         String[] moodSuggestions = new String[]{"Happy", "Sad", "Angry",
                 "Depressed",
                 "Cheerful",
@@ -138,17 +148,17 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 "Lighthearted",
                 "Humorous"};
 
-
         String[] seizureSuggestions = new String[]{"Generalized tonic-clonic (GTC)"
-                ,"Tonic"
-                ,"Clonic"
-                ,"Absence"
-                ,"Myoclonic"
-                ,"Atonic"
-                ,"Infantile or Epileptic spasms"};
-        ArrayAdapter<String> adapterMood = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,moodSuggestions);
-        ArrayAdapter<String> adapterTriggers = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,triggerSuggestions);
-        ArrayAdapter<String> adapterTypeOfSeizure = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,seizureSuggestions);
+                , "Tonic"
+                , "Clonic"
+                , "Absence"
+                , "Myoclonic"
+                , "Atonic"
+                , "Infantile or Epileptic spasms"};
+
+        ArrayAdapter<String> adapterMood = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, moodSuggestions);
+        ArrayAdapter<String> adapterTriggers = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, triggerSuggestions);
+        ArrayAdapter<String> adapterTypeOfSeizure = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, seizureSuggestions);
         triggers.setAdapter(adapterTriggers);
         typeOfSeizure.setAdapter(adapterTypeOfSeizure);
         mood.setAdapter(adapterMood);
@@ -156,32 +166,30 @@ public class AddJournal extends Activity implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v){
-        switch(v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btnclose:
                 finish();
                 break;
             case R.id.btnsave:
-                if(edit){
+                if (edit) {
                     updateInformation();
-                }
-                else{
+                } else {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Navbar.class));
                 break;
-            case R.id.hintAddJournal:
-                showHint(v.getContext());
-                break;
         }
     }
 
-    //method for retrieving info written and saving to firebase
-    public void saveInformation()
-    {
+    /**
+     * saveInformation saves new created journals to firebase
+     */
+    public void saveInformation() {
         List<String> saveTriggers = new ArrayList<String>();
         List<String> saveMood = new ArrayList<String>();
         List<String> saveTypeOfSeizure = new ArrayList<String>();
+
         //retrieving text from text boxes
         String saveDateAndTime = dateAndTime.getText().toString().trim();
         saveMood = mood.getChipValues();
@@ -191,29 +199,19 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String saveDescription = description.getText().toString().trim();
         String savePostDescription = postDescription.getText().toString().trim();
         String saveSeverity = severitySlider.getValues().get(0).toString();
-
-        Log.d("WOOHOHOOHOHOOH", saveTriggers.toString());
-
-
-        if(saveDateAndTime.isEmpty()){
+        if (saveDateAndTime.isEmpty()) {
             dateAndTime.requestFocus();
             Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(saveDescription.isEmpty()){
+        if (saveDescription.isEmpty()) {
             saveDescription = "None";
         }
 
-        if(saveDuration.isEmpty()){
+        if (saveDuration.isEmpty()) {
             saveDuration = "0";
         }
-
-        /*if(saveTriggers.isEmpty()){
-            saveTriggers.add("None");
-        }*/
-
-
 
         Journal journal = new Journal(saveDateAndTime, saveMood, saveTypeOfSeizure, saveDuration,
                 saveTriggers, saveDescription, savePostDescription, saveSeverity);
@@ -226,10 +224,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
         myRef.push().setValue(journal).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Toast.makeText(AddJournal.this, "Journal Saved.", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Toast.makeText(AddJournal.this, "Journal Save Failed.", Toast.LENGTH_LONG).show();
                 }
 
@@ -238,7 +235,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
     }
 
-    public void updateInformation(){
+    /**
+     * updateInformation updates the edited journal into firebase
+     */
+    public void updateInformation() {
 
         //Retrieving new inputted information
         String dateTime = dateAndTime.getText().toString().trim();
@@ -250,71 +250,35 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String postSeizureDescription = postDescription.getText().toString().trim();
         String severity = severitySlider.getValues().get(0).toString();
 
-        if(dateTime.isEmpty()){
+        if (dateTime.isEmpty()) {
             dateAndTime.requestFocus();
             Toast.makeText(AddJournal.this, "Date and Time field was empty. Did not save changes.", Toast.LENGTH_LONG).show();
             return;
         }
 
         updateFieldInFirebase("dateAndTime", dateTime, editJournal.dateAndTime);
-        updateListFieldInFirebase("mood",moodType, editJournal.mood);
-        updateListFieldInFirebase("typeOfSeizure",seizureType, editJournal.typeOfSeizure);
-        updateFieldInFirebase("durationOfSeizure",durationOfSeizure, editJournal.durationOfSeizure);
-        updateListFieldInFirebase("triggers",seizureTrigger,editJournal.triggers);
-        updateFieldInFirebase("description",seizureDescription, editJournal.description);
+        updateListFieldInFirebase("mood", moodType, editJournal.mood);
+        updateListFieldInFirebase("typeOfSeizure", seizureType, editJournal.typeOfSeizure);
+        updateFieldInFirebase("durationOfSeizure", durationOfSeizure, editJournal.durationOfSeizure);
+        updateListFieldInFirebase("triggers", seizureTrigger, editJournal.triggers);
+        updateFieldInFirebase("description", seizureDescription, editJournal.description);
         updateFieldInFirebase("postDescription", postSeizureDescription, editJournal.postDescription);
-        updateFieldInFirebase("severity",severity, editJournal.severity);
-
-        /*
-        //This needs to be changed
-        String previousValue = editJournal.dateAndTime;
-        List<String> previousTriggers;
-        if(!previousValue.equals(dateTime)){
-            updateFieldInFirebase("dateAndTime", dateTime);
-        }
-        previousValue = editJournal.mood;
-        if(!previousValue.equals(moodType)){
-            updateFieldInFirebase("mood", moodType);
-        }
-        previousValue = editJournal.typeOfSeizure;
-        if(!previousValue.equals(seizureType)){
-            updateFieldInFirebase("typeOfSeizure", seizureType);
-        }
-        previousValue = editJournal.durationOfSeizure;
-        if(!previousValue.equals(durationOfSeizure)){
-            updateFieldInFirebase("durationOfSeizure", durationOfSeizure);
-        }
-        previousTriggers = editJournal.triggers;
-        if(!previousTriggers.equals(seizureTrigger)){
-            updateFieldInFirebase("triggers", seizureTrigger.toString());
-        }
-        previousValue = editJournal.description;
-        if(!previousValue.equals(seizureDescription)){
-            updateFieldInFirebase("description", seizureDescription);
-        }
-        previousValue = editJournal.postDescription;
-        if(!previousValue.equals(postSeizureDescription)){
-            updateFieldInFirebase("postDescription", postSeizureDescription);
-        }
-        previousValue = editJournal.severity;
-        if(!previousValue.equals(severity)){
-            updateFieldInFirebase("severity", severity);
-        }
-
-         */
+        updateFieldInFirebase("severity", severity, editJournal.severity);
 
     }
 
-    public void popJournalText(){
+    /**
+     * popJournalText populates the text fields, sliders, and chips of the chosen journal to edit
+     */
+    public void popJournalText() {
         //set existing journal entries to each edittext
         Log.d("1", "made it here");
         userTable.child("Journals").orderByChild("dateAndTime").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot)
-            {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Log.d("date1", "date1 = " + snapshot.toString());
 
-                for (DataSnapshot childSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     journalKey = childSnapshot.getKey();
                     editJournal = childSnapshot.getValue(Journal.class);
                     Log.d("2", "made it here " + editJournal.toString());
@@ -351,8 +315,11 @@ public class AddJournal extends Activity implements View.OnClickListener {
         });
     }
 
-    private void updateFieldInFirebase(String field, String newValue, String previousValue){
-        if(previousValue != null) {
+    /**
+     * updateFieldInFirebase handles updating strings to firebase
+     */
+    private void updateFieldInFirebase(String field, String newValue, String previousValue) {
+        if (previousValue != null) {
             if (!previousValue.equals(newValue)) {
                 DatabaseReference journalTable = userTable.child("Journals");
                 journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
@@ -366,46 +333,65 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * updateListFieldInFirebase handles updating string lists to firebase
+     */
     private void updateListFieldInFirebase(String field, List<String> newValue, List<String> previousValue) {
-                DatabaseReference journalTable = userTable.child("Journals");
-                journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(field, "Updated");
-                    } else {
-                        Log.d(field, task.getException().toString());
-                    }
-                });
-
-
-    }
-
-    private String getCurrentTime(){
-        //gets current time and date
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
-                format(Calendar.getInstance().getTime());
-
-        return timeStamp;
-    }
-
-    private void showHint(Context context) {
-        Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.profile_settings_hint);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
-        }
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.setCancelable(false); //Optional
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
-
-        Button gotIt = dialog.findViewById(R.id.btn_gotit);
-
-        gotIt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+        DatabaseReference journalTable = userTable.child("Journals");
+        journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(field, "Updated");
+            } else {
+                Log.d(field, task.getException().toString());
             }
         });
 
-        dialog.show();
+
+    }
+
+
+    /**
+     * getCurrentTime gets the time when a new journal is created.
+     */
+    private String getCurrentTime() {
+        //gets current time and date
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+                format(Calendar.getInstance().getTime());
+        return timeStamp;
+    }
+
+    /**
+     * popDateAndTimePicker handles the dialog for calender and time.
+     * *Current bug, time dialog and date dialog displays at the same time instead of in order*
+     */
+    public void datePicker(View view) {
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                year = selectedYear;
+                month = selectedMonth;
+                day = selectedDay;
+                timePicker();
+            }
+        };
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, day, month);
+        cal1.add(Calendar.YEAR, -3);
+        datePickerDialog.getDatePicker().setMinDate(cal1.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    private void timePicker(){
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                hour = selectedHour;
+                minute = selectedMinute;
+                dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
+            }
+        };
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
+        timePickerDialog.show();
     }
 }
