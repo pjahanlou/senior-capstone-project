@@ -22,6 +22,17 @@
         app:layout_constraintVertical_bias="1">
 
         <ImageView
+            android:id="@+id/hintAlertPage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_more_info_foreground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:elevation="30dp" />
+
+        <ImageView
             android:id="@+id/imageView3"
             android:layout_width="90dp"
             android:layout_height="90dp"
@@ -95,6 +106,7 @@
                 android:progress="100"
                 android:progressDrawable="@drawable/countdown_circle"
                 android:rotation="-90" />
+
         </LinearLayout>
 
         <TextView

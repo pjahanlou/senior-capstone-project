@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -25,7 +27,9 @@ import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,6 +103,8 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
     private static Geocoder geocoder;
     private LocationRequest locationRequest;
     private static FusedLocationProviderClient fusedLocationProviderClient;
+    private ImageView hintImage;
+    private TextView textBox, titleBox;
 
 
     @Override
@@ -123,11 +129,13 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
         infoText = findViewById(R.id.infoText);
         counterProgressBar = findViewById(R.id.progressBarCircle);
         rippleBackground = findViewById(R.id.ripple);
+        hintImage = findViewById(R.id.hintAlertPage);
         context = getApplicationContext();
 
         // Add event listeners to the buttons
         callButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
         // Initializing the sms manager
         smsManager = SmsManager.getDefault();
@@ -230,7 +238,36 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
                     changeUI(timerStatus);
                 }
                 break;
+            case R.id.hintUsualLocations:
+                showHint(v.getContext());
+                break;
         }
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText("When a seizure has been detected your emergency contacts will be notified after a countdown. If the countdown starts and you do not believe you are having a seizure, you can press the cancel button at the bottom.");
+        titleBox.setText("Alert Page");
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     /**
