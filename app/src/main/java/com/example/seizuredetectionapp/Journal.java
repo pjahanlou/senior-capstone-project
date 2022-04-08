@@ -24,7 +24,7 @@ public class Journal {
         }
 
     public String toString(){
-        return dateAndTime + " " + mood + " " + typeOfSeizure;
+        return "Date and Time: " + dateAndTime + " Duration: " + durationOfSeizure + " Description: " + description;
     }
 
 }

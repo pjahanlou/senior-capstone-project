@@ -102,7 +102,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private Set<String> contactList = new HashSet<String>();
     private SharedPreferences sharedPreferences;
 
-    Button btnExport, btnSettings;
+    Button btnSettings;
     ListView journalList;
     ArrayList<Journal> journals = new ArrayList<>();
     ArrayList<JournalLayout> journalInfo = new ArrayList<>();
@@ -202,7 +202,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
         //ui elements
-        btnExport = root.findViewById(R.id.btnjournalExport);
         btnSettings = root.findViewById(R.id.settings);
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
@@ -213,7 +212,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         hintImage = root.findViewById(R.id.hintDatatable);
 
         //Buttons
-        btnExport.setOnClickListener(this);
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
         graphDisplayWeek.setOnClickListener(this);
@@ -409,8 +407,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 xAxisValues.add("Sat");
 
                 getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
-                break;
-            case(R.id.btnjournalExport):
                 break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
