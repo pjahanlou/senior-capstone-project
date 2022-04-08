@@ -28,21 +28,6 @@
                     android:background="@drawable/button_bg"
                     android:text="Exit" />
 
-<!--
-        <EditText
-            android:id="@+id/datetime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/dateAndTimeTitle"
-            android:background="@color/white"
-            android:hint="mm/dd/year hour:minutes"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
--->
                 <com.hootsuite.nachos.NachoTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,18 +59,21 @@
                     android:background="@color/white"
                     android:hint="Example: Tonic Clonic, Grand Mal"
                     android:textColorHint="@color/black"/>
-        <EditText
-            android:id="@+id/duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/durationTitle"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/durationTitle"
+                    android:background="@color/white"
+                    android:hint="0hour 0minutes 0seconds"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textColorHint="@color/black"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textStyle="normal"
+                    android:paddingLeft="20dp"/>
 
                 <com.hootsuite.nachos.NachoTextView
                     android:layout_width="match_parent"

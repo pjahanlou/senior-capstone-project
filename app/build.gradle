@@ -100,4 +100,6 @@ dependencies {
 
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.3.2'
 
+    // https://github.com/IvanKovac/TimePickerWithSeconds
+    implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
 }

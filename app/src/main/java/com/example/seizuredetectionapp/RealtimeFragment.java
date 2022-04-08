@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -28,9 +31,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -38,8 +38,8 @@ import java.util.Random;
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnEDA;
     Button btnMM;
-    GraphView graphView;
     private Dialog dialog;
+    TextView reading;
 
     LineChart lineChart;
     LineData lineData;
@@ -84,6 +84,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         btnEDA.setOnClickListener(this);
         btnMM.setOnClickListener(this);
 
+        reading = root.findViewById(R.id.txtCircle);
+
         lineChart = root.findViewById(R.id.lineChart);
         lineEntries = new ArrayList<>();
         getEntries();
@@ -111,10 +113,16 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnshowEDA:
+                if (graphType == GraphType.GraphType_EDA) {
+                    return;
+                }
                 graphType = GraphType.GraphType_EDA;
                 break;
 
             case R.id.btnshowMM:
+                if (graphType == GraphType.GraphType_MM) {
+                    return;
+                }
                 graphType = GraphType.GraphType_MM;
                 break;
         }
@@ -142,6 +150,11 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         lineChart.setData(lineData);
         lineChart.invalidate();
 
+        Entry e = (Entry) lineEntries.get(29);
+        float y = e.getY();
+        y = Math.round(y  * 10.f) / 10.f;
+        reading.setText(String.valueOf(y));
+
         if (rfrsh) {
             refresh(1000);
         }
@@ -164,7 +177,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         lineEntries.clear();
         Random r = new Random();
         for (int i = 1; i <= 30; ++i) {
-            lineEntries.add(new Entry(i, r.nextInt(10)));
+            Entry e = new Entry(i, r.nextFloat() * 30.f);
+            lineEntries.add(e);
         }
     }
 }

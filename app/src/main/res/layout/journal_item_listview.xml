@@ -17,36 +17,87 @@
        <!-- android:style="?android:attr/actionOverflowButtonStyle"-->
 
     <TextView
-        android:id="@+id/lvDateAndTime"
-        android:layout_width="match_parent"
+        android:id="@+id/lvMonth"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="10dp"
-        android:text="dateTime"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="62dp"
+        android:text="Month"
+        android:textColorHighlight="@color/black"
+        android:textAlignment="center"
+        android:textColor="@color/OceanBlue"
+        android:textSize="22dp" />
+
+    <TextView
+        android:id="@+id/lvYear"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="86dp"
+        android:layout_marginBottom="15dp"
+        android:text="Year"
+        android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="22sp" />
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/lvDay"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Day"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/lvDuration"
-        android:layout_width="match_parent"
+        android:layout_width="258dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="69dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="72dp"
+        android:gravity="top"
         android:text="duration"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/lvDateAndTime"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/lvDescription"
-        android:layout_width="306dp"
-        android:layout_height="wrap_content"
+        android:layout_width="334dp"
+        android:layout_height="92dp"
+        android:layout_below="@+id/lvDuration"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="72dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
         android:text="description"
         android:textColor="@color/black"
-        android:layout_marginLeft="5dp"
-        android:layout_below="@+id/lvDuration"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="251dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="72dp"
+        android:layout_marginEnd="85dp"
+        android:layout_marginBottom="0dp"
+        android:text="Duration:"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
 
 </RelativeLayout>

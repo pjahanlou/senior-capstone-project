@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hootsuite.nachos.NachoTextView;
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,9 +39,8 @@ import cucumber.api.java.cs.A;
 
 public class AddJournal extends Activity implements View.OnClickListener {
     //class variables
-    static EditText duration, description, postDescription;
-    static Button dateAndTime;
-    static NachoTextView triggers, mood, typeOfSeizure;
+    private static EditText  description, postDescription;
+    private static NachoTextView triggers, mood, typeOfSeizure;
     Button btnClose, btnSave;
     Journal journal;
     private FirebaseAuth mAuth;
@@ -61,6 +61,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private Journal editJournal;
     private String journalKey;
     private RangeSlider severitySlider;
+    private static Button dateAndTime, duration;
+    private int hour, minute, year, month, day;
+    private int durHour = 0, durMinute = 0, durSecond = 0;
+    private Calendar cal, cal1, now;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +87,12 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnSave =  findViewById(R.id.btnsave);
         btnClose =  findViewById(R.id.btnclose);
         severitySlider = findViewById(R.id.severitySlider);
+        //hintImage = findViewById(R.id.hintAddJournal);
+
+        //get calendar
+        cal = Calendar.getInstance();
+        cal1 = Calendar.getInstance();
+        now = Calendar.getInstance();
 
         //if user pressed edit
         Bundle extras = getIntent().getExtras();
@@ -105,6 +115,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
         //onClick Listeners
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+        duration.setOnClickListener(this);
+        //btnDate.setOnClickListener(this);
 
         //Triggers suggestions
         String[] triggerSuggestions = new String[]{"Stress", "Missed Medication",
@@ -161,6 +173,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Navbar.class));
+                break;
+            case R.id.duration:
+                durationPicker();
                 break;
         }
     }
@@ -224,7 +239,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
             }
         });
-
     }
 
     public void updateInformation(){
@@ -356,16 +370,14 @@ public class AddJournal extends Activity implements View.OnClickListener {
     }
 
     private void updateListFieldInFirebase(String field, List<String> newValue, List<String> previousValue) {
-                DatabaseReference journalTable = userTable.child("Journals");
-                journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(field, "Updated");
-                    } else {
-                        Log.d(field, task.getException().toString());
-                    }
-                });
-
-
+        DatabaseReference journalTable = userTable.child("Journals");
+        journalTable.child(journalKey).child(field).setValue(newValue).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(field, "Updated");
+            } else {
+                Log.d(field, task.getException().toString());
+            }
+        });
     }
 
 
@@ -373,8 +385,68 @@ public class AddJournal extends Activity implements View.OnClickListener {
         //gets current time and date
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
                 format(Calendar.getInstance().getTime());
-
         return timeStamp;
     }
 
+    /**
+     * datePicker handles the dialog for calender and time.
+     */
+    public void datePicker(View view) {
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                year = selectedYear;
+                month = selectedMonth;
+                day = selectedDay;
+                timePicker();
+            }
+        };
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, day, month);
+        cal1.add(Calendar.YEAR, -3);
+        datePickerDialog.getDatePicker().setMinDate(cal1.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    private void timePicker(){
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                hour = selectedHour;
+                minute = selectedMinute;
+                dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
+            }
+        };
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
+        timePickerDialog.show();
+    }
+
+    /**
+     * durationPicker handles the duration number picker and displays the duration accordingly
+     */
+    public void durationPicker(){
+
+        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+            String dHour = "";
+            String dMinute = "";
+            String dSecond = "";
+            @Override
+            public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
+                durHour = hourOfDay;
+                durMinute = minute;
+                durSecond = seconds;
+                if(durHour != 0){
+                    dHour = String.format("%02d Hrs ", durHour);
+                }
+                if(durMinute != 0){
+                    dMinute = String.format("%02d Min ", durMinute);
+                }
+                if(durSecond != 0){
+                    dSecond = String.format("%02d Sec", durSecond);
+                }
+                duration.setText(dHour + dMinute + dSecond);
+            }
+        }, 0, 0, 0, true);
+        mTimePicker.show();
+    }
 }
