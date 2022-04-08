@@ -97,7 +97,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnSave = findViewById(R.id.btnsave);
         btnClose = findViewById(R.id.btnclose);
         severitySlider = findViewById(R.id.severitySlider);
-        hintImage = findViewById(R.id.hintAddJournal);
+        //hintImage = findViewById(R.id.hintAddJournal);
 
         //get calendar
         cal = Calendar.getInstance();
@@ -351,8 +351,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 Log.d(field, task.getException().toString());
             }
         });
-
-
     }
 
 
@@ -367,8 +365,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
     }
 
     /**
-     * popDateAndTimePicker handles the dialog for calender and time.
-     * *Current bug, time dialog and date dialog displays at the same time instead of in order*
+     * datePicker handles the dialog for calender and time.
      */
     public void datePicker(View view) {
         DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -396,11 +393,13 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
             }
         };
-
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
         timePickerDialog.show();
     }
 
+    /**
+     * durationPicker handles the duration number picker and displays the duration accordingly
+     */
     public void durationPicker(){
 
         MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
@@ -413,18 +412,17 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 durMinute = minute;
                 durSecond = seconds;
                 if(durHour != 0){
-                    dHour = String.format("%02d Hours ", durHour);
+                    dHour = String.format("%02d Hrs ", durHour);
                 }
                 if(durMinute != 0){
-                    dMinute = String.format("%02d Minutes ", durMinute);
+                    dMinute = String.format("%02d Min ", durMinute);
                 }
                 if(durSecond != 0){
-                    dSecond = String.format("%02d Seconds", durSecond);
+                    dSecond = String.format("%02d Sec", durSecond);
                 }
                 duration.setText(dHour + dMinute + dSecond);
             }
         }, 0, 0, 0, true);
-        Log.d("test woohoo duration", ""+editJournal.durationOfSeizure);
         mTimePicker.show();
     }
 

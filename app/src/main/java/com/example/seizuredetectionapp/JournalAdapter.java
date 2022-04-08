@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,16 +30,27 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class JournalAdapter extends ArrayAdapter<JournalLayout> {
     private Context mContext;
     int mResource;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    HashMap<String,String> months = new HashMap<String,String>();
+
     public JournalAdapter(@NonNull Context context, int resource, @NonNull ArrayList<JournalLayout> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+        //Populate hashmap of months
+        months.put("01","Jan");months.put("07","Jul");
+        months.put("02","Feb");months.put("08","Aug");
+        months.put("03","Mar");months.put("09","Sept");
+        months.put("04","Apr");months.put("10","Oct");
+        months.put("05","May");months.put("11","Nov");
+        months.put("06","Jun");months.put("12","Dec");
 
     }
 
@@ -55,12 +67,16 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
 
-        TextView tvDateTime = (TextView) convertView.findViewById(R.id.lvDateAndTime);
+        TextView tvDay = (TextView) convertView.findViewById(R.id.lvDay);
+        TextView tvMonth = (TextView) convertView.findViewById(R.id.lvMonth);
+        TextView tvYear = (TextView) convertView.findViewById(R.id.lvYear);
         TextView tvDuration = (TextView) convertView.findViewById(R.id.lvDuration);
         TextView tvDescription = (TextView) convertView.findViewById(R.id.lvDescription);
         ImageButton ibThreeDots = (ImageButton) convertView.findViewById(R.id.threeDots);
 
-        tvDateTime.setText(dateAndTime);
+        tvDay.setText(getDay(dateAndTime));
+        tvMonth.setText(getMonth(dateAndTime));
+        tvYear.setText(getYear(dateAndTime));
         tvDuration.setText(duration);
         tvDescription.setText(description);
 
@@ -99,6 +115,7 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                                             snapshot.getRef().removeValue();
+                                            Toast.makeText(mContext, "Journal Deleted.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
@@ -117,6 +134,41 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
             }
         });
         return convertView;
+    }
+
+    public String getMonth(String dateTime){
+        char c0 = dateTime.charAt(0);
+        char c1 = dateTime.charAt(1);
+        StringBuilder sb = new StringBuilder();
+        sb.append(c0);
+        sb.append(c1);
+        String monthNum = sb.toString();
+        String month = months.get(monthNum);
+        return month;
+    }
+
+    public String getDay(String dateTime){
+        char c3 = dateTime.charAt(3);
+        char c4 = dateTime.charAt(4);
+        StringBuilder sb = new StringBuilder();
+        sb.append(c3);
+        sb.append(c4);
+        String day = sb.toString();
+        return day;
+    }
+
+    public String getYear(String dateTime){
+        char c6 = dateTime.charAt(6);
+        char c7 = dateTime.charAt(7);
+        char c8 = dateTime.charAt(8);
+        char c9 = dateTime.charAt(9);
+        StringBuilder sb = new StringBuilder();
+        sb.append(c6);
+        sb.append(c7);
+        sb.append(c8);
+        sb.append(c9);
+        String year = sb.toString();
+        return year;
     }
 
 
