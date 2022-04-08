@@ -67,12 +67,12 @@ public class BackgroundProcess extends Worker {
                 });
 
         //get data from backend server
-        JsonObjectRequest jsonObjectReceive = new JsonObjectRequest
+       /* JsonObjectRequest jsonObjectReceive = new JsonObjectRequest
                 (Request.Method.POST, HTTPHelpers.MYURL, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        if(response.hasSeizure == true){
+                       if(response.hasSeizure == true){
                             //start countdown or alert_page or whatever.
                         }
                     }
@@ -84,7 +84,7 @@ public class BackgroundProcess extends Worker {
 
                     }
                 });
-
+*/
         //probably not useful but eh.
         /*RequestQueue queue = Volley.newRequestQueue(context);
         queue.start();
