@@ -21,7 +21,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
@@ -32,8 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -47,6 +44,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ProfileSettings extends AppCompatActivity implements View.OnClickListener {
@@ -62,9 +61,12 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
     private String currentUserUID;
 
     ArrayList<Journal> savedJournals = new ArrayList<>();
+    ArrayList<String> listOfJournals = new ArrayList<>();
 
     int pdfWidth = 1080;
     int pdfHeight = 1920;
+
+    private String text;
 
     private static final int PERMISSION_REQUEST_CODE = 200;
 
@@ -339,22 +341,59 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private void saveFileToExternalStorage(String displayName, String content) {
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Journal journalToPdf = snapshot.getValue(Journal.class);
+                Log.d("WOWOEOESE222222", journalToPdf.toString());
+                listOfJournals.add(journalToPdf.toString());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         Uri externalUri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
 
         String relativeLocation = Environment.DIRECTORY_DOCUMENTS;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd");
+        LocalDate localDate = LocalDate.now();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, displayName + ".pdf");
+        contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, displayName + "_"+dtf.format(localDate)+".txt");
         contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/text");
         contentValues.put(MediaStore.Files.FileColumns.TITLE, "Journals");
         contentValues.put(MediaStore.Files.FileColumns.DATE_ADDED, System.currentTimeMillis() / 1000);
         contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, relativeLocation);
         contentValues.put(MediaStore.Files.FileColumns.DATE_TAKEN, System.currentTimeMillis());
 
+        text = "";
+        Log.d("WOEWOEOOEOEOEOWEOE", listOfJournals.toString());
+        for (String journal: listOfJournals) {
+            text += "\n" + journal;
+            Log.d("HERE", text);
+        }
+
         Uri fileUri = getContentResolver().insert(externalUri, contentValues);
         try {
             OutputStream outputStream =  getContentResolver().openOutputStream(fileUri);
-            outputStream.write(content.getBytes());
+            outputStream.write(text.getBytes());
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -381,6 +420,39 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         });
 
         dialog.show();
+    }
+
+    private ArrayList<String> getContent(){
+
+        myRef.child("Journals").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Journal journalToPdf = snapshot.getValue(Journal.class);
+                Log.d("WOWOEOESE222222", journalToPdf.toString());
+                listOfJournals.add(journalToPdf.toString());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return listOfJournals;
     }
 
 }
