@@ -3,19 +3,25 @@ package com.example.seizuredetectionapp;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -30,6 +36,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
     private SwipeMenuListView swipeMenuListView;
     private Button saveLocationButton, addLocationButton;
+    private ImageView hintImage;
+    private TextView textBox, titleBox;
 
     private ArrayList<UsualLocationsLayout> locations = new ArrayList<>();
     private UsualLocationsAdapter adapter;
@@ -45,10 +53,12 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         swipeMenuListView = findViewById(R.id.locationListView);
         saveLocationButton = findViewById(R.id.saveLocationButton);
         addLocationButton = findViewById(R.id.addNewLocationButton);
+        hintImage = findViewById(R.id.hintUsualLocations);
 
         // Adding the on click listeners to buttons
         saveLocationButton.setOnClickListener(this);
         addLocationButton.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
         // Pulling from local settings
         Set<String> savedLocations  = pullFromLocalSettings();
@@ -136,6 +146,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             case R.id.addNewLocationButton:
                 startActivity(new Intent(this, GoogleMaps.class));
                 break;
+            case R.id.hintUsualLocations:
+                showHint(view.getContext());
+                break;
         }
     }
 
@@ -181,5 +194,31 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 dp, metrics);
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText("Keeping track of your usual Locations can better help your emergency contacts find you during an emergency. The more specific the location the better!");
+        titleBox.setText("Usual Locations");
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

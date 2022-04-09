@@ -224,21 +224,21 @@
             android:contentDescription="Severity"
             />
 
-        <Button
-            android:id="@+id/datetime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/dateAndTimeTitle"
-            android:background="@color/white"
-            android:hint="Enter Date and Time"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp"
-            android:textAlignment="textStart"
-            android:onClick="datePicker"/>
+                <Button
+                    android:id="@+id/datetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dateAndTimeTitle"
+                    android:background="@color/white"
+                    android:hint="Enter Date and Time"
+                    android:onClick="datePicker"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="16sp" />
 
         </RelativeLayout>
 </ScrollView>

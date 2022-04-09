@@ -2,6 +2,7 @@ package com.example.seizuredetectionapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,10 +11,12 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.CountDownTimer;
@@ -23,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,6 +116,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Double userLatitude, userLongitude;
+    private ImageView hintImage;
+    private TextView textBox, titleBox;
 
     private LocalSettings localSettings;
 
@@ -183,10 +189,12 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         infoText = root.findViewById(R.id.infoText);
         counterProgressBar = root.findViewById(R.id.progressBarCircle);
         rippleBackground = root.findViewById(R.id.ripple);
+        hintImage = root.findViewById(R.id.hintFragmentAlertPage);
 
         // Add event listeners to the buttons
         callButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
         getLocation();
 
@@ -259,7 +267,36 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 // Updating the navbar to reflect the move to datatable
                 Navbar.getBottomNavigationView().setSelectedItemId(R.id.datatableFragment);
                 break;
+            case R.id.hintFragmentAlertPage:
+                showHint(v.getContext());
+                break;
         }
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText("When a seizure has been detected your emergency contacts will be notified after a countdown. If the countdown starts and you do not believe you are having a seizure, you can press the cancel button at the bottom.");
+        titleBox.setText("Alert Page");
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     /**

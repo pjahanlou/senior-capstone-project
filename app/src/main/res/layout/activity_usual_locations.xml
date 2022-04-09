@@ -32,6 +32,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/hintUsualLocations"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_more_info_foreground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/outerConstraintLayout"
         android:layout_width="match_parent"

@@ -4,14 +4,19 @@ import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,9 +24,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +51,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
+    private ImageView hintImage;
+    private TextView textBox, titleBox;
 
 
 
@@ -69,6 +78,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         longestSeizureSlider = findViewById(R.id.longestSeizureSlider);
         openDatePicker = findViewById(R.id.openDatePickerDialog);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
+        hintImage = findViewById(R.id.hintQuestionnaireMedical);
+
 
         // Formatting the average seizure slider
         averageSeizureDurationSlider.setLabelFormatter(value -> {
@@ -93,6 +104,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
 
         openDatePicker.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
     }
 
     private String longestSeizureConvert(float value) {
@@ -146,6 +158,9 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.submitQuestionnaireMedical:
                 saveQuestionnaireMedical();
+                break;
+            case R.id.hintQuestionnaireMedical:
+                showHint(v.getContext());
                 break;
         }
     }
@@ -219,5 +234,31 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         seizureStartD = (month + 1) + "/" + dayOfMonth + "/" + year;
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText("By telling us more about your seizure medical conditions, we can better adjust to you as a user.");
+        titleBox.setText("Medical Questionnaire");
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

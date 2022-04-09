@@ -45,7 +45,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     public Set<String> listOfContacts = new HashSet<>();
     public String contactMethod, selectedSex;
     private RangeSlider heightSlider, weightSlider, countdownTimerSlider;
-    private ImageView hintImage;
+    private ImageView hintImageCountdownTimer, hintImageQuestionnairePersonal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dateOfBirth = findViewById(R.id.dateOfBirthInput);
         submitQuestionnaireButton = findViewById(R.id.submitQuestionairePersonal);
         addContactButton = findViewById(R.id.addContact);
-        hintImage = findViewById(R.id.hint);
+        hintImageCountdownTimer = findViewById(R.id.hint);
 
         // Initializing the spinners
         contactMethodSpinner = findViewById(R.id.contactPreferenceSpinner);
@@ -72,7 +72,8 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         dateOfBirth.setOnClickListener(this);
         addContactButton.setOnClickListener(this);
         submitQuestionnaireButton.setOnClickListener(this);
-        hintImage.setOnClickListener(this);
+        hintImageCountdownTimer.setOnClickListener(this);
+        hintImageQuestionnairePersonal.setOnClickListener(this);
 
         // Setting the values for Countdown timer slider
         countdownTimerSlider.setLabelFormatter(value -> countdownTimerFormatter(value));
@@ -134,6 +135,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             case R.id.hint:
                 showHint();
                 break;
+
         }
     }
 

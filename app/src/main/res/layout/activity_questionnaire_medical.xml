@@ -30,6 +30,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/hintQuestionnaireMedical"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_more_info_foreground"
+            android:elevation="30dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginVertical="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
