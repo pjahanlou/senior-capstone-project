@@ -10,19 +10,15 @@
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/listview_rounded_border.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.22" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_datatable.xml" value="0.2" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_profile_settings.xml" value="0.25" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_profile_settings.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_questionaire.xml" value="0.16757246376811594" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.22" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_personal.xml" value="0.17527173913043478" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/addjournal.xml" value="0.25" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_readwrite_permission.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_text_permission.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/activity_write_read_permission.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/addjournal.xml" value="0.33" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/custom_newuser_dialog.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.22" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
-        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/journal_item_listview.xml" value="0.22" />
+        <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/journal_item_listview.xml" value="0.25" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.103125" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/menu/bottom_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/menu/journal_three_dots_menu.xml" value="0.20416666666666666" />
@@ -37,10 +33,6 @@
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/signup_tab_fragment.xml" value="0.14130434782608695" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/drawable/circle.xml" value="0.1" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/fragment_alert_page.xml" value="0.25" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.12158054711246201" />
-        <entry key="..\:/Users/johnm/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/Questionnaire.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_contacts_page.xml" value="0.275" />
@@ -60,6 +52,7 @@
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_alert_page.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_location_permission.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_navbar.xml" value="0.25" />
+        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_profile_settings.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_questionnaire_personal.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/activity_usual_locations.xml" value="0.36666666666666664" />
@@ -69,8 +62,8 @@
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_alert_page.xml" value="0.2015625" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.33" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_datatable_hint.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_realtime.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/profile_settings_hint.xml" value="0.33" />
-        <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/senior-capstone-project/senior-capstone-project/app/src/main/res/layout/fragment_datatable.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/add_contact_button_bg.xml" value="0.2263888888888889" />
         <entry key="app/src/main/res/drawable/button_bg.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/dialog_bg.xml" value="0.14722222222222223" />

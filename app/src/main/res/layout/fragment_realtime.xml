@@ -20,6 +20,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.937" />
 
+    <ImageView
+        android:id="@+id/hintRealtime"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_more_info_foreground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="30dp" />
+
     <Button
         android:id="@+id/btnshowEDA"
         android:layout_width="wrap_content"

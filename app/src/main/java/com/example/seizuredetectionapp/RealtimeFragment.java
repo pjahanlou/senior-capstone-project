@@ -2,6 +2,7 @@ package com.example.seizuredetectionapp;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +47,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     LineData lineData;
     LineDataSet lineDataSet;
     ArrayList lineEntries;
+    private ImageView hintImage;
+    private TextView textBox, titleBox;
 
     enum GraphType {
         GraphType_EDA,
@@ -81,8 +85,10 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         // Buttons
         btnEDA = root.findViewById(R.id.btnshowEDA);
         btnMM = root.findViewById(R.id.btnshowMM);
+        hintImage = root.findViewById(R.id.hintRealtime);
         btnEDA.setOnClickListener(this);
         btnMM.setOnClickListener(this);
+        hintImage.setOnClickListener(this);
 
         reading = root.findViewById(R.id.txtCircle);
 
@@ -125,8 +131,37 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 }
                 graphType = GraphType.GraphType_MM;
                 break;
+            case R.id.hintRealtime:
+                showHint(view.getContext());
+                break;
         }
         updateGraph(false);
+    }
+
+    private void showHint(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.profile_settings_hint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText("this page displays the data your phone receives from your wearable device. To change which type of data you are viewing click the corresponding button at the bottom!");
+        titleBox.setText("Realtime Data Page");
+
+        Button gotIt = dialog.findViewById(R.id.btn_gotit);
+
+        gotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void updateGraph(boolean rfrsh) {

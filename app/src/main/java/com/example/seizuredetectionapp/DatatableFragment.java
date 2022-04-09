@@ -42,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android.widget.Button;
@@ -130,6 +131,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     BarChart barChart;
     ArrayList<Calendar> journalDates;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
+    TextView textBox, titleBox;
 
 
     // TODO: Rename and change types of parameters
@@ -480,9 +482,16 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             valueList.add(0.0);
         }
 
-        // add 1 to corresponding column for each JournalDate
-        for(int i = 0; i < dates.size(); i++){
-            valueList.set((dates.get(i).get(timeSpan)-1), valueList.get(dates.get(i).get(timeSpan)-1) + 1.0);
+        if(timeSpan == MONTH_OF_YEAR) {
+            for (int i = 0; i < dates.size(); i++) {
+                valueList.set((dates.get(i).get(timeSpan)), valueList.get(dates.get(i).get(timeSpan)) + 1.0);
+            }
+        }
+        else {
+            // add 1 to corresponding column for each JournalDate
+            for (int i = 0; i < dates.size(); i++) {
+                valueList.set((dates.get(i).get(timeSpan) - 1), valueList.get(dates.get(i).get(timeSpan) - 1) + 1.0);
+            }
         }
 
         //fit the data into a bar
@@ -531,6 +540,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     public void getDates(Calendar dateCompare, View view, ArrayList<String> xAxisValues, int timeSpan){
         journalDates = new ArrayList<>();
+        Log.d("getDates START", "ENTRIES BELOW");
         myRef.child("Journals").addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -543,8 +553,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                     cDate.setTime(date);
 
                     if((cDate.getTimeInMillis() >= dateCompare.getTimeInMillis())) {
-                        Log.d("getgraph checker", String.valueOf(cDate));
-                        Log.d("getgraph checker", String.valueOf(cDate.get(WEEK_OF_MONTH)));
+                        //Log.d("getgraph checker", String.valueOf(cDate));
                         journalDates.add(cDate);
                     }
                 } catch (ParseException ex) {
@@ -565,6 +574,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+        Log.d("getDates END", "");
     }
 
     private void showHint(Context context) {
@@ -582,10 +592,17 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         gotIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                if(gotIt.getText() == "Got it!")
+                    dialog.dismiss();
+                gotIt.setText("Got it!");
+                textBox = dialog.getWindow().findViewById(R.id.textView2);
+                titleBox = dialog.getWindow().findViewById(R.id.textView);
+                textBox.setText("By swiping up on the bottom tab, you can edit and view your journals within a list view. Journals are automatically added when a seizure is detected. If desired, you can add a journal manually by clicking the middle button at the bottom.");
+                titleBox.setText("Journal Listview");
             }
         });
 
         dialog.show();
     }
+
 }
