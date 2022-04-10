@@ -247,7 +247,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
         textBox = dialog.getWindow().findViewById(R.id.textView2);
         titleBox = dialog.getWindow().findViewById(R.id.textView);
-        textBox.setText("By telling us more about your seizure medical conditions, we can better adjust to you as a user.");
+        textBox.setText("By learning about your medical history, the app can better adjust to you.");
         titleBox.setText("Medical Questionnaire");
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);

@@ -46,26 +46,6 @@
 
         </TextView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cityTextView"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:paddingTop="5dp">
-
-        </TextView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/stateCountryTextView"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:paddingTop="5dp">
-        </TextView>
-
     </LinearLayout>
 
     <ImageView

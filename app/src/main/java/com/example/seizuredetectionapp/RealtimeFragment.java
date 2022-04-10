@@ -149,7 +149,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
         textBox = dialog.getWindow().findViewById(R.id.textView2);
         titleBox = dialog.getWindow().findViewById(R.id.textView);
-        textBox.setText("this page displays the data your phone receives from your wearable device. To change which type of data you are viewing click the corresponding button at the bottom!");
+        textBox.setText("This page displays the data your phone receives from your wearable device. To change which type of data you are viewing click the corresponding button at the bottom!");
         titleBox.setText("Realtime Data Page");
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);
