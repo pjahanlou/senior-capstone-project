@@ -84,11 +84,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         // Converting to UsualLocationsLayout ArrayList
         for(String location:savedLocations){
-            String[] locationArray = location.split(",");
-            String street = locationArray[0];
-            String city = locationArray[1];
-            String stateAndCountry = locationArray[2] + "" + locationArray[3];
-            UsualLocationsLayout usualLocationsLayout = new UsualLocationsLayout(street, city, stateAndCountry);
+            UsualLocationsLayout usualLocationsLayout = new UsualLocationsLayout(location);
             locations.add(usualLocationsLayout);
         }
 
@@ -156,8 +152,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         Set<String> locationsSet = new HashSet<>();
 
         for(UsualLocationsLayout locationsLayout:locations){
-            String location = locationsLayout.getStreet() + " " + locationsLayout.getCity()
-                    + " " + locationsLayout.getStateAndCountry();
+            String location = locationsLayout.getStreet() + " ";
             locationsSet.add(location);
         }
 
@@ -207,7 +202,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
         textBox = dialog.getWindow().findViewById(R.id.textView2);
         titleBox = dialog.getWindow().findViewById(R.id.textView);
-        textBox.setText("Keeping track of your usual Locations can better help your emergency contacts find you during an emergency. The more specific the location the better!");
+        textBox.setText("Keeping track of your usual locations helps STRapp notify your emergency contacts. The more specific the location the better!");
         titleBox.setText("Usual Locations");
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);

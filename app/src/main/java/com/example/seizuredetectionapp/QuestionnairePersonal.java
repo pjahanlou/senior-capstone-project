@@ -67,6 +67,9 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         countdownTimerSlider = findViewById(R.id.countdownTimerInput);
         weightSlider = findViewById(R.id.weightSlider);
         heightSlider = findViewById(R.id.heightSlider);
+        hintImageQuestionnairePersonal = findViewById(R.id.hintQuestionnairePersonal);
+
+        // Initializing the hint view
 
         // Add click listeners to buttons
         dateOfBirth.setOnClickListener(this);

@@ -76,7 +76,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintWidth_percent="0.7"
-                android:text="We will need your texts to give you better experience"
+                android:text="We will need your texts to give you a better experience"
                 android:textAlignment="center"
                 android:textColor="@color/DarkSlateGray"
                 android:textSize="16dp">
