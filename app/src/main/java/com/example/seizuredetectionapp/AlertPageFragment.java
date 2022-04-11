@@ -80,7 +80,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private String mParam1;
     private String mParam2;
 
-    private enum TimerStatus {
+    public enum TimerStatus {
         STARTED,
         STOPPED
     }
@@ -364,11 +364,13 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         preferredContactMethod = sharedPreferences.getString("preferred contact method", LocalSettings.getPreferredContactMethod());
+        Log.d("preferred contact", ""+preferredContactMethod);
         userCountdownTime = sharedPreferences.getString("countdown timer", LocalSettings.getCountdownTimer());
         Log.d("countdown time", ""+userCountdownTime);
 
         // Pulling the contact list
         contactList = loadContactMap();
+        Log.d("preferred contact", ""+contactList.toString());
 
         start();
 
@@ -422,7 +424,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         // Pulling the usual locations from local settings
         Set<String> usualLocations = pullLocationsFromLocalSettings();
 
-        String closestLocation = null;
+        String closestLocation = "";
 
         // Checking if the user is near any of their usual locations
         for(String location:usualLocations){
@@ -450,21 +452,30 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         }
 
         switch (preferredContactMethod){
-            case "text message":
+            case "Text Message":
 
                 Iterator hmIterator = contactList.entrySet().iterator();
                 while(hmIterator.hasNext()){
                     Map.Entry contact = (Map.Entry)hmIterator.next();
                     String name = (String) contact.getValue();
                     String number = (String) contact.getKey();
-                    if(closestLocation != null){
+                    Log.d("number", ""+number);
+                    Log.d("location", ""+userAddress);
+                    Log.d("closestLocation", ""+closestLocation);
+                    Log.d("conditional", String.valueOf(!closestLocation.equals("")));
+                    if(!closestLocation.equals("") && !message.equals(cancelMessage)){
+                        Log.d("conditional2", String.valueOf(!closestLocation.equals("")));
                         smsManager.sendTextMessage(number, null,
-                                    "Hello "+name+",\n"+
-                                        message+"\nwe have detected that they're here:"+userAddress+
-                                        "\nthe user is within half mile radius of here: "
-                                        + closestLocation
+                                    "Hi "+name+",\n"+
+                                        message+"\nCurrent location:"+userAddress+
+                                        "\nUsual Location: " + closestLocation
                                 , null, null);
-                    } else{
+                    } else if(message.equals(cancelMessage)){
+                        smsManager.sendTextMessage(number, null, "Hello "+name+",\n"+
+                                        message
+                                , null, null);
+                    }
+                    else if(closestLocation.equals("") && !message.equals(cancelMessage)){
                         smsManager.sendTextMessage(number, null, "Hello "+name+",\n"+
                                 message+"\nwe have detected that they're here:"+userAddress
                                 , null, null);
