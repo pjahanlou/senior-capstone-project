@@ -81,6 +81,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timeLineDisplayGraph" />
 
+            <ToggleButton
+                android:id="@+id/startSeizureButton"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/button_bg"
+                android:text="Start Seizure Detection"
+                android:textAllCaps="false"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:stateListAnimator="@null"
+                android:textColor="@color/white"
+                app:layout_constraintHeight_percent="0.15"
+                app:layout_constraintWidth_percent="0.98"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/showGraphWeek" />
+
             <ImageView
                 android:id="@+id/hintDatatable"
                 android:layout_width="50dp"
