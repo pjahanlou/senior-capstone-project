@@ -127,6 +127,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private LocalSettings localSettings;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private ImageView hintImage;
+    private Button startSeizureButton;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
@@ -212,12 +213,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
         graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
         hintImage = root.findViewById(R.id.hintDatatable);
+        startSeizureButton = root.findViewById(R.id.startSeizureButton);
 
         //Buttons
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
         graphDisplayWeek.setOnClickListener(this);
         hintImage.setOnClickListener(this);
+        startSeizureButton.setOnClickListener(this);
 
         //listview adapter
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, journalInfo);
@@ -421,7 +424,23 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             case R.id.hintDatatable:
                 showHint(view.getContext());
                 break;
+            case R.id.startSeizureButton:
+                startService();
+                break;
         }
+    }
+
+    public void startService() {
+
+        Intent serviceIntent = new Intent(getContext(), ExampleService.class);
+        serviceIntent.putExtra("inputExtra", "Seizure Detection");
+
+        ContextCompat.startForegroundService(getContext(), serviceIntent);
+    }
+
+    public void stopService(Intent v) {
+        Intent serviceIntent = new Intent(getContext(), ExampleService.class);
+        stopService(serviceIntent);
     }
 
     private Calendar normalizeDates(Integer timeValue){
