@@ -77,7 +77,7 @@
             android:stateListAnimator="@null"
             android:textStyle="bold"
             android:text="Got it!"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

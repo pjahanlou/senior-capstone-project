@@ -17,7 +17,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/DarkGray"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
