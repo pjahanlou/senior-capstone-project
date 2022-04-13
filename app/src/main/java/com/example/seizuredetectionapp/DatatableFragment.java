@@ -493,6 +493,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     public void generateChart(View view, ArrayList<Calendar> dates, ArrayList<String> xAxisValues, int timeSpan){
 
+        int maxValue = 0;
         ArrayList<Double> valueList = new ArrayList<Double>();
         ArrayList<BarEntry> entries = new ArrayList<>();
         String title = " Recorded Seizures";
@@ -517,6 +518,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         for (int i = 0; i < valueList.size(); i++) {
             BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
             entries.add(barEntry);
+            if(valueList.get(i) > maxValue)
+                maxValue = (int) valueList.get(i).floatValue();
         }
 
         BarDataSet barDataSet = new BarDataSet(entries, title);
@@ -537,13 +540,16 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         axisX.setValueFormatter(new IndexAxisValueFormatter(xAxisValues));
 
         YAxis axisY = barChart.getAxisLeft();
-        if(timeSpan == DAY_OF_WEEK){
-            axisY.setAxisMaximum(10f);
-        }if(timeSpan == WEEK_OF_MONTH){
-            axisY.setAxisMaximum(25f);
-        }if(timeSpan == MONTH_OF_YEAR){
-            axisY.setAxisMaximum(50f);
-        }
+        axisY.setAxisMaximum(Math.max(maxValue, 5f));
+        axisY.setGranularity(1f);
+        Log.d("getMax", String.valueOf(maxValue));
+//        if(timeSpan == DAY_OF_WEEK){
+//            axisY.setAxisMaximum(10f);
+//        }if(timeSpan == WEEK_OF_MONTH){
+//            axisY.setAxisMaximum(25f);
+//        }if(timeSpan == MONTH_OF_YEAR){
+//            axisY.setAxisMaximum(50f);
+//        }
 
         YAxis rightAxis = barChart.getAxisRight();
         rightAxis.setDrawGridLines(false);

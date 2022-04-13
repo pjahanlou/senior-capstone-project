@@ -12,6 +12,16 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:buttonStyle">@style/ButtonLowercase</item>
+        <item name="android:textColorHint">@style/HintColor</item>
+    </style>
+
+    <style name="ButtonLowercase" parent="Widget.AppCompat.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="HintColor" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorHint">@color/DarkGray</item>
     </style>
 
     <style name="threeDotImageView" parent="@style/Widget.AppCompat.ActionButton.Overflow">

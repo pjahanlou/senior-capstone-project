@@ -11,14 +11,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnsave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/button_bg"
-            android:text="save" />
+                <Button
+                    android:id="@+id/btnsave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/button_bg"
+                    android:text="save"
+                    android:textAllCaps="false"/>
 
                 <Button
                     android:id="@+id/btnclose"
@@ -26,39 +27,40 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/button_bg"
-                    android:text="Exit" />
+                    android:text="Exit"
+                    android:textAllCaps="false"/>
 
                 <com.hootsuite.nachos.NachoTextView
+                    android:id="@+id/mood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/mood"
                     android:layout_below="@id/moodTitle"
-                    app:chipBackground="@color/LightSteelBlue"
-                    app:chipTextColor="@color/black"
-                    app:chipTextSize="16dp"
-                    app:chipHeight="30dp"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:paddingLeft="20dp"
                     android:background="@color/white"
                     android:hint="Example: Sad, Happy"
-                    android:textColorHint="@color/black"/>
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/DarkGray"
+                    android:textSize="15dp"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipHeight="30dp"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp" />
 
                 <com.hootsuite.nachos.NachoTextView
+                    android:id="@+id/typeofseizure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/typeofseizure"
                     android:layout_below="@id/typeOfSeizureTitle"
-                    app:chipBackground="@color/LightSteelBlue"
-                    app:chipTextColor="@color/black"
-                    app:chipTextSize="16dp"
-                    app:chipHeight="30dp"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:paddingLeft="20dp"
                     android:background="@color/white"
                     android:hint="Example: Tonic Clonic, Grand Mal"
-                    android:textColorHint="@color/black"/>
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/DarkGray"
+                    android:textSize="15dp"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipHeight="30dp"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp" />
 
                 <Button
                     android:id="@+id/duration"
@@ -67,30 +69,29 @@
                     android:layout_below="@id/durationTitle"
                     android:background="@color/white"
                     android:hint="0hour 0minutes 0seconds"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textColorHint="@color/black"
+                    android:paddingLeft="20dp"
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
-                    android:textStyle="normal"
-                    android:paddingLeft="20dp"/>
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="normal" />
 
                 <com.hootsuite.nachos.NachoTextView
+                    android:id="@+id/triggers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/triggers"
                     android:layout_below="@id/triggersTitle"
-                    app:chipBackground="@color/LightSteelBlue"
-                    app:chipTextColor="@color/black"
-                    app:chipTextSize="16dp"
-                    app:chipHeight="30dp"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:paddingLeft="20dp"
                     android:background="@color/white"
                     android:hint="Example: Stress, Missed Medication"
-                    android:textColorHint="@color/black"
-                    />
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/DarkGray"
+                    android:textSize="15dp"
+                    app:chipBackground="@color/LightSteelBlue"
+                    app:chipHeight="30dp"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="16dp" />
 
         <EditText
             android:id="@+id/description"
