@@ -72,6 +72,7 @@ dependencies {
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-firestore:24.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
@@ -106,4 +107,6 @@ dependencies {
 
     // https://github.com/IvanKovac/TimePickerWithSeconds
     implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
+
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
 }

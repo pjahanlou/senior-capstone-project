@@ -7,6 +7,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android.widget.Button;
+import android.widget.ToggleButton;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -133,6 +136,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     ArrayList<Calendar> journalDates;
     Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
     TextView textBox, titleBox;
+
+    public enum ThreadStatus {
+        STARTED,
+        STOPPED
+    }
+    private ThreadStatus threadStatus = ThreadStatus.STOPPED;
 
 
     // TODO: Rename and change types of parameters
@@ -425,22 +434,42 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 showHint(view.getContext());
                 break;
             case R.id.startSeizureButton:
-                startService();
+                if(threadStatus == ThreadStatus.STARTED){
+                    stopService();
+                    threadStatus = ThreadStatus.STOPPED;
+                    startSeizureButton.setText("Start Seizure Detection");
+                } else if(threadStatus == ThreadStatus.STOPPED){
+                    startService();
+                    threadStatus = ThreadStatus.STARTED;
+                    startSeizureButton.setText("Stop Seizure Detection");
+                }
                 break;
         }
     }
 
     public void startService() {
+        if(!foregroundServiceRunning()){
+            Intent serviceIntent = new Intent(getContext(), ExampleService.class);
+            serviceIntent.putExtra("inputExtra", "Start Service");
 
-        Intent serviceIntent = new Intent(getContext(), ExampleService.class);
-        serviceIntent.putExtra("inputExtra", "Seizure Detection");
-
-        ContextCompat.startForegroundService(getContext(), serviceIntent);
+            ContextCompat.startForegroundService(getContext(), serviceIntent);
+        }
     }
 
-    public void stopService(Intent v) {
+    public void stopService() {
         Intent serviceIntent = new Intent(getContext(), ExampleService.class);
-        stopService(serviceIntent);
+        serviceIntent.putExtra("inputExtra", "Stop Service");
+    }
+
+    public boolean foregroundServiceRunning(){
+        Context context = getContext();
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if(ExampleService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Calendar normalizeDates(Integer timeValue){
