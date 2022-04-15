@@ -44,7 +44,8 @@
             <ImageView
                 android:id="@+id/locationPicture"
                 android:layout_width="wrap_content"
-                android:layout_height="400dp"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.45"
                 android:layout_marginTop="10dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/allowLocation"
