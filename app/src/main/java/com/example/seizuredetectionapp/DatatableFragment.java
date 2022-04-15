@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Environment;
 import android.print.PrintAttributes;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -240,11 +242,16 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         bottomSheetBehavior = BottomSheetBehavior.from(sheetBottom);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        //Peek Height
         //TODO find a way to make it relative for each phone
         // .getHeight() of the xml view and find a good dividen
-        bottomSheetBehavior.setPeekHeight(210);
+        /* This doesn't quite work sadly, 12 is the best dividen i found for the pixel 4 xl but it doesnt work on other devices
+        //
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+        Log.d("DISPLAY HEIGHT",Integer.toString(height));
+        bottomSheetBehavior.setPeekHeight(height/12);
+         */
         //set journal to not be hideable
+        bottomSheetBehavior.setPeekHeight(210);
         bottomSheetBehavior.setHideable(false);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -314,29 +321,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         //Array goes into generateChart
 
         return root;
-    }
-
-    //remove single journal from firebase
-    public void removeJournal(int pos){
-        JournalLayout journalLayout = journalInfo.get(pos);
-        //gets key id for chosen journal
-        Query query = myRef.child("Journals").orderByChild("dateAndTime").equalTo(journalLayout.getDateAndTime());
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    snapshot.getRef().removeValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Delete Operation", "onCancelled", databaseError.toException());
-            }
-        });
-        journalInfo.remove(pos);
-        adapter.notifyDataSetChanged();
     }
 
     private void sortJournals(String selectedItem){

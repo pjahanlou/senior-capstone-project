@@ -17,8 +17,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:background="@drawable/button_bg"
-                    android:text="save"
+                    android:background="@drawable/addjournal_button_bg"
+                    android:text="Save"
                     android:textAllCaps="false"/>
 
                 <Button
@@ -26,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/button_bg"
+                    android:background="@drawable/addjournal_button_bg"
                     android:text="Exit"
                     android:textAllCaps="false"/>
 
@@ -68,12 +68,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/durationTitle"
                     android:background="@color/white"
-                    android:hint="0hour 0minutes 0seconds"
+                    android:hint="0 Hour 0 Min 0 Sec"
                     android:paddingLeft="20dp"
                     android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColorHint="@color/DarkGray"
                     android:textSize="16dp"
                     android:textStyle="normal" />
 
@@ -93,18 +93,19 @@
                     app:chipTextColor="@color/black"
                     app:chipTextSize="16dp" />
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionTitle"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/descriptionTitle"
+                    android:background="@color/white"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:hint="Please fill this out with helpful information for your doctor."
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/DarkGray"
+                    android:textSize="16sp" />
 
         <EditText
             android:id="@+id/postdescription"
@@ -218,7 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/severityTitle"
-            android:theme="@style/SliderTheme"
+            android:theme="@style/AddJournal_slider"
             android:valueFrom = "0"
             android:valueTo = "10"
             android:stepSize = "1"
@@ -238,7 +239,7 @@
                     android:paddingBottom="10dp"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColorHint="@color/DarkGray"
                     android:textSize="16sp" />
 
         </RelativeLayout>

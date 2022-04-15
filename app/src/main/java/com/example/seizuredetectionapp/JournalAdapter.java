@@ -36,14 +36,17 @@ import java.util.HashSet;
 public class JournalAdapter extends ArrayAdapter<JournalLayout> {
     private Context mContext;
     int mResource;
+    ArrayList<JournalLayout> mObjects;
     FirebaseDatabase database;
     DatabaseReference myRef;
     HashMap<String,String> months = new HashMap<String,String>();
+    private ArrayList<Journal> updateJournals;
 
     public JournalAdapter(@NonNull Context context, int resource, @NonNull ArrayList<JournalLayout> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+        mObjects = objects;
         //Populate hashmap of months
         months.put("01","Jan");months.put("07","Jul");
         months.put("02","Feb");months.put("08","Aug");
@@ -124,6 +127,7 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
                                         Log.e("Delete Operation", "onCancelled", databaseError.toException());
                                     }
                                 });
+                                mObjects.remove(position);
                                 notifyDataSetChanged();
                                 return true;
                         }
@@ -169,6 +173,11 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         sb.append(c9);
         String year = sb.toString();
         return year;
+    }
+
+    public void setList(){
+        this.updateJournals = updateJournals;
+        notifyDataSetChanged();
     }
 
 

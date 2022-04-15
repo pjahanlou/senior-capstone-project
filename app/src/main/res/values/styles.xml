@@ -22,5 +22,8 @@
     <style name="SliderTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
     </style>
+    <style name="AddJournal_slider" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/DarkOrange</item>
+    </style>
 
 </resources>
