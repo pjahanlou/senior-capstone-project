@@ -135,6 +135,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 "Flashing Lights",
                 "Flickering Lights",
                 "Hormones" };
+
         String[] moodSuggestions = new String[]{"Happy", "Sad", "Angry",
                 "Depressed",
                 "Cheerful",
@@ -146,7 +147,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 "Lonely",
                 "Lighthearted",
                 "Humorous"};
-
 
         String[] seizureSuggestions = new String[]{"Generalized tonic-clonic (GTC)"
                 ,"Tonic"
@@ -211,18 +211,12 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }
 
         if(saveDescription.isEmpty()){
-            saveDescription = "None";
+            saveDescription = "No description was put.";
         }
 
         if(saveDuration.isEmpty()){
-            saveDuration = "0";
+            saveDuration = "No duration recorded";
         }
-
-        /*if(saveTriggers.isEmpty()){
-            saveTriggers.add("None");
-        }*/
-
-
 
         Journal journal = new Journal(saveDateAndTime, saveMood, saveTypeOfSeizure, saveDuration,
                 saveTriggers, saveDescription, savePostDescription, saveSeverity);
@@ -273,44 +267,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
         updateFieldInFirebase("postDescription", postSeizureDescription, editJournal.postDescription);
         updateFieldInFirebase("severity",severity, editJournal.severity);
 
-        /*
-        //This needs to be changed
-        String previousValue = editJournal.dateAndTime;
-        List<String> previousTriggers;
-        if(!previousValue.equals(dateTime)){
-            updateFieldInFirebase("dateAndTime", dateTime);
-        }
-        previousValue = editJournal.mood;
-        if(!previousValue.equals(moodType)){
-            updateFieldInFirebase("mood", moodType);
-        }
-        previousValue = editJournal.typeOfSeizure;
-        if(!previousValue.equals(seizureType)){
-            updateFieldInFirebase("typeOfSeizure", seizureType);
-        }
-        previousValue = editJournal.durationOfSeizure;
-        if(!previousValue.equals(durationOfSeizure)){
-            updateFieldInFirebase("durationOfSeizure", durationOfSeizure);
-        }
-        previousTriggers = editJournal.triggers;
-        if(!previousTriggers.equals(seizureTrigger)){
-            updateFieldInFirebase("triggers", seizureTrigger.toString());
-        }
-        previousValue = editJournal.description;
-        if(!previousValue.equals(seizureDescription)){
-            updateFieldInFirebase("description", seizureDescription);
-        }
-        previousValue = editJournal.postDescription;
-        if(!previousValue.equals(postSeizureDescription)){
-            updateFieldInFirebase("postDescription", postSeizureDescription);
-        }
-        previousValue = editJournal.severity;
-        if(!previousValue.equals(severity)){
-            updateFieldInFirebase("severity", severity);
-        }
-
-         */
-
     }
 
     public void popJournalText(){
@@ -347,7 +303,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
-                    //TODO set slider to existing value
+                    severitySlider.setValues(fSev);
 
                 }
             }
@@ -454,4 +410,5 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }, 0, 0, 0, true);
         mTimePicker.show();
     }
+
 }
