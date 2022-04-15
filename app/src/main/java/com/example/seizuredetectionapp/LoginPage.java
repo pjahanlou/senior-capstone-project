@@ -7,8 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -22,6 +25,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class LoginPage extends AppCompatActivity implements View.OnClickListener{
 
     TabLayout tabLayout;
@@ -31,6 +37,9 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     private GoogleSignInClient mGoogleSignInClient;
     private final static int RC_SIGN_IN = 123;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    private String isQuestionnaireComplete;
+    private SharedPreferences sharedPreferences;
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +58,16 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
                 handleSignInResult(task);
             }
         });
+
+        // Retrieving the user info from shared preferences
+        sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        isQuestionnaireComplete = sharedPreferences.getString("questionnaire bool", localSettings.getQuestionnaireComplete());
+        Log.d("boolQ", ""+isQuestionnaireComplete);
+
+        // Checking if the user has completed the questionnaire or not
+        if(isQuestionnaireComplete != null && isQuestionnaireComplete.equals("1")){
+            startActivity(new Intent(this, Navbar.class));
+        }
 
         // Getting the Views
         tabLayout = findViewById(R.id.tab_layout);
