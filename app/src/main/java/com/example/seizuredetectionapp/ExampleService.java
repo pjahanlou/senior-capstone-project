@@ -105,60 +105,6 @@ public class ExampleService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void makeOkHTTPReq(){
-        OkHttpClient client = new OkHttpClient();
-
-        String url = "http://104.237.129.207:8080/eda?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=";
-
-        RequestBody formBody = new FormEncodingBuilder()
-                .add("timestamp", "ass")
-                .add("reading", "ass")
-                .build();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    final String myResponse = response.body().string();
-                    Log.d("response", myResponse);
-                }
-            }
-        });
-    }
-
-    private void startThread(boolean flag) {
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int counter = 0;
-                while(flag) {
-                    //do whatever you want
-                    Log.d("Log", String.valueOf(counter));
-                    // Start making request to microservice
-                    // get respond back
-                    // if seizure then start seizure protocol
-                    // make sure to stop the service based on intent extra
-                    try {
-                        Thread.sleep(1000); //sleep time in milliseconds
-                        counter++;
-                        makeOkHTTPReq();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
     private void createNotification(String input, PendingIntent pendingIntent) {
         notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("STRapp")
@@ -200,7 +146,7 @@ public class ExampleService extends Service {
         private void makeOkHTTPReq(){
             OkHttpClient client = new OkHttpClient();
 
-            String url = "http://104.237.129.207:8080/eda?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=";
+            String url = "http://104.237.129.207:8080/detect?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=";
 
             RequestBody formBody = new FormEncodingBuilder()
                     .add("timestamp", "ass")
@@ -209,6 +155,7 @@ public class ExampleService extends Service {
 
             Request request = new Request.Builder()
                     .url(url)
+                    .post(formBody)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
