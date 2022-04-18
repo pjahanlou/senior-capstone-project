@@ -273,7 +273,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 Log.d("child added", "child added " + snapshot);
                 Journal journal = snapshot.getValue(Journal.class);
                 journals.add(journal);
-                JournalLayout journalLayout = new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description);
+                JournalLayout journalLayout = new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description, journal.severity);
                 journalInfo.add(journalLayout);
                 adapter.notifyDataSetChanged();
             }
@@ -328,7 +328,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         for(Journal journal: journals){
             if(!journal.dateAndTime.equals("")) {
-                sortedJournals.add(new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description));
+                sortedJournals.add(new JournalLayout(journal.dateAndTime, journal.durationOfSeizure, journal.description, journal.severity));
             }
         }
 
