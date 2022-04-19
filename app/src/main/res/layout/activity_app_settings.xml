@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/LightSteelBlue">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/LightSteelBlue">
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_bg"
+        android:text="Back"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -12,9 +32,9 @@ android:background="@color/LightSteelBlue">
         android:background="@drawable/vie_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".92"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent=".92"
         app:layout_constraintVertical_bias="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,9 +44,9 @@ android:background="@color/LightSteelBlue">
             android:background="@drawable/vie_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent=".92"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHeight_percent=".92"
             app:layout_constraintVertical_bias="1">
 
             <TextView
@@ -35,399 +55,95 @@ android:background="@color/LightSteelBlue">
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="App Settings"
-                android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="30sp"
-                app:layout_constraintVertical_bias="0.02"
-                app:layout_constraintTop_toTopOf="@id/topInfo"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/topInfo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/topInfo"/>
+                app:layout_constraintTop_toTopOf="@id/topInfo"
+                app:layout_constraintVertical_bias="0.02" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomTextViews"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/vie_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHeight_percent=".8"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintVertical_bias="1">
-
-            <LinearLayout
-                android:id="@+id/nameLinearLayout"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/startMedicalQuestionnaire"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/nameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Name"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/DarkGray"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/countdownTimerLineayLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/nameLinearLayout"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/countdownTimerTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Countdown Timer"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/nameLinearLayout"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewCountdownTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <com.skydoves.powerspinner.PowerSpinnerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/prefContactMethod"
                 android:background="@drawable/button_bg"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:hint="Preferred Contact Method"
-                android:padding="10dp"
-                android:textColor="@color/Platinum"
-                android:textColorHint="@color/Platinum"
-                app:layout_constraintVertical_bias="0.2"
+                android:text="Medical Information"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:textSize="16dp"
-                app:spinner_arrow_gravity="end"
-                app:spinner_arrow_padding="8dp"
-                app:spinner_divider_color="@color/purple_500"
-                app:spinner_divider_show="true"
-                app:spinner_divider_size="1dp"
-                android:layout_marginTop="10dp"
-                app:spinner_item_array="@array/prefContactMethodOptions"
-                app:spinner_popup_animation="bounce"
-                app:spinner_popup_background="@color/LightSteelBlue"
-                app:spinner_popup_elevation="14dp"
-                app:layout_constraintTop_toBottomOf="@id/countdownTimerLineayLayout"/>
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/settingsText"
+                app:layout_constraintWidth_percent=".8" />
 
-            <LinearLayout
-                android:id="@+id/ageLinearLayout"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/startPersonalQuestionnaire"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/prefContactMethod"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/ageTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Age"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toBottomOf="@id/countdownTimerLineayLayout"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/seizureDurationLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/ageLinearLayout"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/seizureDurationTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Seizure Duration"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewSeizureDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/heightLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/seizureDurationLinearLayout"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/heightTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Height"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewHeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/weightLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/heightLinearLayout"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/weightTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Weight"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewWeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/SeizureFrequencyLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/weightLinearLayout"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/seizureFrequencyTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="New Seizure Frequency per Month"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="16dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:textColorHint="@color/DarkGray"
-                    android:textColor="@color/black"
-                    android:textCursorDrawable="@null"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/bottomTextViews"
-                    android:layout_marginRight="10dp"/>
-
-                <Button
-                    android:id="@+id/submitNewSeizureFrequency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="Update"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
-                    app:layout_constraintStart_toEndOf="@id/changeEmailText"
-                    app:layout_constraintTop_toTopOf="@id/bottomTextViews"
-                    app:layout_constraintWidth_percent=".8" />
-
-            </LinearLayout>
+                android:background="@drawable/button_bg"
+                android:text="Personal Information"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/startMedicalQuestionnaire"
+                app:layout_constraintWidth_percent=".8" />
 
             <Button
                 android:id="@+id/changeContactList"
-                android:layout_width="0dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:text="Change Contacts List"
+                android:background="@drawable/button_bg"
+                android:text="Contacts List"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:background="@drawable/button_bg"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                app:layout_constraintVertical_bias="0.20"
-                app:layout_constraintBottom_toBottomOf="@id/bottomTextViews"
+                android:layout_marginTop="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/SeizureFrequencyLinearLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/startPersonalQuestionnaire"
+                app:layout_constraintVertical_bias="0.20" />
+
+            <Button
+                android:id="@+id/changeUsualLocations"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:text="Usual Locations"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changeContactList"
+                app:layout_constraintWidth_percent=".8" />
+
+            <Switch
+                android:id="@+id/PrivacyMode"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/button_bg"
+                android:text="Privacy Mode"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                android:paddingHorizontal="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changeUsualLocations"
+                app:layout_constraintWidth_percent=".8" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

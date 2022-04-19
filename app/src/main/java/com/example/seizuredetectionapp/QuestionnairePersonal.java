@@ -162,7 +162,12 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         questionnaireComplete("preferred contact method", contactMethod);
 
         // Moving to Questionnaire Medical
-        startActivity(new Intent(this, QuestionnaireMedical.class));
+        Intent intent = getIntent();
+        String previousActivity = intent.getStringExtra("PreviousActivity");
+        if (previousActivity.equals("AppSettings"))
+            finish();
+        else
+            startActivity(new Intent(this, QuestionnaireMedical.class));
     }
 
     private void questionnaireComplete(String field, String value){
