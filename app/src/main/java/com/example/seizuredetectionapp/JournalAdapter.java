@@ -68,7 +68,9 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         String description = getItem(position).getDescription();
         String severity = getItem(position).getSeverity();
 
-        severityFloat = Float.parseFloat(severity);
+        if(severity != null && severity.length() > 0){
+            severityFloat = Float.parseFloat(severity);
+        }
 
         JournalLayout journal = new JournalLayout(dateAndTime,duration,description,severity);
 

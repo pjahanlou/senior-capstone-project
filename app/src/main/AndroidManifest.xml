@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:name=".App"
@@ -50,11 +53,9 @@
             android:name=".ContactPermission"
             android:exported="true" />
         <activity
-            android:name=".UpdateContacts"
-            android:exported="true" />
+            android:name=".UpdateContacts" />
         <activity
-            android:name=".Navbar"
-            android:exported="true" />
+            android:name=".Navbar" />
         <activity
             android:name=".ProfileSettings"
             android:exported="false" />

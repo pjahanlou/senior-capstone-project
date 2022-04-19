@@ -10,6 +10,7 @@
         name="journalSortDropDown">
         <item>@string/journalSortDate</item>
         <item>@string/journalSortDuration</item>
+        <item>@string/journalSortSeverity</item>
     </array>
 
     <array
@@ -22,4 +23,5 @@
 
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="journalSortSeverity">Severity</string>
 </resources>
