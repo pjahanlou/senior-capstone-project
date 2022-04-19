@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -126,10 +127,16 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
             // returns the user to the previous page with the selected contacts
             case R.id.done_Button: {
                 // Checking to see which page is asking for the added contacts
-                addedContacts = adapter.listOfContacts;
-                contactMap = adapter.contactMap;
-                contactMapSave = adapter.contactMap;
-                saveContactMap(contactMapSave);
+                Map<String, String> savedContacts = loadContactMap();
+
+                if(!savedContacts.isEmpty()){
+                    savedContacts.putAll(adapter.contactMap);
+                    Log.d("contactMap in Contacts", savedContacts.toString());
+                    saveContactMap(savedContacts);
+                } else{
+                    saveContactMap(adapter.contactMap);
+                }
+
                 // Saving the contact hashmap to local settings
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
                 if(settings){
@@ -138,6 +145,28 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
                 finish();
             }
         }
+    }
+
+    private Map<String, String> loadContactMap() {
+        Map<String, String> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
+        try {
+            if (pSharedPref != null) {
+                String jsonString = pSharedPref.getString("contact map", (new JSONObject()).toString());
+                if (jsonString != null) {
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    Iterator<String> keysItr = jsonObject.keys();
+                    while (keysItr.hasNext()) {
+                        String key = keysItr.next();
+                        String value = jsonObject.getString(key);
+                        outputMap.put(key, value);
+                    }
+                }
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return outputMap;
     }
 
     /**

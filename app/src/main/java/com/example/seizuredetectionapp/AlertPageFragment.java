@@ -159,7 +159,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         if (!locationPermission) {
             String descriptionLocation = "Unfortunately, help request is unavailable. Please give STRapp location access, so it can better notify your contacts.";
             String titleLocation = "Location Permission";
-            String buttonText = "Sure!!";
+            String buttonText = "Sure!";
             showMessage(getContext(), descriptionLocation, titleLocation, buttonText);
         }
 
@@ -169,7 +169,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         if (!textPermission) {
             String descriptionText = "Unfortunately, help request is unavailable. Please give STRapp SMS access, so it can better notify your contacts.";
             String titleText = "SMS Permission";
-            String buttonText = "Sure!";
+            String buttonText = "Sure!!";
             showMessage(getContext(), descriptionText, titleText, buttonText);
         }
 
@@ -303,16 +303,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     }
 
     private void startDatatable(){
-        DatatableFragment nextFrag = new DatatableFragment();
-        int currentFragment = ((ViewGroup)getView().getParent()).getId();
-
-        // Moving to the datatable fragment if user cancels
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(currentFragment, nextFrag, "findThisFragment")
-                .addToBackStack(null)
-                .commit();
-        // Updating the navbar to reflect the move to datatable
-        Navbar.getBottomNavigationView().setSelectedItemId(R.id.datatableFragment);
+        startActivity(new Intent(getContext(), Navbar.class));
     }
 
     private void showHint(Context context, String description, String title) {

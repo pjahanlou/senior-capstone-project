@@ -84,7 +84,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         }
 
         // Merging the saved locations and received locations
-        if(savedLocations != null){
+        if(savedLocations != null && receivedLocations != null){
             Set<String> receivedLocationsSet = new HashSet<>(receivedLocations);
             savedLocations.addAll(receivedLocationsSet);
             Log.d("merged locations", savedLocations.toString());
@@ -129,8 +129,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             switch (index) {
                 case 0:
                     // Delete location
+                    UsualLocationsLayout deleteItem = locations.get(position);
                     locations.remove(position);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(deleteItem);
+                    swipeMenuListView.setAdapter(adapter);
                     break;
             }
             // false : close the menu; true : not close the menu
