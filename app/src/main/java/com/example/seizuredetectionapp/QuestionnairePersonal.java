@@ -1,7 +1,5 @@
 package com.example.seizuredetectionapp;
 
-import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -143,7 +141,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     }
 
     private void storeQuestionnaireData() {
-        Log.d("confirmation", "completed list: " + addedContacts);
 
         String countdownTimer = String.valueOf(Math.round(countdownTimerSlider.getValues().get(0)));
         String height = valueToHeight(heightSlider.getValues().get(0));
@@ -163,16 +160,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         questionnaireComplete("sex", selectedSex);
         questionnaireComplete("age", selectedDOB);
         questionnaireComplete("preferred contact method", contactMethod);
-
-        // Saving the contact list
-        localSettings.setContactList(addedContacts);
-        SharedPreferences.Editor editor = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE).edit();
-        editor.putStringSet("contact method", localSettings.getContactList());
-        if (editor.commit()) {
-            Log.d("contacts status", "Successful");
-        } else {
-            Log.d("contacts status", "Failed");
-        }
 
         // Moving to Questionnaire Medical
         Intent intent = getIntent();

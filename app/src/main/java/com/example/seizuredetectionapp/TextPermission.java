@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,11 +18,19 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
 
     private static final int TEXT_PERMISSION_CODE = 102;
     private Button sureButton, notSureButton;
+    private String wasAlertPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_permission);
+
+        try{
+            wasAlertPage = getIntent().getExtras().getString("page");
+            Log.d("Alert page prev", ""+wasAlertPage);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         // Initializing the Buttons
         sureButton = findViewById(R.id.acceptTextPermission);
@@ -39,9 +48,21 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
                 checkPermission(Manifest.permission.SEND_SMS, TEXT_PERMISSION_CODE);
                 break;
             case R.id.rejectTextPermission:
-                Intent intent = new Intent(this, UsualLocations.class);
-                startActivity(intent);
+                navigateToNextPage();
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPage != null){
+            if(wasAlertPage.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+        } else{
+            Intent intent = new Intent(this, UsualLocations.class);
+            startActivity(intent);
         }
     }
 
@@ -55,7 +76,7 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
         }
         else {
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, UsualLocations.class));
+            navigateToNextPage();
         }
     }
 
@@ -75,7 +96,7 @@ public class TextPermission extends AppCompatActivity implements View.OnClickLis
             else {
                 Toast.makeText(this, "Text Permission Denied", Toast.LENGTH_SHORT) .show();
             }
-            startActivity(new Intent(this, UsualLocations.class));
+            navigateToNextPage();
         }
     }
 }

@@ -43,6 +43,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
+    private String wasAlertPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,13 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         // Pulling from local settings
         Set<String> savedLocations  = pullFromLocalSettings();
 
+        try{
+            wasAlertPage = getIntent().getExtras().getString("page");
+            Log.d("Alert page prev", ""+wasAlertPage);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
         // Locations selected in the GoogleMaps page
         ArrayList<String> receivedLocations = new ArrayList<>();
         try {
@@ -76,7 +84,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         }
 
         // Merging the saved locations and received locations
-        if(savedLocations != null){
+        if(savedLocations != null && receivedLocations != null){
             Set<String> receivedLocationsSet = new HashSet<>(receivedLocations);
             savedLocations.addAll(receivedLocationsSet);
             Log.d("merged locations", savedLocations.toString());
@@ -121,8 +129,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             switch (index) {
                 case 0:
                     // Delete location
+                    UsualLocationsLayout deleteItem = locations.get(position);
                     locations.remove(position);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(deleteItem);
+                    swipeMenuListView.setAdapter(adapter);
                     break;
             }
             // false : close the menu; true : not close the menu
@@ -137,16 +147,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         switch(view.getId()){
             case R.id.saveLocationButton:
-                Intent intent = getIntent();
-                String previousActivity = intent.getStringExtra("PreviousActivity");
-                if (previousActivity.equals("AppSettings")) {
-                    Log.d("Activity Director", "Return to AppSettings");
-                    finish();
-                }
-                else {
-                    Log.d("Activity Director", "Continued");
-                    startActivity(new Intent(this, Navbar.class));
-                }
+                navigateToNextPage();
                 break;
             case R.id.addNewLocationButton:
                 startActivity(new Intent(this, GoogleMaps.class));
@@ -154,6 +155,18 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             case R.id.hintUsualLocations:
                 showHint(view.getContext());
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPage != null){
+            if(wasAlertPage.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+        } else{
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 

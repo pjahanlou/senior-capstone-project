@@ -48,11 +48,6 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
 
-        // Initializing Firebase
-        // currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // database = FirebaseDatabase.getInstance();
-        // settingsTable = database.getReference("Users").child(currentUserUID).child("Settings");
-
         // initializing the buttons
         closeActivity = findViewById(R.id.back);
         changeMedicalQuestionnaire = findViewById(R.id.startMedicalQuestionnaire);

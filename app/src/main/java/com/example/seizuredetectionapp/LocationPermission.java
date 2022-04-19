@@ -23,11 +23,19 @@ public class LocationPermission extends AppCompatActivity implements View.OnClic
     private Button sureButton, notSureButton;
     private SharedPreferences sharedPreferences;
     private LocalSettings localSettings;
+    private String wasAlertPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_permission);
+
+        try{
+            wasAlertPage = getIntent().getExtras().getString("page");
+            Log.d("Alert page prev", ""+wasAlertPage);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         // Initializing the Buttons
         sureButton = findViewById(R.id.acceptLocationPermission);
@@ -56,8 +64,20 @@ public class LocationPermission extends AppCompatActivity implements View.OnClic
                 // checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, COARSE_LOCATION_PERMISSION_CODE);
                 break;
             case R.id.rejectLocationPermission:
-                startActivity(new Intent(this, TextPermission.class));
+                navigateToNextPage();
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPage != null){
+            if(wasAlertPage.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+        } else{
+            startActivity(new Intent(this, TextPermission.class));
         }
     }
 
@@ -71,7 +91,7 @@ public class LocationPermission extends AppCompatActivity implements View.OnClic
         }
         else {
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, TextPermission.class));
+            navigateToNextPage();
         }
     }
 
@@ -91,7 +111,7 @@ public class LocationPermission extends AppCompatActivity implements View.OnClic
             else {
                 Toast.makeText(this, "Fine Location Permission Denied", Toast.LENGTH_SHORT).show();
             }
-            startActivity(new Intent(this, TextPermission.class));
+            navigateToNextPage();
         }
         else if (requestCode == COARSE_LOCATION_PERMISSION_CODE) {
             if (grantResults.length > 0

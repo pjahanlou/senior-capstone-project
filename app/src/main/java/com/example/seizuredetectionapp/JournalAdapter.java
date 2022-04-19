@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,14 +37,18 @@ import java.util.HashSet;
 public class JournalAdapter extends ArrayAdapter<JournalLayout> {
     private Context mContext;
     int mResource;
+    ArrayList<JournalLayout> mObjects;
     FirebaseDatabase database;
     DatabaseReference myRef;
     HashMap<String,String> months = new HashMap<String,String>();
+    private ArrayList<Journal> updateJournals;
+    Float severityFloat;
 
     public JournalAdapter(@NonNull Context context, int resource, @NonNull ArrayList<JournalLayout> objects) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+        mObjects = objects;
         //Populate hashmap of months
         months.put("01","Jan");months.put("07","Jul");
         months.put("02","Feb");months.put("08","Aug");
@@ -61,24 +66,36 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         String dateAndTime = getItem(position).getDateAndTime();
         String duration = getItem(position).getDuration();
         String description = getItem(position).getDescription();
+        String severity = getItem(position).getSeverity();
 
-        JournalLayout journal = new JournalLayout(dateAndTime,duration,description);
+        if(severity != null && severity.length() > 0){
+            severityFloat = Float.parseFloat(severity);
+        }
+
+        JournalLayout journal = new JournalLayout(dateAndTime,duration,description,severity);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
 
+        //set up display
         TextView tvDay = (TextView) convertView.findViewById(R.id.lvDay);
         TextView tvMonth = (TextView) convertView.findViewById(R.id.lvMonth);
         TextView tvYear = (TextView) convertView.findViewById(R.id.lvYear);
         TextView tvDuration = (TextView) convertView.findViewById(R.id.lvDuration);
         TextView tvDescription = (TextView) convertView.findViewById(R.id.lvDescription);
         ImageButton ibThreeDots = (ImageButton) convertView.findViewById(R.id.threeDots);
+        RangeSlider rsSeverity = (RangeSlider) convertView.findViewById(R.id.severityDisplay);
 
+        //set slider to disabled
+        rsSeverity.setEnabled(false);
+
+        //set display with text
         tvDay.setText(getDay(dateAndTime));
         tvMonth.setText(getMonth(dateAndTime));
         tvYear.setText(getYear(dateAndTime));
         tvDuration.setText(duration);
         tvDescription.setText(description);
+        rsSeverity.setValues(severityFloat);
 
         ibThreeDots.setOnClickListener(new View.OnClickListener(){
 
@@ -124,6 +141,7 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
                                         Log.e("Delete Operation", "onCancelled", databaseError.toException());
                                     }
                                 });
+                                mObjects.remove(position);
                                 notifyDataSetChanged();
                                 return true;
                         }
@@ -171,5 +189,9 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         return year;
     }
 
+    public void setList(){
+        this.updateJournals = updateJournals;
+        notifyDataSetChanged();
+    }
 
 }

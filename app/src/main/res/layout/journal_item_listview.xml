@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="175dp"
     android:background="@drawable/listview_rounded_border"
     android:elevation="5dp">
 
@@ -65,9 +65,10 @@
         android:id="@+id/lvDuration"
         android:layout_width="258dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="69dp"
-        android:layout_marginTop="25dp"
+        android:layout_below="@+id/durationLabel"
         android:layout_marginStart="72dp"
+        android:layout_marginLeft="69dp"
+        android:layout_marginTop="0dp"
         android:gravity="top"
         android:text="duration"
         android:textColor="@color/black"
@@ -75,8 +76,8 @@
 
     <TextView
         android:id="@+id/lvDescription"
-        android:layout_width="334dp"
-        android:layout_height="92dp"
+        android:layout_width="322dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/lvDuration"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -89,15 +90,28 @@
         android:textSize="14sp" />
 
     <TextView
+        android:id="@+id/durationLabel"
         android:layout_width="251dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="72dp"
-        android:layout_marginEnd="85dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="97dp"
         android:layout_marginBottom="0dp"
         android:text="Duration:"
         android:textColor="@color/black"
         android:textSize="16dp" />
 
+    <com.google.android.material.slider.RangeSlider
+        android:id="@+id/severityDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lvDescription"
+        android:theme="@style/AddJournal_slider"
+        android:valueFrom = "0"
+        android:valueTo = "10"
+        android:stepSize = "1"
+        android:contentDescription="Severity" />
 
 </RelativeLayout>

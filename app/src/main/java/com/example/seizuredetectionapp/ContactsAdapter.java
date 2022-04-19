@@ -70,6 +70,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            contactMap.clear();
             name = itemView.findViewById(R.id.contactEditViewName);
             phoneNumber = itemView.findViewById(R.id.contactEditViewNumber);
             itemView.findViewById(R.id.addContact_Button)
@@ -81,7 +82,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.UserVi
                     Log.d("demo", "button Clicked on contact: " + textPhoneNumber);
                     contactMap.put(textPhoneNumber, textName);
                     listOfContacts.add(textPhoneNumber);
-                    Log.d("my check", "" + listOfContacts.toString());
+                    Log.d("contactMap in adapter", "" + contactMap.toString());
                 }
             });
         }

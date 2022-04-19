@@ -24,6 +24,7 @@ public class LocalSettings extends Application {
     public static String preferredContactMethod;
     public static String sex;
     public static String firstSeizureDate;
+    public static String seizureDetected;
 
     // A wrapper function for the app settings activity
     public static String getField(String field) {
@@ -232,5 +233,13 @@ public class LocalSettings extends Application {
 
     public static void setLocations(Set<String> locations) {
         LocalSettings.locations = locations;
+    }
+
+    public static String getSeizureDetected() {
+        return seizureDetected;
+    }
+
+    public static void setSeizureDetected(String seizureDetected) {
+        LocalSettings.seizureDetected = seizureDetected;
     }
 }
