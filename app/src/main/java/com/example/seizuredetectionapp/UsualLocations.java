@@ -84,7 +84,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         }
 
         // Merging the saved locations and received locations
-        if(savedLocations != null){
+        if(savedLocations != null && receivedLocations != null){
             Set<String> receivedLocationsSet = new HashSet<>(receivedLocations);
             savedLocations.addAll(receivedLocationsSet);
             Log.d("merged locations", savedLocations.toString());

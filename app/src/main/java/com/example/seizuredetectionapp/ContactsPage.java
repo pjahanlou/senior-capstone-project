@@ -128,9 +128,15 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
             case R.id.done_Button: {
                 // Checking to see which page is asking for the added contacts
                 Map<String, String> savedContacts = loadContactMap();
-                savedContacts.putAll(adapter.contactMap);
-                Log.d("contactMap in Contacts", savedContacts.toString());
-                saveContactMap(savedContacts);
+
+                if(!savedContacts.isEmpty()){
+                    savedContacts.putAll(adapter.contactMap);
+                    Log.d("contactMap in Contacts", savedContacts.toString());
+                    saveContactMap(savedContacts);
+                } else{
+                    saveContactMap(adapter.contactMap);
+                }
+
                 // Saving the contact hashmap to local settings
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
                 if(settings){
