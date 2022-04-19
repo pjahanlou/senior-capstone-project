@@ -49,14 +49,6 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
 
-        // Initializing settings
-        localSettings = (LocalSettings) getApplication();
-
-        // Initializing Firebase
-        // currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // database = FirebaseDatabase.getInstance();
-        // settingsTable = database.getReference("Users").child(currentUserUID).child("Settings");
-
         // initializing the text views
         nameTextView = findViewById(R.id.nameTextView);
         countdownTimerTextView = findViewById(R.id.countdownTimerTextView);

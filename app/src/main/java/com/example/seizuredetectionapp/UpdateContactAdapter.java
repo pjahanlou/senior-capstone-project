@@ -45,7 +45,7 @@ public class UpdateContactAdapter extends ArrayAdapter<UpdateContactLayout> {
         convertView = inflater.inflate(mResource, parent, false);
 
         TextView contactName = convertView.findViewById(R.id.updatecontactEditViewName);
-        TextView contactNumber = (TextView) convertView.findViewById(R.id.updatecontactEditViewNumber);
+        TextView contactNumber = convertView.findViewById(R.id.updatecontactEditViewNumber);
 
         contactName.setText(name);
         contactNumber.setText(number);

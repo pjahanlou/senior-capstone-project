@@ -129,8 +129,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             switch (index) {
                 case 0:
                     // Delete location
+                    UsualLocationsLayout deleteItem = locations.get(position);
                     locations.remove(position);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(deleteItem);
+                    swipeMenuListView.setAdapter(adapter);
                     break;
             }
             // false : close the menu; true : not close the menu
