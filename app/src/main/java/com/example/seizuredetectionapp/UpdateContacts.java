@@ -38,6 +38,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
     private String[] contactValues;
     private LocalSettings localSettings;
     ArrayList<UpdateContactLayout> contactList = new ArrayList<UpdateContactLayout>();
+    private String wasAlertPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,13 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
 
         changeContactListButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
+
+        try{
+            wasAlertPage = getIntent().getExtras().getString("page");
+            Log.d("Alert page prev", ""+wasAlertPage);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         // Getting the user contacts hashmap
         Map<String, String> contactMapSave = loadContactMap();
@@ -156,8 +164,20 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
             case R.id.saveButton:
                 // TODO: Save the user changes to the local settings
                 saveContactMap();
-                startActivity(new Intent(UpdateContacts.this, AppSettings.class));
+                navigateToNextPage();
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPage != null){
+            if(wasAlertPage.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+        } else{
+            startActivity(new Intent(this, AppSettings.class));
         }
     }
 

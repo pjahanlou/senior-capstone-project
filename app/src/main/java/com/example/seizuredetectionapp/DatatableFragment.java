@@ -348,6 +348,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 }
             });
         }
+        else if(selectedItem.equals("Severity")){
+            Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
+                @Override
+                public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    return t1.getSeverity().compareTo(journalLayout.getSeverity());
+                }
+            });
+        }
 
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
         journalList.setAdapter(adapter);

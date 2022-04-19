@@ -43,6 +43,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
+    private String wasAlertPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,13 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         // Pulling from local settings
         Set<String> savedLocations  = pullFromLocalSettings();
+
+        try{
+            wasAlertPage = getIntent().getExtras().getString("page");
+            Log.d("Alert page prev", ""+wasAlertPage);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         // Locations selected in the GoogleMaps page
         ArrayList<String> receivedLocations = new ArrayList<>();
@@ -137,7 +145,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         switch(view.getId()){
             case R.id.saveLocationButton:
-                startActivity(new Intent(this, Navbar.class));
+                navigateToNextPage();
                 break;
             case R.id.addNewLocationButton:
                 startActivity(new Intent(this, GoogleMaps.class));
@@ -145,6 +153,18 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             case R.id.hintUsualLocations:
                 showHint(view.getContext());
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPage != null){
+            if(wasAlertPage.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+        } else{
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 
