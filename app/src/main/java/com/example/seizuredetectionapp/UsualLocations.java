@@ -137,7 +137,16 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         switch(view.getId()){
             case R.id.saveLocationButton:
-                startActivity(new Intent(this, Navbar.class));
+                Intent intent = getIntent();
+                String previousActivity = intent.getStringExtra("PreviousActivity");
+                if (previousActivity.equals("AppSettings")) {
+                    Log.d("Activity Director", "Return to AppSettings");
+                    finish();
+                }
+                else {
+                    Log.d("Activity Director", "Continued");
+                    startActivity(new Intent(this, Navbar.class));
+                }
                 break;
             case R.id.addNewLocationButton:
                 startActivity(new Intent(this, GoogleMaps.class));

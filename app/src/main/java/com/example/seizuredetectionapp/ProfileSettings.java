@@ -52,7 +52,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
     private static final int EXTERNAL_STORAGE_PERMISSION_CODE = 69;
     private TextView changeEmailText, changeDisplayNameText;
-    private Button updateEmailButton, updateDisplayNameButton, changePasswordButton, deleteAccountButton, exportDataButton;
+    private Button updateEmailButton, updateDisplayNameButton, changePasswordButton, deleteAccountButton, exportDataButton, closeActivity;
     private ImageView hintImage;
 
     private FirebaseUser currentUser;
@@ -90,6 +90,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         deleteAccountButton = findViewById(R.id.deleteAccountButton);
         exportDataButton = findViewById(R.id.exportDataButton);
         hintImage = findViewById(R.id.hintProfileSettings);
+        closeActivity = findViewById(R.id.back);
 
         // Setting the on click listeners
         updateEmailButton.setOnClickListener(this);
@@ -98,7 +99,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         deleteAccountButton.setOnClickListener(this);
         exportDataButton.setOnClickListener(this);
         hintImage.setOnClickListener(this);
-
+        closeActivity.setOnClickListener(this);
     }
 
     @Override
@@ -122,6 +123,9 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.hintProfileSettings:
                 showHint(view.getContext());
+                break;
+            case R.id.back:
+                finish();
                 break;
 
         }
