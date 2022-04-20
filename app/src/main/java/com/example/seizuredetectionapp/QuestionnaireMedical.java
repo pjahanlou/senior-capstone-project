@@ -215,14 +215,14 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
 
         // Moving to Datatable fragment
         Intent intent = getIntent();
-        String previousActivity = intent.getStringExtra("PreviousActivity");
-        Log.d("Activity Director",  "AppSettings" + previousActivity);
-        if (previousActivity.equals("AppSettings")) {
-            Log.d("Activity Director", "Return to AppSettings");
-            finish();
-        }
-        else {
-            Log.d("Activity Director", "Continued");
+        try {
+            String previousActivity = intent.getStringExtra("PreviousActivity");
+            if (previousActivity.equals("AppSettings")) {
+                finish();
+            } else {
+                startActivity(new Intent(this, LocationPermission.class));
+            }
+        } catch(Exception e){
             startActivity(new Intent(this, LocationPermission.class));
         }
     }
