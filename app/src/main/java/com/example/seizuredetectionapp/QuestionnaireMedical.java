@@ -148,7 +148,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
             case R.id.openDatePickerDialog:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this,
-                        0,
+                        R.style.datepicker_theme,
                         this,
                         Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
