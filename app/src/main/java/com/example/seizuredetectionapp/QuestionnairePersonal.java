@@ -163,11 +163,16 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
 
         // Moving to Questionnaire Medical
         Intent intent = getIntent();
-        String previousActivity = intent.getStringExtra("PreviousActivity");
-        if (previousActivity.equals("AppSettings"))
-            finish();
-        else
+        try {
+            String previousActivity = intent.getStringExtra("PreviousActivity");
+            if (previousActivity.equals("AppSettings")) {
+                finish();
+            } else {
+                startActivity(new Intent(this, QuestionnaireMedical.class));
+            }
+        } catch(Exception e){
             startActivity(new Intent(this, QuestionnaireMedical.class));
+        }
     }
 
     private void questionnaireComplete(String field, String value){

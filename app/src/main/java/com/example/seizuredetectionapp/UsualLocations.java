@@ -159,14 +159,32 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToNextPage(){
-        if(wasAlertPage != null){
-            if(wasAlertPage.equals("alert page")){
-                Intent intent = new Intent(this, Navbar.class);
-                intent.putExtra("go to alert", true);
-                startActivity(intent);
+        Intent intent = getIntent();
+        try {
+            String previousActivity = intent.getStringExtra("PreviousActivity");
+            if (previousActivity.equals("AppSettings")) {
+                finish();
+            } else {
+                if(wasAlertPage != null){
+                    if(wasAlertPage.equals("alert page")){
+                        intent = new Intent(this, Navbar.class);
+                        intent.putExtra("go to alert", true);
+                        startActivity(intent);
+                    }
+                } else{
+                    startActivity(new Intent(this, Navbar.class));
+                }
             }
-        } else{
-            startActivity(new Intent(this, Navbar.class));
+        } catch(Exception e){
+            if(wasAlertPage != null){
+                if(wasAlertPage.equals("alert page")){
+                    intent = new Intent(this, Navbar.class);
+                    intent.putExtra("go to alert", true);
+                    startActivity(intent);
+                }
+            } else{
+                startActivity(new Intent(this, Navbar.class));
+            }
         }
     }
 
