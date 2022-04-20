@@ -362,7 +362,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 timePicker();
             }
         };
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, day, month);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.addjournal_datepicker_theme, onDateSetListener, year, day, month);
         cal1.add(Calendar.YEAR, -3);
         datePickerDialog.getDatePicker().setMinDate(cal1.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
@@ -378,7 +378,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
             }
         };
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.addjournal_datepicker_theme, onTimeSetListener, hour, minute, false);
         timePickerDialog.show();
     }
 
@@ -387,7 +387,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
      */
     public void durationPicker(){
 
-        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, 0, new MyTimePickerDialog.OnTimeSetListener() {
             String dHour = "";
             String dMinute = "";
             String dSecond = "";

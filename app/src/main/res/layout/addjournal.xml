@@ -19,7 +19,7 @@
                     android:layout_alignParentTop="true"
                     android:background="@drawable/addjournal_button_bg"
                     android:text="Save"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false" />
 
                 <Button
                     android:id="@+id/btnclose"

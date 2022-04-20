@@ -115,7 +115,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             case R.id.dateOfBirthInput:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this,
-                        0,
+                        R.style.datepicker_theme,
                         this,
                         Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
@@ -147,7 +147,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         String weight = String.valueOf(weightSlider.getValues().get(0));
 
         // checks to see if any inputs are empty and alerts user.
-        if (selectedDOB.equals(null)) {
+        if (selectedDOB == null) {
             dateOfBirth.setError("Age is required!");
             dateOfBirth.requestFocus();
             return;
