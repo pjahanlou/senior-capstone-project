@@ -109,6 +109,7 @@
             </intent-filter>
         </activity>
         <service android:name=".ExampleService" />
+        <receiver android:name=".ExampleService$StopAlarmListener" />
     </application>
 
 </manifest>
