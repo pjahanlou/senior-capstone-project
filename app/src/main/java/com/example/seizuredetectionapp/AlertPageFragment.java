@@ -538,7 +538,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         for(String location:usualLocations){
             // Getting the coordinates of a usual location
             LatLng latLng = getLocationFromAddress(location);
-            Log.d("latlng", latLng.toString());
+            //logcat was crashing the build for Jordan
+            //Log.d("latlng", latLng.toString());
 
             // Setting coordinate points
             Location userLocation = new Location("user location");
@@ -650,11 +651,11 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 format(Calendar.getInstance().getTime());
         List<String> moodType = new ArrayList<String>();
         List<String> seizureType = new ArrayList<String>();
-        String durationOfSeizure = "";
+        String durationOfSeizure = "No duration recorded.";
         List<String> seizureTrigger = new ArrayList<String>();
-        String seizureDescription = "";
+        String seizureDescription = "No Description Entered.";
         String postSeizureDescription = "";
-        String severity = "";
+        String severity = "0.0";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription, severity);
