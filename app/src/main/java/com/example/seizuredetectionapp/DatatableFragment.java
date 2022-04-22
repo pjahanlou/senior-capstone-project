@@ -466,6 +466,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     public void stopService() {
         Intent serviceIntent = new Intent(getContext(), ExampleService.class);
         serviceIntent.putExtra("inputExtra", "Stop Service");
+
+        ContextCompat.startForegroundService(getContext(), serviceIntent);
     }
 
     public boolean foregroundServiceRunning(){
