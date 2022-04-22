@@ -344,10 +344,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
                 @Override
                 public int compare(JournalLayout journalLayout, JournalLayout t1) {
-                    Log.d("t1", t1.getDuration());
-                    Log.d("t2", journalLayout.getDuration());
-                    // TODO: convert the strings to ints for comparison
-                    return t1.getDuration().compareTo(journalLayout.getDuration());
+                    String d1 = durationStringToInt(t1.getDuration());
+                    String d2 = durationStringToInt(journalLayout.getDuration());
+                    return d1.compareTo(d2);
                 }
             });
         }
@@ -363,6 +362,19 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         adapter = new JournalAdapter(getContext(), R.layout.journal_item_listview, sortedJournals);
         journalList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    private String durationStringToInt(String durationString){
+        int durationInt = 0;
+        if(durationString.equals("No duration recorded")){
+            return String.valueOf(durationInt);
+        }
+        String[] durations = durationString.split(":");
+        int hourInSecs = Integer.parseInt(durations[0]) * 3600;
+        int minInSecs = Integer.parseInt(durations[1]) * 60;
+        int secs = Integer.parseInt(durations[2]);
+        durationInt = hourInSecs + minInSecs + secs;
+        return String.valueOf(durationInt);
     }
 
     @Override
