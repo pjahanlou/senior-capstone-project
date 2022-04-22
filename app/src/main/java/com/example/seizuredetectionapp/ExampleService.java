@@ -228,7 +228,7 @@ public class ExampleService extends Service {
                 v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                v.vibrate(500);
+                v.vibrate(5000);
             }
         }
 

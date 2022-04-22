@@ -391,21 +391,32 @@ public class AddJournal extends Activity implements View.OnClickListener {
             String dHour = "";
             String dMinute = "";
             String dSecond = "";
+            String durationTotal = "";
             @Override
             public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
                 durHour = hourOfDay;
                 durMinute = minute;
                 durSecond = seconds;
-                if(durHour != 0){
-                    dHour = String.format("%02d Hrs ", durHour);
+                if(String.valueOf(durHour).length() == 1){
+                    dHour = "0"+durHour;
+                    Log.d("dhour", dHour);
+                } else{
+                    dHour = String.valueOf(durHour);
                 }
-                if(durMinute != 0){
-                    dMinute = String.format("%02d Min ", durMinute);
+                if(String.valueOf(durMinute).length() == 1){
+                    dMinute = "0"+durMinute;
+                    Log.d("dhour", dMinute);
+                } else{
+                    dMinute = String.valueOf(durMinute);
                 }
-                if(durSecond != 0){
-                    dSecond = String.format("%02d Sec", durSecond);
+                if(String.valueOf(durSecond).length() == 1){
+                    dSecond = "0"+durSecond;
+                    Log.d("dhour", dSecond);
+                } else{
+                    dSecond = String.valueOf(durSecond);
                 }
-                duration.setText(dHour + dMinute + dSecond);
+                durationTotal = dHour+":"+dMinute+":"+dSecond;
+                duration.setText(durationTotal);
             }
         }, 0, 0, 0, true);
         mTimePicker.show();
