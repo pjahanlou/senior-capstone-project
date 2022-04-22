@@ -421,11 +421,11 @@ public class AlertPage extends AppCompatActivity implements View.OnClickListener
                 format(Calendar.getInstance().getTime());
         List<String> moodType = new ArrayList<>();
         List<String> seizureType = new ArrayList<>();
-        String durationOfSeizure = "";
+        String durationOfSeizure = "No Duration Recorded.";
         List<String> seizureTrigger = new ArrayList<String>();
-        String seizureDescription = "";
+        String seizureDescription = "No Description Provided.";
         String postSeizureDescription = "";
-        String severity = "";
+        String severity = "1.0";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription, severity);
