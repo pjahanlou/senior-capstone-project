@@ -344,6 +344,9 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
                 @Override
                 public int compare(JournalLayout journalLayout, JournalLayout t1) {
+                    Log.d("t1", t1.getDuration());
+                    Log.d("t2", journalLayout.getDuration());
+                    // TODO: convert the strings to ints for comparison
                     return t1.getDuration().compareTo(journalLayout.getDuration());
                 }
             });

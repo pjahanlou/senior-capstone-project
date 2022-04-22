@@ -13,7 +13,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
         android:elevation="30dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,11 +60,10 @@
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle=""
-            app:layout_constraintVertical_bias="0.55"
-            app:layout_constraintBottom_toTopOf="@id/progressBarCircle"
+            app:layout_constraintVertical_bias="0.435"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line"/>
+            app:layout_constraintTop_toBottomOf="@id/imageView3"/>
 
         <TextView
             android:id="@+id/infoText"
@@ -78,7 +76,7 @@
             android:textSize="16sp"
             android:textAlignment="center"
             android:layout_marginTop="5dp"
-            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintWidth_percent="0.8"
             app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toTopOf="@id/progressBarCircle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,6 +97,7 @@
             android:progress="100"
             android:progressDrawable="@drawable/countdown_circle"
             android:rotation="-90"
+            android:layout_marginTop="10dp"
             app:layout_constraintVertical_bias="0.2"
             app:layout_constraintBottom_toBottomOf="@id/callnow"
             app:layout_constraintEnd_toEndOf="parent"

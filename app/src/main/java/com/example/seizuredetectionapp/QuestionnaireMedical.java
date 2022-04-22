@@ -173,26 +173,26 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         String longestSeizure = longestSeizureConvert(longestSeizureSlider.getValues().get(0));
 
         if (seizureTypes == null) {
-            seizureTypeView.requestFocus();
             seizureTypeView.setError("A seizure type is required!");
+            seizureTypeView.requestFocus();
             return;
         }
 
         if (seizureStartD == "") {
-            openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
+            openDatePicker.requestFocus();
             return;
         }
 
         if (seizureFreq == "0") {
-            openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
+            openDatePicker.requestFocus();
             return;
         }
 
         if (averageSeizure == "0") {
-            openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
+            openDatePicker.requestFocus();
             return;
         }
 

@@ -41,6 +41,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +55,7 @@ public class ExampleService extends Service {
     private Notification notification;
     PrimeThread T1;
     public static MediaPlayer mp;
+    public String seizurePrediction;
 
     @Override
     public void onCreate() {
@@ -87,7 +89,7 @@ public class ExampleService extends Service {
         //do heavy work on a background thread
         //stopSelf();
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     /**
@@ -248,16 +250,10 @@ public class ExampleService extends Service {
         private void makeOkHTTPReq(){
             OkHttpClient client = new OkHttpClient();
 
-            String url = "http://104.237.129.207:8080/detect?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=";
-
-            RequestBody formBody = new FormEncodingBuilder()
-                    .add("timestamp", "ass")
-                    .add("reading", "ass")
-                    .build();
+            String url = "http://104.237.129.207:8080/iris/api/v1.0/getpred?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=?aX=1&aY=1&aZ=5&Temp=100&EDA=1&Hr=80";
 
             Request request = new Request.Builder()
                     .url(url)
-                    .post(formBody)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -269,12 +265,32 @@ public class ExampleService extends Service {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     if (response.isSuccessful()) {
-                        final String myResponse = response.body().string();
-                        Log.d("response", myResponse);
+                        final String responseString = response.body().string();
+                        seizurePrediction = parseResponse(responseString);
+                        if(seizurePrediction != null){
+                            Log.d("response", "prediction is " + seizurePrediction);
+                        } else{
+                            Log.d("response", "prediction is null");
+                        }
                     }
                 }
             });
         }
+    }
+
+    public String parseResponse(String response){
+        JSONObject jsonResponse = null;
+        String prediction = null;
+        try {
+            jsonResponse = new JSONObject(response);
+            JSONArray results = jsonResponse.getJSONArray("result");
+            for(int i=1;i<results.length();i++){
+                prediction = results.getJSONObject(1).getString("probability");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return prediction;
     }
 
     /**
