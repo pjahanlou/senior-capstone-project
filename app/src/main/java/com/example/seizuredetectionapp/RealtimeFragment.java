@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -23,6 +24,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -30,8 +40,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -43,6 +62,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     private Dialog dialog;
     TextView reading;
     long lineCount;
+    private String currentUserID;
 
     LineChart lineChart;
     LineData lineData;
@@ -85,6 +105,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         View root = inflater.inflate(R.layout.fragment_realtime, container, false);
 
+        currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         // Buttons
         btnEDA = root.findViewById(R.id.btnshowEDA);
         btnHR = root.findViewById(R.id.btnshowHR);
@@ -97,6 +119,9 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         lineCount = 2;
         lineChart = root.findViewById(R.id.lineChart);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getAxisRight().setDrawGridLines(false);
         lineEntries = new ArrayList<>();
         getEntries();
         createChart("Electrodermal Activity");
@@ -151,14 +176,17 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         getEntries();
         createChart(s);
 
-        lineChart.setData(lineData);
-        lineChart.notifyDataSetChanged();
-        lineChart.invalidate();
+        if (useDummyData) {
 
-        Entry e = (Entry) lineEntries.get(29);
-        float y = e.getY();
-        y = Math.round(y  * 10.f) / 10.f;
-        reading.setText(String.valueOf(y));
+            lineChart.notifyDataSetChanged();
+            lineChart.invalidate();
+
+            Entry e = (Entry) lineEntries.get(29);
+            float y = e.getY();
+            y = Math.round(y  * 10.f) / 10.f;
+            reading.setText(String.valueOf(y));
+            lineChart.setData(lineData);
+        }
 
         if (rfrsh) {
             refresh(1000);
@@ -198,8 +226,57 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 lineDataSet.addEntry(new Entry(lineCount-1, r.nextFloat() * 30.f));
                 lineCount++;
             }
+        } else {
+            String s = "eda";
+            switch (graphType) {
+                case GraphType_EDA:
+                    s = "eda";
+                    break;
+                case GraphType_HR:
+                    s = "hr";
+                    break;
+                case GraphType_MM:
+                    s = "mm";
+                    break;
+            }
+
+            requestData(s);
         }
     }
+
+    private void requestData(String dataType) {
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("userkey").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String key = "?key=" + snapshot.getValue();
+                        String after = "&after=" + String.valueOf(System.currentTimeMillis() / 1000L - 30);
+                        Log.d("aaa", HTTPHelpers.MYURL + dataType + key + after);
+                        RequestQueue queue = Volley.newRequestQueue(getContext());
+                        queue.start();
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, HTTPHelpers.MYURL + dataType + key + after,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Log.d("aaa", response);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("Volley Error", error.toString());
+                            }
+                        });
+                        queue.add(stringRequest);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
     private void createChart(String graphStr) {
         if (lineChart.getLineData() != null) {
             lineChart.clearValues();
@@ -207,7 +284,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         lineDataSet = new LineDataSet(lineEntries, "Vitals");
         lineData = new LineData(lineDataSet);
         lineChart.setData(lineData);
-        lineDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        lineDataSet.setColors(getResources().getColor(R.color.purple_500));
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setValueTextSize(18f);
         lineDataSet.setDrawValues(false);

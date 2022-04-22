@@ -12,12 +12,12 @@
         android:layout_height="50dp"
         android:layout_marginStart="0dp"
         android:background="@drawable/button_bg"
-        android:text="HR"
+        android:text="Heart Rate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnshowMM"
         app:layout_constraintStart_toEndOf="@id/btnshowEDA"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.937" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <Button
         android:id="@+id/btnshowMM"
@@ -25,13 +25,13 @@
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/button_bg"
-        android:text="MM"
+        android:text="Movement Magnitude"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toEndOf="@id/btnshowHR"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.937" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <Button
         android:id="@+id/btnshowEDA"
@@ -39,32 +39,32 @@
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_bg"
-        android:text="EDA"
+        android:text="Electrodermal activity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnshowHR"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.937" />
+        app:layout_constraintVertical_bias="0.95" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
-        android:layout_width="match_parent"
-        android:layout_height="535dp"
+        android:layout_width="360dp"
+        android:layout_height="450dp"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
     </com.github.mikephil.charting.charts.LineChart>
 
     <RelativeLayout
         android:id="@+id/circleReading"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginEnd="120dp"
+        android:layout_height="140dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginEnd="110dp"
         android:layout_marginTop="220dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
@@ -76,10 +76,10 @@
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/txtCircle"
-        android:layout_height="160dp"
+        android:layout_height="140dp"
         android:layout_marginTop="220dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginEnd="110dp"
         android:gravity="center"
         android:text="Calibrating"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
         android:textColor="#000000"
-        android:textSize="32dp" />
+        android:textSize="29dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
