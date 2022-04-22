@@ -56,6 +56,7 @@ public class ExampleService extends Service {
     PrimeThread T1;
     public static MediaPlayer mp;
     public String seizurePrediction;
+    boolean running = true;
 
     @Override
     public void onCreate() {
@@ -78,10 +79,11 @@ public class ExampleService extends Service {
         // Starting the service thread
         // TODO: Figure out a way to stop the thread
         T1 = new PrimeThread();
+        Log.d("input", input);
         if(input.equals("Start Service")){
             T1.start();
         } else{
-            T1.interrupt();;
+            stopThread();
             stopSelf();
             stopForeground(true);
         }
@@ -124,7 +126,6 @@ public class ExampleService extends Service {
      * Class for everything related to the thread that runs our service
      * */
     class PrimeThread extends Thread {
-        boolean running = false;
         private LocalSettings localSettings;
         private NotificationCompat.Builder seizureNotification;
         private int seizureNotificationID = 101;
@@ -137,8 +138,8 @@ public class ExampleService extends Service {
 
         @Override
         public void run() {
-            running = true;
             int counter = 0;
+            Log.d("running", String.valueOf(running));
             while(running){
                 SystemClock.sleep(1000);
                 Log.d("Log", String.valueOf(counter));
@@ -228,7 +229,7 @@ public class ExampleService extends Service {
                 v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                v.vibrate(500);
+                v.vibrate(5000);
             }
         }
 
@@ -276,6 +277,11 @@ public class ExampleService extends Service {
                 }
             });
         }
+    }
+
+    public void stopThread(){
+        running = false;
+        Log.d("running", String.valueOf(running));
     }
 
     public String parseResponse(String response){

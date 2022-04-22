@@ -43,6 +43,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
+    private String previousActivity;
     private String wasAlertPageOrGoogleMaps;
     private String prev;
     String previousActivity = null;
@@ -68,6 +69,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         // Getting the string from alert page
         try{
+            previousActivity = getIntent().getExtras().getString("page");
+            Log.d("Previous Page: ", ""+previousActivity);
             wasAlertPageOrGoogleMaps = getIntent().getExtras().getString("page");
             prev = wasAlertPageOrGoogleMaps;
             Log.d("prev usual location", ""+wasAlertPageOrGoogleMaps);
@@ -181,6 +184,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
                 intent.putExtra ("go to alert", true);
                 startActivity (intent);
             }
+        }else {
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 

@@ -41,7 +41,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
     public String selectedDOB;
     public LocalSettings localSettings;
     public Set<String> listOfContacts = new HashSet<>();
-    public String contactMethod, selectedSex;
+    public String contactMethod, selectedSex, previousActivity;
     private RangeSlider heightSlider, weightSlider, countdownTimerSlider;
     private ImageView hintImageCountdownTimer, hintImageQuestionnairePersonal;
 
@@ -50,6 +50,8 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionnaire_personal);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        SharedPreferences settings = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
 
         // Initializing the buttons
         dateOfBirth = findViewById(R.id.dateOfBirthInput);
@@ -66,8 +68,6 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         weightSlider = findViewById(R.id.weightSlider);
         heightSlider = findViewById(R.id.heightSlider);
         hintImageQuestionnairePersonal = findViewById(R.id.hintQuestionnairePersonal);
-
-        // Initializing the hint view
 
         // Add click listeners to buttons
         dateOfBirth.setOnClickListener(this);
@@ -90,6 +90,44 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         sexSpinner.setOnSpinnerItemSelectedListener((OnSpinnerItemSelectedListener<String>)
                 (oldIndex, oldItem, newIndex, newItem) -> selectedSex = newItem);
 
+        // add stored values into widgets
+        if(settings.getString("countdown timer", "") != "") {
+            countdownTimerSlider.setValues(countdownTimerReformatter(settings.getString("countdown timer", "")));
+        }
+        if(settings.getString("weight", "") != "") {
+            weightSlider.setValues(Float.valueOf(settings.getString("weight", "")));
+        }
+        if(settings.getString("height", "") != "") {
+            heightSlider.setValues(heightToValue(settings.getString("height", "")));
+        }
+        if(settings.getString("sex", "") != ""){
+            selectedSex = settings.getString("sex", "");
+            if(selectedSex.equals("Male")) {
+                sexSpinner.selectItemByIndex(0);
+            }else if(selectedSex.equals("Female")) {
+                sexSpinner.selectItemByIndex(1);
+            }
+        }
+        if(settings.getString("age", "") != "") {
+            selectedDOB = settings.getString("age", "");
+        }
+        if(settings.getString("preferred contact method", "") != "") {
+            contactMethod = settings.getString("preferred contact method", "");
+            if (contactMethod.equals("Text Message")) {
+                contactMethodSpinner.selectItemByIndex(0);
+            } else if (contactMethod.equals("Email")) {
+                contactMethodSpinner.selectItemByIndex(1);
+            }
+        }
+
+        try{
+            previousActivity = getIntent().getExtras().getString("page");
+
+            Log.d("Previous Page: ", ""+previousActivity);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
     }
 
     public String countdownTimerFormatter(float value){
@@ -97,6 +135,13 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             return "1 Min";
         }
         return (int) value +" sec";
+    }
+
+    public float countdownTimerReformatter(String time){
+        if(time.equals("1 Min")){
+            return 60f;
+        }
+        return Float.parseFloat(time);
     }
 
     /**
@@ -107,6 +152,15 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         int feet = inches / 12;
         int inch = inches % 12;
         return String.valueOf(feet)+"'"+String.valueOf(inch)+"";
+    }
+
+    public float heightToValue(String height){
+        height += "-";
+        Log.d("conversionCheck", height);
+        float feet = Float.parseFloat(height.substring(0, height.indexOf("'")));
+        float inches = feet*12;
+        inches += Float.parseFloat(height.substring(height.indexOf("'")+1, height.indexOf("-")));
+        return inches - 46;
     }
 
     @Override
@@ -147,10 +201,16 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         String weight = String.valueOf(weightSlider.getValues().get(0));
 
         // checks to see if any inputs are empty and alerts user.
-        if (selectedDOB == null) {
-            dateOfBirth.setError("Age is required!");
-            dateOfBirth.requestFocus();
-            return;
+        if (selectedDOB.equals(null)) {
+            if(previousActivity == null) {
+                dateOfBirth.setError("Age is required!");
+                dateOfBirth.requestFocus();
+                return;
+            }else if(!previousActivity.equals("AppSettings")){
+                dateOfBirth.setError("Age is required!");
+                dateOfBirth.requestFocus();
+                return;
+            }
         }
 
         // Saving the fields to local settings
@@ -162,15 +222,11 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
         questionnaireComplete("preferred contact method", contactMethod);
 
         // Moving to Questionnaire Medical
-        Intent intent = getIntent();
-        try {
-            String previousActivity = intent.getStringExtra("PreviousActivity");
+        if(previousActivity != null){
             if (previousActivity.equals("AppSettings")) {
                 finish();
-            } else {
-                startActivity(new Intent(this, QuestionnaireMedical.class));
             }
-        } catch(Exception e){
+        }else {
             startActivity(new Intent(this, QuestionnaireMedical.class));
         }
     }
