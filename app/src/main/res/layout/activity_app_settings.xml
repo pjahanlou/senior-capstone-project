@@ -74,7 +74,7 @@
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/settingsText"
@@ -90,7 +90,7 @@
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/startMedicalQuestionnaire"
@@ -106,7 +106,7 @@
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/startPersonalQuestionnaire"
@@ -122,10 +122,26 @@
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/changeContactList"
+                app:layout_constraintWidth_percent=".8" />
+
+            <Button
+                android:id="@+id/connectToWearable"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:text="Connect To Wearable"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changeUsualLocations"
                 app:layout_constraintWidth_percent=".8" />
 
             <Switch
@@ -138,11 +154,11 @@
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 android:paddingHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/changeUsualLocations"
+                app:layout_constraintTop_toBottomOf="@+id/connectToWearable"
                 app:layout_constraintWidth_percent=".8" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

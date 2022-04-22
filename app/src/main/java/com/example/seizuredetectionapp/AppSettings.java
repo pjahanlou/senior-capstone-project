@@ -71,17 +71,17 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.startMedicalQuestionnaire:
                 intent = new Intent(this, QuestionnaireMedical.class);
-                intent.putExtra("PreviousActivity", "AppSettings");
+                intent.putExtra("page", "AppSettings");
                 startActivity(intent);
                 break;
             case R.id.startPersonalQuestionnaire:
                 intent = new Intent(this, QuestionnairePersonal.class);
-                intent.putExtra("PreviousActivity", "AppSettings");
+                intent.putExtra("page", "AppSettings");
                 startActivity(intent);
                 break;
             case R.id.changeUsualLocations:
                 intent = new Intent(this, UsualLocations.class);
-                intent.putExtra("PreviousActivity", "AppSettings");
+                intent.putExtra("page", "AppSettings");
                 startActivity(intent);
                 break;
             case R.id.changeContactList:

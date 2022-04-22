@@ -35,7 +35,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
     private String[] contactValues;
     private LocalSettings localSettings;
     ArrayList<UpdateContactLayout> contactList = new ArrayList<UpdateContactLayout>();
-    private String wasAlertPage;
+    private String previousActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,9 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         saveButton.setOnClickListener(this);
 
         try{
-            wasAlertPage = getIntent().getExtras().getString("page");
-            Log.d("Alert page prev", ""+wasAlertPage);
+            previousActivity = getIntent().getExtras().getString("page");
+
+            Log.d("Previous Page: ", ""+previousActivity);
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -171,14 +172,17 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToNextPage(){
-        if(wasAlertPage != null){
-            if(wasAlertPage.equals("alert page")){
+        if(previousActivity != null){
+            if(previousActivity.equals("alert page")){
                 Intent intent = new Intent(this, Navbar.class);
                 intent.putExtra("go to alert", true);
                 startActivity(intent);
             }
+            if(previousActivity.equals("AppSettings")){
+                finish();
+            }
         } else{
-            startActivity(new Intent(this, AppSettings.class));
+            finish();
         }
     }
 

@@ -55,7 +55,8 @@
         <activity
             android:name=".UpdateContacts" />
         <activity
-            android:name=".Navbar" />
+            android:name=".Navbar"
+            android:exported="true" />
         <activity
             android:name=".ProfileSettings"
             android:exported="false" />
