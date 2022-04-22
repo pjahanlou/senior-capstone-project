@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -40,8 +41,10 @@ import java.util.Random;
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnEDA;
     Button btnMM;
+    Button btnHR;
     private Dialog dialog;
     TextView reading;
+    long lineCount;
 
     LineChart lineChart;
     LineData lineData;
@@ -50,8 +53,12 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     private ImageView hintImage;
     private TextView textBox, titleBox;
 
+    // SET TO FALSE WHEN BACKEND IS READY
+    static boolean useDummyData = true;
+
     enum GraphType {
         GraphType_EDA,
+        GraphType_HR,
         GraphType_MM
     }
 
@@ -64,6 +71,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.custom_newuser_dialog);
@@ -73,7 +81,6 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 //        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        dialog.setCancelable(false); //Optional
 //        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
-
     }
 
     @Override
@@ -84,30 +91,21 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         // Buttons
         btnEDA = root.findViewById(R.id.btnshowEDA);
+        btnHR = root.findViewById(R.id.btnshowHR);
         btnMM = root.findViewById(R.id.btnshowMM);
         hintImage = root.findViewById(R.id.hintRealtime);
         btnEDA.setOnClickListener(this);
+        btnHR.setOnClickListener(this);
         btnMM.setOnClickListener(this);
         hintImage.setOnClickListener(this);
 
         reading = root.findViewById(R.id.txtCircle);
 
+        lineCount = 2;
         lineChart = root.findViewById(R.id.lineChart);
         lineEntries = new ArrayList<>();
         getEntries();
-        lineDataSet = new LineDataSet(lineEntries, "Vitals");
-        lineData = new LineData(lineDataSet);
-        lineChart.setData(lineData);
-        lineDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        lineDataSet.setValueTextColor(Color.BLACK);
-        lineDataSet.setValueTextSize(18f);
-        lineDataSet.setDrawValues(false);
-        lineDataSet.setLineWidth(3.f);
-
-        Description desc = new Description();
-        desc.setText("Electrodermal Activity");
-        desc.setTextSize(21.f);
-        lineChart.setDescription(desc);
+        createChart("Electrodermal Activity");
 
         graphType = GraphType.GraphType_EDA;
         updateGraph(true);
@@ -123,6 +121,13 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 graphType = GraphType.GraphType_EDA;
+                break;
+
+            case R.id.btnshowHR:
+                if (graphType == GraphType.GraphType_HR) {
+                    return;
+                }
+                graphType = GraphType.GraphType_HR;
                 break;
 
             case R.id.btnshowMM:
@@ -170,19 +175,19 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
             case GraphType_EDA:
                 s = "Electrodermal Activity";
                 break;
+            case GraphType_HR:
+                s = "Heart Rate";
+                break;
             case GraphType_MM:
                 s = "Movement Magnitude";
                 break;
         }
 
         getEntries();
-
-        Description desc = new Description();
-        desc.setText(s);
-        desc.setTextSize(21.f);
-        lineChart.setDescription(desc);
+        createChart(s);
 
         lineChart.setData(lineData);
+        lineChart.notifyDataSetChanged();
         lineChart.invalidate();
 
         Entry e = (Entry) lineEntries.get(29);
@@ -209,11 +214,45 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
     // TODO; retrieve real-time data (need to refactor backend first) -John
     private void getEntries() {
-        lineEntries.clear();
-        Random r = new Random();
-        for (int i = 1; i <= 30; ++i) {
-            Entry e = new Entry(i, r.nextFloat() * 30.f);
-            lineEntries.add(e);
+        if (useDummyData) {
+            Random r = new Random();
+            if (lineEntries.isEmpty()) {
+                for (int i = 1; i <= 30; ++i) {
+                    Entry e = new Entry(i, r.nextFloat() * 30.f);
+                    lineEntries.add(e);
+                    lineCount++;
+                }
+            } else {
+                while (lineEntries.size() < 30) {
+                    Entry e = new Entry(lineEntries.size()+1, r.nextFloat() * 30.f);
+                    lineEntries.add(e);
+                    lineCount++;
+                }
+
+                lineDataSet.removeFirst();
+                lineDataSet.addEntry(new Entry(lineCount-1, r.nextFloat() * 30.f));
+                lineCount++;
+            }
         }
+    }
+    private void createChart(String graphStr) {
+        if (lineChart.getLineData() != null) {
+            lineChart.clearValues();
+        }
+        lineDataSet = new LineDataSet(lineEntries, "Vitals");
+        lineData = new LineData(lineDataSet);
+        lineChart.setData(lineData);
+        lineDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        lineDataSet.setValueTextColor(Color.BLACK);
+        lineDataSet.setValueTextSize(18f);
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setLineWidth(3.f);
+        XAxis x = lineChart.getXAxis();
+        x.setDrawLabels(false);
+
+        Description desc = new Description();
+        desc.setText(graphStr);
+        desc.setTextSize(21.f);
+        lineChart.setDescription(desc);
     }
 }
