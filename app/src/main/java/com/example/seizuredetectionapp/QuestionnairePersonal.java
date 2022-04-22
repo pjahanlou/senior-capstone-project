@@ -169,7 +169,7 @@ public class QuestionnairePersonal extends AppCompatActivity implements View.OnC
             case R.id.dateOfBirthInput:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this,
-                        0,
+                        R.style.datepicker_theme,
                         this,
                         Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),

@@ -362,7 +362,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 timePicker();
             }
         };
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, day, month);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.addjournal_datepicker_theme, onDateSetListener, year, day, month);
         cal1.add(Calendar.YEAR, -3);
         datePickerDialog.getDatePicker().setMinDate(cal1.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
@@ -378,7 +378,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
             }
         };
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, onTimeSetListener, hour, minute, false);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.addjournal_datepicker_theme, onTimeSetListener, hour, minute, false);
         timePickerDialog.show();
     }
 
@@ -387,25 +387,36 @@ public class AddJournal extends Activity implements View.OnClickListener {
      */
     public void durationPicker(){
 
-        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, 0, new MyTimePickerDialog.OnTimeSetListener() {
             String dHour = "";
             String dMinute = "";
             String dSecond = "";
+            String durationTotal = "";
             @Override
             public void onTimeSet(com.ikovac.timepickerwithseconds.TimePicker view, int hourOfDay, int minute, int seconds) {
                 durHour = hourOfDay;
                 durMinute = minute;
                 durSecond = seconds;
-                if(durHour != 0){
-                    dHour = String.format("%02d Hrs ", durHour);
+                if(String.valueOf(durHour).length() == 1){
+                    dHour = "0"+durHour;
+                    Log.d("dhour", dHour);
+                } else{
+                    dHour = String.valueOf(durHour);
                 }
-                if(durMinute != 0){
-                    dMinute = String.format("%02d Min ", durMinute);
+                if(String.valueOf(durMinute).length() == 1){
+                    dMinute = "0"+durMinute;
+                    Log.d("dhour", dMinute);
+                } else{
+                    dMinute = String.valueOf(durMinute);
                 }
-                if(durSecond != 0){
-                    dSecond = String.format("%02d Sec", durSecond);
+                if(String.valueOf(durSecond).length() == 1){
+                    dSecond = "0"+durSecond;
+                    Log.d("dhour", dSecond);
+                } else{
+                    dSecond = String.valueOf(durSecond);
                 }
-                duration.setText(dHour + dMinute + dSecond);
+                durationTotal = dHour+":"+dMinute+":"+dSecond;
+                duration.setText(durationTotal);
             }
         }, 0, 0, 0, true);
         mTimePicker.show();

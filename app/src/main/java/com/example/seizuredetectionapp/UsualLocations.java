@@ -44,6 +44,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
     private LocalSettings localSettings;
     private String previousActivity;
+    private String wasAlertPageOrGoogleMaps;
+    private String prev;
+    String previousActivity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +67,20 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         // Pulling from local settings
         Set<String> savedLocations  = pullFromLocalSettings();
 
+        // Getting the string from alert page
         try{
             previousActivity = getIntent().getExtras().getString("page");
-
             Log.d("Previous Page: ", ""+previousActivity);
+            wasAlertPageOrGoogleMaps = getIntent().getExtras().getString("page");
+            prev = wasAlertPageOrGoogleMaps;
+            Log.d("prev usual location", ""+wasAlertPageOrGoogleMaps);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
+        try {
+            previousActivity = getIntent().getStringExtra("PreviousActivity");
+            prev = previousActivity;
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -151,7 +164,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
                 navigateToNextPage();
                 break;
             case R.id.addNewLocationButton:
-                startActivity(new Intent(this, GoogleMaps.class));
+                Intent intent = new Intent(this, GoogleMaps.class);
+                Log.d("prev", ""+prev);
+                intent.putExtra("page", prev);
+                startActivity(intent);
                 break;
             case R.id.hintUsualLocations:
                 showHint(view.getContext());
@@ -160,9 +176,13 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToNextPage(){
-        if(previousActivity != null){
-            if(previousActivity.equals("AppSettings")){
-                finish();
+        if(prev != null){
+            if(prev.equals("AppSettings")){
+                startActivity(new Intent(this, AppSettings.class));
+            }else if(prev.equals("go to alert")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
             }
         }else {
             startActivity(new Intent(this, Navbar.class));

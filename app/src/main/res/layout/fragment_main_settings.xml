@@ -20,8 +20,10 @@
 
         <com.github.onlynight.waveview.WaveView
             android:id="@+id/imageView3"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.15"
+            app:layout_constraintWidth_percent="0.3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,22 +33,6 @@
             app:waveRange="15dp"
             app:waveSpeed="5"
             app:waveStrokeWidth="3dp"/>
-
-        <com.github.onlynight.waveview.WaveView
-            android:id="@+id/waveview"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:isCircle="false"
-            app:period="4"
-            app:waveHeightPercent="0.85"
-            app:waveRange="15dp"
-            app:waveSpeed="5"
-            app:waveStrokeWidth="3dp"/>
-
-
 
             <TextView
                 android:id="@+id/settingsText"
@@ -68,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintWidth_percent="0.6"
-                app:layout_constraintHeight_percent="0.3"
+                app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintVertical_bias="0.2"
                 android:src="@drawable/ic_baseline_add_a_photo_24"
                 app:civ_border_width="3dp"

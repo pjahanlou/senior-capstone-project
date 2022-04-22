@@ -45,7 +45,7 @@
             android:exported="true" />
         <activity
             android:name=".TextPermission"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".LocationPermission"
             android:exported="true" />
@@ -110,6 +110,7 @@
             </intent-filter>
         </activity>
         <service android:name=".ExampleService" />
+        <receiver android:name=".ExampleService$StopAlarmListener" />
     </application>
 
 </manifest>

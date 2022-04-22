@@ -7,16 +7,29 @@
     android:background="@color/Platinum">
 
     <Button
+        android:id="@+id/btnshowHR"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="0dp"
+        android:background="@drawable/button_bg"
+        android:text="HR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnshowMM"
+        app:layout_constraintStart_toEndOf="@id/btnshowEDA"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.937" />
+
+    <Button
         android:id="@+id/btnshowMM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/button_bg"
         android:text="MM"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toEndOf="@id/btnshowEDA"
+        app:layout_constraintStart_toEndOf="@id/btnshowHR"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.937" />
 
@@ -31,14 +44,13 @@
 
     <Button
         android:id="@+id/btnshowEDA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/button_bg"
         android:text="EDA"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnshowMM"
-        app:layout_constraintHorizontal_bias=".9"
+        app:layout_constraintEnd_toStartOf="@id/btnshowHR"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.937" />

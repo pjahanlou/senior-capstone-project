@@ -67,6 +67,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
     private MaterialSearchBar materialSearchBar;
     private View mapView;
     private Button saveLocationsButton;
+    private String wasAlertPageOrGoogleMaps;
 
     private final float DEFAULT_ZOOM = 15;
 
@@ -89,6 +90,14 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         Places.initialize(GoogleMaps.this, getString(R.string.map_key));
         placesClient = Places.createClient(GoogleMaps.this);
         final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+
+        // Getting the string from alert page
+        try{
+            wasAlertPageOrGoogleMaps = getIntent().getExtras().getString("page");
+            Log.d("was AP Or GM", ""+wasAlertPageOrGoogleMaps);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
@@ -206,6 +215,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
                 Log.d("locations", locations.toString());
                 Intent intent = new Intent(this, UsualLocations.class);
                 intent.putExtra("locations", locations); // getText() SHOULD NOT be static!!!
+                intent.putExtra("page", wasAlertPageOrGoogleMaps);
                 startActivity(intent);
                 break;
         }

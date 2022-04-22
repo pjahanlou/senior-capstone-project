@@ -3,6 +3,7 @@ package com.example.seizuredetectionapp;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -39,6 +41,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,19 +52,13 @@ import cucumber.api.Pending;
 
 public class ExampleService extends Service {
 
-    private PowerManager.WakeLock wakeLock = null;
-    private boolean isServiceStarted = false;
-    private Thread thread;
     private Notification notification;
-    private RequestQueue mRQueue;
-    private StringRequest mSReq;
     PrimeThread T1;
-    boolean running;
+    public static MediaPlayer mp;
+    public String seizurePrediction;
 
     @Override
     public void onCreate() {
-
-        mRQueue = Volley.newRequestQueue(this);
         super.onCreate();
     }
 
@@ -69,15 +66,18 @@ public class ExampleService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String input = intent.getStringExtra("inputExtra");
-        Log.d("input", input);
+        Log.d("Service Status", input);
 
+        // Creating the seizure detection notification
         Intent notificationIntent = new Intent(this, Navbar.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                 0, notificationIntent, 0);
-
         createNotification("Reading Vitals", pendingIntent);
-        T1 = new PrimeThread();
+        startForeground(1, notification);
 
+        // Starting the service thread
+        // TODO: Figure out a way to stop the thread
+        T1 = new PrimeThread();
         if(input.equals("Start Service")){
             T1.start();
         } else{
@@ -86,14 +86,15 @@ public class ExampleService extends Service {
             stopForeground(true);
         }
 
-        startForeground(1, notification);
-
         //do heavy work on a background thread
         //stopSelf();
 
         return START_NOT_STICKY;
     }
 
+    /**
+     * Method for building the seizure detection notification
+     * */
     public void createNotification(String input, PendingIntent pendingIntent) {
         notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("STRapp")
@@ -119,10 +120,20 @@ public class ExampleService extends Service {
         return null;
     }
 
+    /**
+     * Class for everything related to the thread that runs our service
+     * */
     class PrimeThread extends Thread {
         boolean running = false;
         private LocalSettings localSettings;
-        private MediaPlayer mp;
+        private NotificationCompat.Builder seizureNotification;
+        private int seizureNotificationID = 101;
+        private NotificationManagerCompat notificationManager;
+        private SharedPreferences sharedPreferences;
+        private int userCountdownTime;
+        private boolean seizureDetected = false;
+        private int timer = 0;
+        private String input = "Seizure has been detected!";
 
         @Override
         public void run() {
@@ -133,40 +144,83 @@ public class ExampleService extends Service {
                 Log.d("Log", String.valueOf(counter));
                 counter++;
                 makeOkHTTPReq();
+                // TODO: Change to response from microservice in the near future
                 if(counter == 10){
+                    seizureDetected = true;
+
                     // TODO: Test these
                     openAlertPage();
                     vibratePhone();
                     playAlarm();
 
-                    /*
-                    Intent notificationIntent = new Intent(ExampleService.this, Navbar.class);;
-                    notificationIntent.putExtra("seizure", true);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(ExampleService.this,
-                            0, notificationIntent, PendingIntent.FLAG_MUTABLE);
-                    String input = "Seizure has been detected!";
-                    displayNotification(input, pendingIntent);
+                    // Creating the seizure detected notification
+                    displayNotification();
+                }
 
-                     */
+                // Updating the notification progress bar
+                if(seizureDetected){
+                    seizureNotification.setProgress(userCountdownTime, timer, false);
+                    seizureNotification.setContentText(input+"\n"+(userCountdownTime-timer)+" Sec Until Contacts Notified");
+                    notificationManager.notify(seizureNotificationID, seizureNotification.build());
+                    timer++;
+                    // Change text when countdown timer runs out of time
+                    if(timer == userCountdownTime){
+                        seizureNotification.setContentText("Emergency contacts have been notified.");
+                        seizureNotification.setProgress(0, 0, false);
+                        notificationManager.notify(seizureNotificationID, seizureNotification.build());
+                        seizureDetected = false;
+                    }
                 }
             }
         }
 
+        /**
+         * Method for playing alarm for the user
+         * */
         private void playAlarm(){
             mp = MediaPlayer.create(ExampleService.this, Settings.System.DEFAULT_RINGTONE_URI);
             mp.start();
         }
 
-        private void displayNotification(String input, PendingIntent pendingIntent){
+        /**
+         * Method for creating seizure detected notification
+         * */
+        private void displayNotification(){
 
-            notification = new NotificationCompat.Builder(ExampleService.this, CHANNEL_ID)
+            // These are for the notification itself
+            Intent notificationIntent = new Intent(ExampleService.this, Navbar.class);;
+            notificationIntent.putExtra("seizure", true);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(ExampleService.this,
+                    0, notificationIntent, PendingIntent.FLAG_MUTABLE);
+
+            // Pulling user countdown timer from shared preferences
+            sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
+            userCountdownTime = Integer.parseInt(sharedPreferences.getString("countdown timer", ""));
+
+            // These are for the stop alarm button
+            Intent snoozeIntent = new Intent(ExampleService.this, StopAlarmListener.class);
+            PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(ExampleService.this, 0,
+                    snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // Building the seizure detected notification
+            seizureNotification = new NotificationCompat.Builder(ExampleService.this, CHANNEL_ID)
                     .setContentTitle("STRapp")
-                    .setContentText(input)
+                    .setContentText(input+"\n"+userCountdownTime+" Sec")
                     .setSmallIcon(R.drawable.ic_baseline_person_add_24)
                     .setContentIntent(pendingIntent)
-                    .build();
+                    .addAction(R.drawable.ic_delete, "Stop Alarm",
+                            snoozePendingIntent)
+                    .setFullScreenIntent(snoozePendingIntent, true)
+                    .setProgress(userCountdownTime, 0, false);
+
+            notificationManager = NotificationManagerCompat.from(ExampleService.this);
+            notificationManager.notify(seizureNotificationID, seizureNotification.build());
         }
 
+        /**
+         * Method for vibrating the user phone
+         * */
         private void vibratePhone(){
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
@@ -174,32 +228,32 @@ public class ExampleService extends Service {
                 v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 //deprecated in API 26
-                v.vibrate(500);
+                v.vibrate(5000);
             }
         }
 
+        /**
+         * Method for opening alert page for when a seizure has been detected
+         * */
         private void openAlertPage(){
             Intent dialogIntent = new Intent(ExampleService.this, Navbar.class);
             dialogIntent.putExtra("seizure", true);
             dialogIntent.setAction(Intent.ACTION_VIEW);
             dialogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(dialogIntent);
-            Log.d("startSeizureProtocol", "Navbar opened");
+            Log.d("startSeizureProtocol", "Alertpage opened");
         }
 
+        /**
+         * Method for making HTTP request to microservice
+         * */
         private void makeOkHTTPReq(){
             OkHttpClient client = new OkHttpClient();
 
-            String url = "http://104.237.129.207:8080/detect?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=";
-
-            RequestBody formBody = new FormEncodingBuilder()
-                    .add("timestamp", "ass")
-                    .add("reading", "ass")
-                    .build();
+            String url = "http://104.237.129.207:8080/iris/api/v1.0/getpred?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=?aX=1&aY=1&aZ=5&Temp=100&EDA=1&Hr=80";
 
             Request request = new Request.Builder()
                     .url(url)
-                    .post(formBody)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -211,15 +265,42 @@ public class ExampleService extends Service {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     if (response.isSuccessful()) {
-                        final String myResponse = response.body().string();
-                        Log.d("response", myResponse);
+                        final String responseString = response.body().string();
+                        seizurePrediction = parseResponse(responseString);
+                        if(seizurePrediction != null){
+                            Log.d("response", "prediction is " + seizurePrediction);
+                        } else{
+                            Log.d("response", "prediction is null");
+                        }
                     }
                 }
             });
         }
+    }
 
-        public void stopRunning(){
-            running = false;
+    public String parseResponse(String response){
+        JSONObject jsonResponse = null;
+        String prediction = null;
+        try {
+            jsonResponse = new JSONObject(response);
+            JSONArray results = jsonResponse.getJSONArray("result");
+            for(int i=1;i<results.length();i++){
+                prediction = results.getJSONObject(1).getString("probability");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return prediction;
+    }
+
+    /**
+     * Class for handling the seizure detected "stop alarm" button
+     * */
+    public static class StopAlarmListener extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Here", "I am here");
+            mp.stop();
         }
     }
 }
