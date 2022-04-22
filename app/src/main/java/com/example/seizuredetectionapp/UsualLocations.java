@@ -43,7 +43,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
-    private String wasAlertPage;
+    private String previousActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +65,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         Set<String> savedLocations  = pullFromLocalSettings();
 
         try{
-            wasAlertPage = getIntent().getExtras().getString("page");
-            Log.d("Alert page prev", ""+wasAlertPage);
+            previousActivity = getIntent().getExtras().getString("page");
+
+            Log.d("Previous Page: ", ""+previousActivity);
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -159,32 +160,12 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToNextPage(){
-        Intent intent = getIntent();
-        try {
-            String previousActivity = intent.getStringExtra("PreviousActivity");
-            if (previousActivity.equals("AppSettings")) {
+        if(previousActivity != null){
+            if(previousActivity.equals("AppSettings")){
                 finish();
-            } else {
-                if(wasAlertPage != null){
-                    if(wasAlertPage.equals("alert page")){
-                        intent = new Intent(this, Navbar.class);
-                        intent.putExtra("go to alert", true);
-                        startActivity(intent);
-                    }
-                } else{
-                    startActivity(new Intent(this, Navbar.class));
-                }
             }
-        } catch(Exception e){
-            if(wasAlertPage != null){
-                if(wasAlertPage.equals("alert page")){
-                    intent = new Intent(this, Navbar.class);
-                    intent.putExtra("go to alert", true);
-                    startActivity(intent);
-                }
-            } else{
-                startActivity(new Intent(this, Navbar.class));
-            }
+        }else {
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 

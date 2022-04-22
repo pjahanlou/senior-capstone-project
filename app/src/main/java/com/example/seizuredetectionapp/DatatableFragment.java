@@ -545,7 +545,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
         BarDataSet barDataSet = new BarDataSet(entries, title);
         //barDataSet.setDrawValues(false);
-        barDataSet.setColor(Color.parseColor("#B0C4DE"));
+        barDataSet.setColor(Color.parseColor("#473fa2"));
         BarData data = new BarData(barDataSet);
 
         barChart.setData(data);
