@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -66,7 +67,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private Journal editJournal;
     private String journalKey;
     private RangeSlider severitySlider;
-    private static Button dateAndTime, duration;
+    private static RangeSlider duration;
+    private static Button dateAndTime;
     private int hour, minute, year, month, day;
     private int durHour = 0, durMinute = 0, durSecond = 0;
     private Calendar cal, cal1, now;
@@ -162,6 +164,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         typeOfSeizure.setAdapter(adapterTypeOfSeizure);
         mood.setAdapter(adapterMood);
 
+        duration.setLabelFormatter(value -> {
+            return durationSeizureConvert(value);
+        });
+
     }
 
     @Override
@@ -195,7 +201,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String saveDateAndTime = dateAndTime.getText().toString().trim();
         saveMood = mood.getChipValues();
         saveTypeOfSeizure = typeOfSeizure.getChipValues();
-        String saveDuration = duration.getText().toString().trim();
+        //String saveDuration = duration.getText().toString().trim();
+        String saveDuration = duration.getValues().get(0).toString();
         saveTriggers = triggers.getChipValues();
         String saveDescription = description.getText().toString().trim();
         String savePostDescription = postDescription.getText().toString().trim();
@@ -246,7 +253,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String dateTime = dateAndTime.getText().toString().trim();
         List<String> moodType = mood.getChipValues();
         List<String> seizureType = typeOfSeizure.getChipValues();
-        String durationOfSeizure = duration.getText().toString().trim();
+//        String durationOfSeizure = duration.getText().toString().trim();
+        String durationOfSeizure = duration.getValues().get(0).toString();
         List<String> seizureTrigger = triggers.getChipValues();
         String seizureDescription = description.getText().toString().trim();
         String postSeizureDescription = postDescription.getText().toString().trim();
@@ -294,16 +302,18 @@ public class AddJournal extends Activity implements View.OnClickListener {
                     AddJournal.updateSeverity = editJournal.severity;
 
                     //change duration and severity to float from string
-                    float fSev = Float.parseFloat(AddJournal.updateSeverity);
+                    float fSeverity = Float.parseFloat(AddJournal.updateSeverity);
+                    float fDuration = Float.parseFloat(AddJournal.updateDuration);
                     //Set EditText to existing saved values
                     AddJournal.dateAndTime.setText(AddJournal.updateDateTime);
                     AddJournal.mood.setText(updateMood);
                     AddJournal.typeOfSeizure.setText(updateTypeOfSeizure);
-                    AddJournal.duration.setText(updateDuration);
+                    //AddJournal.duration.setText(updateDuration);
+                    AddJournal.duration.setValues(fDuration);
                     AddJournal.triggers.setText(updateTriggers);
                     AddJournal.description.setText(updateDescription);
                     AddJournal.postDescription.setText(updatePostDescription);
-                    severitySlider.setValues(fSev);
+                    severitySlider.setValues(fSeverity);
 
                 }
             }
@@ -341,7 +351,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
         });
     }
 
-
     private String getCurrentTime(){
         //gets current time and date
         String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
@@ -378,7 +387,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 dateAndTime.setText(String.format(Locale.getDefault(), "%02d/%02d/%02d %02d:%02d", month + 1, day, year,hour,minute));
             }
         };
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.addjournal_datepicker_theme, onTimeSetListener, hour, minute, false);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, R.style.addjournal_datepicker_theme, onTimeSetListener, hour, minute, true);
         timePickerDialog.show();
     }
 
@@ -405,10 +414,25 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 if(durSecond != 0){
                     dSecond = String.format("%02d Sec", durSecond);
                 }
-                duration.setText(dHour + dMinute + dSecond);
+                //duration.setText(dHour + dMinute + dSecond);
             }
         }, 0, 0, 0, true);
+        //mTimePicker.findViewById(Resources.getSystem().getIdentifier("hourOfDay","id","android")).setVisibility(View.GONE);
         mTimePicker.show();
+    }
+
+    private String durationSeizureConvert(float value) {
+        if(value == 0){
+            return "30 Sec";
+        } else if(value == 120) {
+            return "1 Hour";
+        }else if(value == 1){
+                return ((int)value)+" Min";
+        } else if(value % 2 == 1){
+            return ((int)value/2)+" Min 30 Sec";
+        }  else{
+            return ((int)value/2)+" Min";
+        }
     }
 
 }

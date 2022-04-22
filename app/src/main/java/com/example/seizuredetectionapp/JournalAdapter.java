@@ -93,7 +93,7 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
         tvDay.setText(getDay(dateAndTime));
         tvMonth.setText(getMonth(dateAndTime));
         tvYear.setText(getYear(dateAndTime));
-        tvDuration.setText(duration);
+        tvDuration.setText(durationSeizureConvert(Float.parseFloat(duration)));
         tvDescription.setText(description);
         rsSeverity.setValues(severityFloat);
 
@@ -192,6 +192,20 @@ public class JournalAdapter extends ArrayAdapter<JournalLayout> {
     public void setList(){
         this.updateJournals = updateJournals;
         notifyDataSetChanged();
+    }
+
+    private String durationSeizureConvert(float value) {
+        if(value == 0){
+            return "30 Sec";
+        } else if(value == 120) {
+            return "1 Hour";
+        }else if(value == 1){
+            return ((int)value)+" Min";
+        } else if(value % 2 == 1){
+            return ((int)value/2)+" Min 30 Sec";
+        }  else{
+            return ((int)value/2)+" Min";
+        }
     }
 
 }
