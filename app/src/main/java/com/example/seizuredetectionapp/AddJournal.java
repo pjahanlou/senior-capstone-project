@@ -426,7 +426,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 }
                 //duration.setText(dHour + dMinute + dSecond);
                 durationTotal = dHour+":"+dMinute+":"+dSecond;
-                duration.setText(durationTotal);
+                //duration.setText(durationTotal);
             }
         }, 0, 0, 0, true);
         //mTimePicker.findViewById(Resources.getSystem().getIdentifier("hourOfDay","id","android")).setVisibility(View.GONE);

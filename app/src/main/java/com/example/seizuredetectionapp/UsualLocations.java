@@ -43,10 +43,9 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
-    private String previousActivity;
+    private String previousActivity = null;
     private String wasAlertPageOrGoogleMaps;
     private String prev;
-    String previousActivity = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
