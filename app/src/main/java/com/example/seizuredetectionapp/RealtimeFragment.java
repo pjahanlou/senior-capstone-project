@@ -236,7 +236,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                     s = "hr";
                     break;
                 case GraphType_MM:
-                    s = "mm";
+                    s = "acc";
                     break;
             }
 
