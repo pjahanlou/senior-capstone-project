@@ -39,6 +39,7 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
     FloatingActionButton addJournal;
     private boolean seizureDetected = false;
     private boolean gotoAlert = false;
+    private boolean gotoSettings = false;
     private SharedPreferences sharedPreferences;
     private LocalSettings localSettings;
 
@@ -56,6 +57,12 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
 
         try{
             gotoAlert = getIntent().getExtras().getBoolean("go to alert");
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
+        try{
+            gotoSettings = getIntent().getExtras().getBoolean("go to settings");
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -81,6 +88,10 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
         if(seizureDetected || gotoAlert){
             Log.d("made it here", ""+seizureDetected);
             bottomNavigationView.setSelectedItemId(R.id.alertPageFragment);
+        }
+
+        if(gotoSettings){
+            bottomNavigationView.setSelectedItemId(R.id.mainSettingsFragment);
         }
 
         // Initialize swipe listener
