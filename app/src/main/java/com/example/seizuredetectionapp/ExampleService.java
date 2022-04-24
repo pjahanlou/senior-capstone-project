@@ -57,6 +57,10 @@ public class ExampleService extends Service {
     public static MediaPlayer mp;
     public String seizurePrediction;
     boolean running = true;
+    public static NotificationCompat.Builder seizureNotification;
+    public static int seizureNotificationID = 101;
+    public static NotificationManagerCompat notificationManager;
+    private static boolean seizureDetected = false;
 
     @Override
     public void onCreate() {
@@ -127,12 +131,8 @@ public class ExampleService extends Service {
      * */
     class PrimeThread extends Thread {
         private LocalSettings localSettings;
-        private NotificationCompat.Builder seizureNotification;
-        private int seizureNotificationID = 101;
-        private NotificationManagerCompat notificationManager;
         private SharedPreferences sharedPreferences;
         private int userCountdownTime;
-        private boolean seizureDetected = false;
         private int timer = 0;
         private String input = "Seizure has been detected!";
 
@@ -149,7 +149,7 @@ public class ExampleService extends Service {
                 if(counter == 10){
                     seizureDetected = true;
 
-                    // TODO: Test these
+                    // TODO: Fix default sound bug
                     openAlertPage();
                     vibratePhone();
                     playAlarm();
@@ -170,6 +170,9 @@ public class ExampleService extends Service {
                         seizureNotification.setProgress(0, 0, false);
                         notificationManager.notify(seizureNotificationID, seizureNotification.build());
                         seizureDetected = false;
+                        // TODO: do we text their emergency contacts when the timer on notification runs out?
+                        //  since we we already open up alert page in the background
+                        //  If we do open up alert page, then close it on stop alarm so we don't contact people
                     }
                 }
             }
@@ -307,6 +310,10 @@ public class ExampleService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.d("Here", "I am here");
             mp.stop();
+            seizureNotification.setProgress(0, 0, false);
+            seizureNotification.setContentText("Countdown Cancelled.");
+            notificationManager.notify(seizureNotificationID, seizureNotification.build());
+            seizureDetected = false;
         }
     }
 }

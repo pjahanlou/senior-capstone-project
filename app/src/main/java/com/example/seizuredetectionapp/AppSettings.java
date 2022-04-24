@@ -67,7 +67,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.back:
-                finish();
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to settings", true);
+                startActivity (intent);
                 break;
             case R.id.startMedicalQuestionnaire:
                 intent = new Intent(this, QuestionnaireMedical.class);

@@ -226,6 +226,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         hintImage = root.findViewById(R.id.hintDatatable);
         startSeizureButton = root.findViewById(R.id.startSeizureButton);
 
+        if(foregroundServiceRunning()){
+            threadStatus = ThreadStatus.STARTED;
+            startSeizureButton.setText("Stop Seizure Detection");
+            startSeizureButton.setBackground(getResources().getDrawable(R.drawable.addjournal_button_bg));
+        }
+
         //Buttons
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
@@ -443,18 +449,18 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             case R.id.startSeizureButton:
                 if(threadStatus == ThreadStatus.STARTED){
                     stopService();
-                    threadStatus = ThreadStatus.STOPPED;
-                    startSeizureButton.setText("Start Seizure Detection");
                 } else if(threadStatus == ThreadStatus.STOPPED){
                     startService();
-                    threadStatus = ThreadStatus.STARTED;
-                    startSeizureButton.setText("Stop Seizure Detection");
                 }
                 break;
         }
     }
 
     public void startService() {
+        threadStatus = ThreadStatus.STARTED;
+        startSeizureButton.setText("Stop Seizure Detection");
+        startSeizureButton.setBackground(getResources().getDrawable(R.drawable.addjournal_button_bg));
+
         if(!foregroundServiceRunning()){
             Intent serviceIntent = new Intent(getContext(), ExampleService.class);
             serviceIntent.putExtra("inputExtra", "Start Service");
@@ -464,6 +470,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     }
 
     public void stopService() {
+        threadStatus = ThreadStatus.STOPPED;
+        startSeizureButton.setText("Start Seizure Detection");
+        startSeizureButton.setBackground(getResources().getDrawable(R.drawable.button_bg));
+
         Intent serviceIntent = new Intent(getContext(), ExampleService.class);
         serviceIntent.putExtra("inputExtra", "Stop Service");
 

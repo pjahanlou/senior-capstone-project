@@ -44,7 +44,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
     private LocalSettings localSettings;
     private String previousActivity = null;
-    private String wasAlertPageOrGoogleMaps;
+    private String wasAlertPageOrAppSettings;
+    private String wasAlertPageOrAppSettingsFromGoogleMaps;
     private String prev;
 
     @Override
@@ -68,18 +69,15 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         // Getting the string from alert page
         try{
-            previousActivity = getIntent().getExtras().getString("page");
-            Log.d("Previous Page: ", ""+previousActivity);
-            wasAlertPageOrGoogleMaps = getIntent().getExtras().getString("page");
-            prev = wasAlertPageOrGoogleMaps;
-            Log.d("prev usual location", ""+wasAlertPageOrGoogleMaps);
+            wasAlertPageOrAppSettings = getIntent().getExtras().getString("page");
+            Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettings);
         } catch (Throwable e){
             e.printStackTrace();
         }
 
-        try {
-            previousActivity = getIntent().getStringExtra("PreviousActivity");
-            prev = previousActivity;
+        try{
+            wasAlertPageOrAppSettingsFromGoogleMaps = getIntent().getExtras().getString("page - GoogleMaps");
+            Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettingsFromGoogleMaps);
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -164,8 +162,8 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.addNewLocationButton:
                 Intent intent = new Intent(this, GoogleMaps.class);
-                Log.d("prev", ""+prev);
-                intent.putExtra("page", prev);
+                Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettings);
+                intent.putExtra("page", wasAlertPageOrAppSettings);
                 startActivity(intent);
                 break;
             case R.id.hintUsualLocations:
@@ -175,16 +173,28 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToNextPage(){
-        if(prev != null){
-            if(prev.equals("AppSettings")){
+        if(wasAlertPageOrAppSettings != null){
+            if(wasAlertPageOrAppSettings.equals("AppSettings - Google Maps")){
                 startActivity(new Intent(this, AppSettings.class));
-            }else if(prev.equals("go to alert")){
+            }else if(wasAlertPageOrAppSettings.equals("alert page - Google Maps")){
                 Intent intent = new Intent(this, Navbar.class);
                 intent.putExtra ("go to alert", true);
                 startActivity (intent);
+            } else if(wasAlertPageOrAppSettings.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
+            } else if(wasAlertPageOrAppSettings.equals("AppSettings")){
+                startActivity(new Intent(this, AppSettings.class));
             }
-        }else {
-            startActivity(new Intent(this, Navbar.class));
+        }else if(wasAlertPageOrAppSettingsFromGoogleMaps != null){
+            if(wasAlertPageOrAppSettingsFromGoogleMaps.equals("alert page - Google Maps")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
+            } else if(wasAlertPageOrAppSettingsFromGoogleMaps.equals("AppSettings - Google Maps")){
+                startActivity(new Intent(this, AppSettings.class));
+            }
         }
     }
 
