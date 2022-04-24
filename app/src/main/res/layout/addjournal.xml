@@ -61,7 +61,7 @@
                     app:chipHeight="30dp"
                     app:chipTextColor="@color/black"
                     app:chipTextSize="16dp" />
-
+<!--
                 <Button
                     android:id="@+id/duration"
                     android:layout_width="match_parent"
@@ -76,6 +76,16 @@
                     android:textColorHint="@color/DarkGray"
                     android:textSize="16dp"
                     android:textStyle="normal" />
+                -->
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/durationTitle"
+                    android:theme="@style/AddJournal_slider"
+                    android:valueFrom="0"
+                    android:valueTo="120"
+                    android:stepSize="1.0"/>
 
                 <com.hootsuite.nachos.NachoTextView
                     android:id="@+id/triggers"

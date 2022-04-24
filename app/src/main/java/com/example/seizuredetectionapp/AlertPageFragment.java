@@ -651,9 +651,9 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                 format(Calendar.getInstance().getTime());
         List<String> moodType = new ArrayList<String>();
         List<String> seizureType = new ArrayList<String>();
-        String durationOfSeizure = "No duration recorded.";
+        String durationOfSeizure = "0.0";
         List<String> seizureTrigger = new ArrayList<String>();
-        String seizureDescription = "No Description Entered.";
+        String seizureDescription = "No description entered.";
         String postSeizureDescription = "";
         String severity = "0.0";
 
