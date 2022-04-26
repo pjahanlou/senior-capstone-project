@@ -177,17 +177,17 @@
             android:textSize="16sp"
             android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/typeOfSeizureTitle"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mood"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="Type of Seizure"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/typeOfSeizureTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mood"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Type of Seizure"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
         <TextView
             android:id="@+id/moodTitle"
@@ -251,6 +251,17 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/DarkGray"
                     android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/seizureInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mood"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_toEndOf="@+id/typeOfSeizureTitle"
+                    android:src="@drawable/ic_baseline_help_icon" />
+
 
         </RelativeLayout>
 </ScrollView>

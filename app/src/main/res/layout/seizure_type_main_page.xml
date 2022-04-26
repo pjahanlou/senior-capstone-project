@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Platinum"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/seizure_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seizure Types"
+            android:textColor="@color/black"
+            android:textSize="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/seizure_back"
+            app:layout_constraintTop_toTopOf="parent
+" />
+
+        <Button
+            android:id="@+id/seizure_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:background="@drawable/button_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/Generalized_tonic_clonic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Generalized Tonic-Clonic"
+            android:textAllCaps="false"
+            android:background="@drawable/button_bg"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Tonic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/seizure_title"
+            />
+
+        <Button
+            android:id="@+id/Tonic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Tonic"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Clonic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/Generalized_tonic_clonic" />
+
+        <Button
+            android:id="@+id/Clonic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Clonic"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Absence"
+            app:layout_constraintTop_toBottomOf="@id/Tonic" />
+
+        <Button
+            android:id="@+id/Absence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Absence"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintVertical_bias=".05"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Myoclonic"
+            app:layout_constraintTop_toBottomOf="@id/Clonic"
+/>
+
+        <Button
+            android:id="@+id/Myoclonic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Myoclonic"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Atonic"
+            app:layout_constraintTop_toBottomOf="@id/Absence" />
+
+        <Button
+            android:id="@+id/Atonic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Atonic"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintVertical_bias=".05"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/Epileptic_Seizure"
+            app:layout_constraintTop_toBottomOf="@id/Myoclonic" />
+
+        <Button
+            android:id="@+id/Epileptic_Seizure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="Epileptic Seizure"
+            android:textAllCaps="false"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/Atonic"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
