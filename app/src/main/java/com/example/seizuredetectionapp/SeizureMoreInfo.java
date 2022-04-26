@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,7 +74,10 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
 
         Button dialogBack = dialog.findViewById(R.id.btn_back);
-
+        TextView titleBox = dialog.findViewById(R.id.titleText);
+        TextView mainBox = dialog.findViewById(R.id.mainText);
+        titleBox.setText(type);
+        mainBox.setText(explanation);
         dialogBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,26 +90,35 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
+            // Sources for seizure information: https://www.hopkinsmedicine.org/health/conditions-and-diseases/epilepsy/generalized-seizures#:~:text=Atonic%20Seizures%20(Drop%20Attacks),or%20collapse%2C%20possibly%20causing%20injury.
             case R.id.Generalized_tonic_clonic:
-                showHint(this, "Generalized Tonic-Clonic","");
+                showHint(this, "Generalized Tonic-Clonic","Many people with generalized tonic-clonic seizures have vision, " +
+                        "taste, smell, or sensory changes before the seizure. This is called aura. This is followed by violent muscle contractions " +
+                        "and loss of alertness");
                 break;
             case R.id.Tonic:
-                showHint(this, "Tonic","");
+                showHint(this, "Tonic","Tonic seizures causes a sudden stiffness or tension in th muscles or the arms, legs or torso. " +
+                        "The stiffness last about 20 seconds and is most likely to happen during sleep. Tonic seizures that occur while the person is " +
+                        "standing may cause them to fall");
                 break;
             case R.id.Clonic:
-                showHint(this, "Clonic","");
+                showHint(this, "Clonic","Clonic seizures are characterized by repeated jerking movements of the arms and legs on one or both sides of the body, " +
+                        "sometimes with numbness or tingling. If it is a partial seizure, the person may be aware of what's happening.");
                 break;
             case R.id.Absence:
-                showHint(this, "Absence","");
+                showHint(this, "Absence","Absence seizures are more common among children than adults. Common symptoms are: being very still, smacking the lips or " +
+                        "making a chewing motion with the mouth, fluttering the eyelids, suddenly not talking or moving, and small movements of both hands.");
                 break;
             case R.id.Myoclonic:
-                showHint(this, "Myoclonic","");
+                showHint(this, "Myoclonic","Myoclonic seizures are characterized by brief, jerking spasms of a muscle or muscle group. They can often " +
+                        "occur with atonic seizures. Each individual seizure lasts about 1-3 seconds but can happen in clusters");
                 break;
             case R.id.Atonic:
-                showHint(this, "Atonic","");
+                showHint(this, "Atonic","Atonic seizure, also known as drop attacks, involves a sudden decrease in muscle tone, causing a person's body to go limp, slump, or collapse. ");
                 break;
             case R.id.Epileptic_Seizure:
-                showHint(this, "Epileptic Seizure","");
+                showHint(this, "Infantile Spasms","Infantile spasms typically begin between 3 and 12 months of age and suddenly stop by the age of 2 to 4 years. " +
+                        "The spasms appear as a sudden jerk or jolt followed by stiffening. Often the child's arms fling outward and the knees pull up as the body bends forward.");
                 break;
             case R.id.seizure_back:
                 if(previousPage.equals("AddJournal")){

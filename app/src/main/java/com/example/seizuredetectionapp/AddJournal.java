@@ -262,7 +262,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID).child("Journals");
-        String id = myRef.child("Journals").push().getKey();
         myRef.push().setValue(journal).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -274,6 +273,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 }
             }
         });
+        String id = journal.getDateAndTime();
         Log.d("WOWOOWOWOOWOWOWOWO",id);
         return id;
     }
@@ -382,7 +382,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
     private String getCurrentTime(){
         //gets current time and date
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").
                 format(Calendar.getInstance().getTime());
         return timeStamp;
     }
