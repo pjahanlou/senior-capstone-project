@@ -23,6 +23,10 @@ public class Journal {
             this.severity = severity;
         }
 
+    public String getDateAndTime() {
+        return dateAndTime;
+    }
+
     public String toString(){
         return "Date and Time: " + dateAndTime + " Duration: " + durationOfSeizure + " Description: " + description;
     }

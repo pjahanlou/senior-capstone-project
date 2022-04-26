@@ -247,17 +247,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
         bottomSheetBehavior = BottomSheetBehavior.from(sheetBottom);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        //TODO find a way to make it relative for each phone
-        // .getHeight() of the xml view and find a good dividen
-        /* This doesn't quite work sadly, 12 is the best dividen i found for the pixel 4 xl but it doesnt work on other devices
-        //
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
-        Log.d("DISPLAY HEIGHT",Integer.toString(height));
-        bottomSheetBehavior.setPeekHeight(height/12);
-         */
-        //set journal to not be hideable
-        bottomSheetBehavior.setPeekHeight(210);
+        bottomSheetBehavior.setPeekHeight((height/9));
         bottomSheetBehavior.setHideable(false);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
