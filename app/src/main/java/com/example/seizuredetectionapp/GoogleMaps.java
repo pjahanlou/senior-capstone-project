@@ -215,7 +215,9 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
                 Log.d("locations", locations.toString());
                 Intent intent = new Intent(this, UsualLocations.class);
                 intent.putExtra("locations", locations);
-                intent.putExtra("page - GoogleMaps", wasAlertPageOrAppSettings+" - Google Maps");
+                if(wasAlertPageOrAppSettings != null){
+                    intent.putExtra("page - GoogleMaps", wasAlertPageOrAppSettings+" - Google Maps");
+                }
                 startActivity(intent);
                 break;
         }
