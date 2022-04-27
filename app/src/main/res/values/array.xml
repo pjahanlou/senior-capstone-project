@@ -3,7 +3,7 @@
     <array
         name="prefContactMethodOptions">
         <item>@string/prefContactMethodTextMessage</item>
-        <item>@string/prefContactMethodEmail</item>
+        <item>@string/None</item>
     </array>
 
     <array
@@ -24,4 +24,5 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="journalSortSeverity">Severity</string>
+    <string name="None">None</string>
 </resources>

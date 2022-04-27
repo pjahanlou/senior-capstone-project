@@ -2,18 +2,23 @@ package com.example.seizuredetectionapp;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,6 +38,7 @@ import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +57,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
     Journal journal;
     private FirebaseAuth mAuth;
     Boolean edit;
-    String ID;
+    private String ID;
     DatabaseReference myRef;
     public static FirebaseDatabase database;
     public static DatabaseReference userTable;
@@ -69,6 +75,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
     private RangeSlider severitySlider;
     private static RangeSlider duration;
     private static Button dateAndTime;
+    private ImageView seizureHint;
     private int hour, minute, year, month, day;
     private int durHour = 0, durMinute = 0, durSecond = 0;
     private Calendar cal, cal1, now;
@@ -94,6 +101,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnSave =  findViewById(R.id.btnsave);
         btnClose =  findViewById(R.id.btnclose);
         severitySlider = findViewById(R.id.severitySlider);
+        seizureHint = findViewById(R.id.seizureInfo);
         //hintImage = findViewById(R.id.hintAddJournal);
 
         //get calendar
@@ -107,10 +115,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
         if(extras != null){
             edit = extras.getBoolean("key");
             ID = extras.getString("id");
-            Log.d("journal ID","id" + ID);
-            Log.d("edit boolean", "" + edit.toString());
+            Log.d("ID was recieved",ID);
+            Log.d("Edit was recieved ",edit.toString());
         }
-        Log.d("edit boolean 2", "" + edit.toString());
         if(edit){
             //Retrieving saved journal information and populating the EditText
             popJournalText();
@@ -123,6 +130,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         btnClose.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         duration.setOnClickListener(this);
+        seizureHint.setOnClickListener(this);
         //btnDate.setOnClickListener(this);
 
         //Triggers suggestions
@@ -157,6 +165,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 ,"Myoclonic"
                 ,"Atonic"
                 ,"Infantile or Epileptic spasms"};
+
         ArrayAdapter<String> adapterMood = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,moodSuggestions);
         ArrayAdapter<String> adapterTriggers = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,triggerSuggestions);
         ArrayAdapter<String> adapterTypeOfSeizure = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,seizureSuggestions);
@@ -174,13 +183,12 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btnclose:
-                finish();
+                startActivity(new Intent(AddJournal.this,Navbar.class));
                 break;
             case R.id.btnsave:
                 if(edit){
                     updateInformation();
-                }
-                else{
+                } else {
                     saveInformation();
                 }
                 startActivity(new Intent(AddJournal.this, Navbar.class));
@@ -188,11 +196,15 @@ public class AddJournal extends Activity implements View.OnClickListener {
             case R.id.duration:
                 durationPicker();
                 break;
+            case R.id.seizureInfo:
+                Intent intent = new Intent(AddJournal.this, SeizureMoreInfo.class);
+                startActivity(intent);
+                break;
         }
     }
 
     //method for retrieving info written and saving to firebase
-    public void saveInformation()
+    public String saveInformation()
     {
         List<String> saveTriggers = new ArrayList<String>();
         List<String> saveMood = new ArrayList<String>();
@@ -213,8 +225,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
         if(saveDateAndTime.isEmpty()){
             dateAndTime.requestFocus();
-            Toast.makeText(AddJournal.this, "Date and Time field was empty. Journal was not saved.", Toast.LENGTH_LONG).show();
-            return;
+            Toast.makeText(AddJournal.this, "Date and Time field was empty. Please fill out the Date and Time Field", Toast.LENGTH_LONG).show();
+            return "Failed";
         }
 
         if(saveDescription.isEmpty()){
@@ -232,7 +244,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users").child(currentUserUID).child("Journals");
-
         myRef.push().setValue(journal).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -242,9 +253,11 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 else {
                     Toast.makeText(AddJournal.this, "Journal Save Failed.", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
+        String id = journal.getDateAndTime();
+        Log.d("WOWOOWOWOOWOWOWOWO",id);
+        return id;
     }
 
     public void updateInformation(){
@@ -253,7 +266,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String dateTime = dateAndTime.getText().toString().trim();
         List<String> moodType = mood.getChipValues();
         List<String> seizureType = typeOfSeizure.getChipValues();
-//        String durationOfSeizure = duration.getText().toString().trim();
+        //durationOfSeizure = duration.getText().toString().trim();
         String durationOfSeizure = duration.getValues().get(0).toString();
         List<String> seizureTrigger = triggers.getChipValues();
         String seizureDescription = description.getText().toString().trim();
@@ -276,16 +289,14 @@ public class AddJournal extends Activity implements View.OnClickListener {
         updateFieldInFirebase("severity",severity, editJournal.severity);
 
     }
-
     public void popJournalText(){
         //set existing journal entries to each edittext
-        Log.d("1", "made it here");
+        Log.d("1", ID);
         userTable.child("Journals").orderByChild("dateAndTime").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
-                //Log.d("date1", "date1 = " + snapshot.toString());
-
+                Log.d("2 weewoo", ID);
                 for (DataSnapshot childSnapshot: snapshot.getChildren()) {
                     journalKey = childSnapshot.getKey();
                     editJournal = childSnapshot.getValue(Journal.class);
@@ -353,7 +364,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
 
     private String getCurrentTime(){
         //gets current time and date
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").
                 format(Calendar.getInstance().getTime());
         return timeStamp;
     }
@@ -445,6 +456,10 @@ public class AddJournal extends Activity implements View.OnClickListener {
         }  else{
             return ((int)value/2)+" Min";
         }
+    }
+
+    private void showHint(Context context) {
+
     }
 
 }

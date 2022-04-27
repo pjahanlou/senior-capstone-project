@@ -57,7 +57,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
-    private ImageView hintImage;
+    private ImageView hintImage, seizureHelp;
     private TextView textBox, titleBox;
 
 
@@ -87,6 +87,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         openDatePicker = findViewById(R.id.openDatePickerDialog);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
         hintImage = findViewById(R.id.hintQuestionnaireMedical);
+        seizureHelp = findViewById(R.id.medicalSeizureHelp);
 
 
         Set<String> seizureTypes =  settings.getStringSet("seizureType", localSettings.getSeizureTypes());
@@ -144,6 +145,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         openDatePicker.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
         hintImage.setOnClickListener(this);
+        seizureHelp.setOnClickListener(this);
     }
 
     private String longestSeizureConvert(float value) {
@@ -235,6 +237,9 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
             case R.id.hintQuestionnaireMedical:
                 showHint(v.getContext());
                 break;
+            case R.id.medicalSeizureHelp:
+                Intent intent = new Intent(this, SeizureMoreInfo.class);
+                startActivity(intent);
         }
     }
 

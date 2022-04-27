@@ -67,7 +67,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
     private MaterialSearchBar materialSearchBar;
     private View mapView;
     private Button saveLocationsButton;
-    private String wasAlertPageOrGoogleMaps;
+    private String wasAlertPageOrAppSettings;
 
     private final float DEFAULT_ZOOM = 15;
 
@@ -93,8 +93,8 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
 
         // Getting the string from alert page
         try{
-            wasAlertPageOrGoogleMaps = getIntent().getExtras().getString("page");
-            Log.d("was AP Or GM", ""+wasAlertPageOrGoogleMaps);
+            wasAlertPageOrAppSettings = getIntent().getExtras().getString("page");
+            Log.d("page - Google Maps", ""+wasAlertPageOrAppSettings);
         } catch (Throwable e){
             e.printStackTrace();
         }
@@ -214,8 +214,8 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
             case R.id.saveLocations:
                 Log.d("locations", locations.toString());
                 Intent intent = new Intent(this, UsualLocations.class);
-                intent.putExtra("locations", locations); // getText() SHOULD NOT be static!!!
-                intent.putExtra("page", wasAlertPageOrGoogleMaps);
+                intent.putExtra("locations", locations);
+                intent.putExtra("page - GoogleMaps", wasAlertPageOrAppSettings+" - Google Maps");
                 startActivity(intent);
                 break;
         }
@@ -317,136 +317,3 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 }
-
-
-
-/*
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.EditText;
-import android.widget.SearchView;
-
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import cucumber.api.java.it.Ma;
-
-public class GoogleMaps extends FragmentActivity implements OnMapReadyCallback {
-
-    private GoogleMap map;
-    private SearchView searchView;
-    private PlacesClient placesClient;
-    private List<AutocompletePrediction> predictionList;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_google_maps);
-
-        // Initializing the views
-        searchView = findViewById(R.id.locationSearchView);
-
-        Places.initialize(GoogleMaps.this, getString(R.string.map_key));
-        placesClient = Places.createClient(this);
-        final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                String location = searchView.getQuery().toString();
-                List<Address> addressList = null;
-
-                if(location != null || !location.equals("")){
-                    Geocoder geocoder = new Geocoder(GoogleMaps.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    map.addMarker(new MarkerOptions().position(latLng).title(location));
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
-                        .setTypeFilter(TypeFilter.ADDRESS)
-                        .setSessionToken(token)
-                        .setQuery(s.toString())
-                        .build();
-                placesClient.findAutocompletePredictions(predictionsRequest).addOnCompleteListener(new OnCompleteListener<FindAutocompletePredictionsResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
-                        if (task.isSuccessful()) {
-                            FindAutocompletePredictionsResponse predictionsResponse = task.getResult();
-                            if (predictionsResponse != null) {
-                                predictionList = predictionsResponse.getAutocompletePredictions();
-                                List<String> suggestionsList = new ArrayList<>();
-                                for (int i = 0; i < predictionList.size(); i++) {
-                                    AutocompletePrediction prediction = predictionList.get(i);
-                                    suggestionsList.add(prediction.getFullText(null).toString());
-                                }
-                                Log.d("suggestion list", ""+suggestionsList.toString());
-
-                                location.updateLastSuggestions(suggestionsList);
-                                if (!materialSearchBar.isSuggestionsVisible()) {
-                                    materialSearchBar.showSuggestionsList();
-                                }
-
-
-                            }
-                        } else {
-                            Log.i("mytag", "prediction fetching task unsuccessful");
-                        }
-                    }
-                });
-                return false;
-            }
-        });
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().
-                findFragmentById(R.id.googleMap);
-        mapFragment.getMapAsync(this);
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap){
-        map = googleMap;
-    }
-}
-*/
-

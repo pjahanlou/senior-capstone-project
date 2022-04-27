@@ -226,6 +226,12 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         hintImage = root.findViewById(R.id.hintDatatable);
         startSeizureButton = root.findViewById(R.id.startSeizureButton);
 
+        if(foregroundServiceRunning()){
+            threadStatus = ThreadStatus.STARTED;
+            startSeizureButton.setText("Stop Seizure Detection");
+            startSeizureButton.setBackground(getResources().getDrawable(R.drawable.addjournal_button_bg));
+        }
+
         //Buttons
         graphDisplayYear.setOnClickListener(this);
         graphDisplayMonth.setOnClickListener(this);
@@ -241,17 +247,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         sheetBottom = root.findViewById(R.id.bottom_sheet_header);
         bottomSheetBehavior = BottomSheetBehavior.from(sheetBottom);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        //TODO find a way to make it relative for each phone
-        // .getHeight() of the xml view and find a good dividen
-        /* This doesn't quite work sadly, 12 is the best dividen i found for the pixel 4 xl but it doesnt work on other devices
-        //
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
-        Log.d("DISPLAY HEIGHT",Integer.toString(height));
-        bottomSheetBehavior.setPeekHeight(height/12);
-         */
-        //set journal to not be hideable
-        bottomSheetBehavior.setPeekHeight(210);
+        bottomSheetBehavior.setPeekHeight((height/9));
         bottomSheetBehavior.setHideable(false);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -443,18 +440,18 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             case R.id.startSeizureButton:
                 if(threadStatus == ThreadStatus.STARTED){
                     stopService();
-                    threadStatus = ThreadStatus.STOPPED;
-                    startSeizureButton.setText("Start Seizure Detection");
                 } else if(threadStatus == ThreadStatus.STOPPED){
                     startService();
-                    threadStatus = ThreadStatus.STARTED;
-                    startSeizureButton.setText("Stop Seizure Detection");
                 }
                 break;
         }
     }
 
     public void startService() {
+        threadStatus = ThreadStatus.STARTED;
+        startSeizureButton.setText("Stop Seizure Detection");
+        startSeizureButton.setBackground(getResources().getDrawable(R.drawable.addjournal_button_bg));
+
         if(!foregroundServiceRunning()){
             Intent serviceIntent = new Intent(getContext(), ExampleService.class);
             serviceIntent.putExtra("inputExtra", "Start Service");
@@ -464,6 +461,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     }
 
     public void stopService() {
+        threadStatus = ThreadStatus.STOPPED;
+        startSeizureButton.setText("Start Seizure Detection");
+        startSeizureButton.setBackground(getResources().getDrawable(R.drawable.button_bg));
+
         Intent serviceIntent = new Intent(getContext(), ExampleService.class);
         serviceIntent.putExtra("inputExtra", "Stop Service");
 

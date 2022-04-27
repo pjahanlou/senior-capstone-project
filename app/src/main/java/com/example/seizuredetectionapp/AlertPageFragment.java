@@ -527,7 +527,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
                 break;
 
-            case "email":
+            case "None":
                 break;
         }
     }
@@ -647,7 +647,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Update the journal info in the future
      */
     private void saveJournal(){
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").
                 format(Calendar.getInstance().getTime());
         List<String> moodType = new ArrayList<String>();
         List<String> seizureType = new ArrayList<String>();

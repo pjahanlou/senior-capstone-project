@@ -338,6 +338,5 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void requestData(String dataType) {
-
     }
 }
