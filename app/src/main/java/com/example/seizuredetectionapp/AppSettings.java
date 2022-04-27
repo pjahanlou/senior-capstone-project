@@ -87,7 +87,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.changeContactList:
-                startActivity(new Intent(AppSettings.this, UpdateContacts.class));
+                intent = new Intent(this, UpdateContacts.class);
+                intent.putExtra("page", "AppSettings");
+                startActivity(intent);
                 break;
         }
     }
