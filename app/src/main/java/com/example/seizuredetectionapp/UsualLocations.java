@@ -197,7 +197,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if(wasAlertPageOrAppSettings == null || wasAlertPageOrAppSettingsFromGoogleMaps == null){
-            startActivity(new Intent(this, UsualLocations.class));
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 
