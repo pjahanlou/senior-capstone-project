@@ -54,14 +54,19 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
         atonic.setOnClickListener(this);
         epilepticSeizures.setOnClickListener(this);
 
+        try {
+            previousPage = getIntent().getExtras().getString("page");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try{
             ID = getIntent().getExtras().getString("id");
-            previousPage = getIntent().getExtras().getString("page");
             addJournalEdit = getIntent().getExtras().getBoolean("key");
         } catch (Exception e){
             e.printStackTrace();
         }
-        Log.d("DID KEY GETTOMOREINFO",ID);
+
     }
     private void showHint(Context context, String type, String explanation) {
         Dialog dialog = new Dialog(this);
@@ -121,14 +126,20 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
                         "The spasms appear as a sudden jerk or jolt followed by stiffening. Often the child's arms fling outward and the knees pull up as the body bends forward.");
                 break;
             case R.id.seizure_back:
-                if(previousPage.equals("AddJournal")){
-                    Intent intent = new Intent(this, AddJournal.class);
-                    Log.d("page - AddJournal", "Previous Page was AddJournal");
-                    intent.putExtra("id",ID);
-                    intent.putExtra("key",true);
-                    startActivity(intent);
+                if(previousPage != null){
+                    if(previousPage.equals("AddJournal")){
+                        Intent intent = new Intent(this, AddJournal.class);
+                        intent.putExtra("id",ID);
+                        intent.putExtra("key",true);
+                        startActivity(intent);
+                    } else if (previousPage.equals("AppSettings")) {
+                        //Intent intent = new Intent(this, AddJournal.class);
+                        //intent.putExtra("page",previousPage);
+                        //startActivity(intent);
+                        finish();
+                    }
                 } else {
-                    break;
+                    finish();
                 }
                 break;
         }
