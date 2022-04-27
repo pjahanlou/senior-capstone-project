@@ -527,7 +527,7 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
                 break;
 
-            case "email":
+            case "None":
                 break;
         }
     }
