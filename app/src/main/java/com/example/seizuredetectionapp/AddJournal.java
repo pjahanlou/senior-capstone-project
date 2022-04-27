@@ -220,9 +220,6 @@ public class AddJournal extends Activity implements View.OnClickListener {
         String savePostDescription = postDescription.getText().toString().trim();
         String saveSeverity = severitySlider.getValues().get(0).toString();
 
-        Log.d("WOOHOHOOHOHOOH", saveTriggers.toString());
-
-
         if(saveDateAndTime.isEmpty()){
             dateAndTime.requestFocus();
             Toast.makeText(AddJournal.this, "Date and Time field was empty. Please fill out the Date and Time Field", Toast.LENGTH_LONG).show();
@@ -287,6 +284,7 @@ public class AddJournal extends Activity implements View.OnClickListener {
         updateFieldInFirebase("description",seizureDescription, editJournal.description);
         updateFieldInFirebase("postDescription", postSeizureDescription, editJournal.postDescription);
         updateFieldInFirebase("severity",severity, editJournal.severity);
+        Toast.makeText(AddJournal.this,"Journal edited and saved.",Toast.LENGTH_SHORT).show();
 
     }
     public void popJournalText(){

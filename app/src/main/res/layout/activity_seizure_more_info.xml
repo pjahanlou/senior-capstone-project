@@ -13,25 +13,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+<!--
         <TextView
             android:id="@+id/seizure_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Seizure Types"
             android:textColor="@color/black"
-            android:textSize="35dp"
+            android:textSize="28dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/seizure_back"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click on any of the buttons to see some more information!"
+            android:textSize="14dp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/seizure_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        -->
+
 
         <Button
             android:id="@+id/seizure_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg"
             android:text="Back"
             android:textAllCaps="false"
-            android:background="@drawable/button_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +62,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/Tonic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/seizure_title"
+            app:layout_constraintTop_toBottomOf="@+id/seizure_back"
             />
 
         <Button
@@ -122,7 +138,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_bg"
-            android:text="Epileptic Seizure"
+            android:text="Infantile Spasms"
             android:textAllCaps="false"
             app:layout_constraintWidth_percent=".8"
             app:layout_constraintEnd_toEndOf="parent"
