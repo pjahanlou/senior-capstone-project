@@ -90,9 +90,9 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         seizureHelp = findViewById(R.id.medicalSeizureHelp);
 
 
-        Set<String> seizureTypes =  settings.getStringSet("seizureType", localSettings.getSeizureTypes());
+        Set<String> seizureTypes = settings.getStringSet("seizureType", localSettings.getSeizureTypes());
         Log.d("checkme", String.valueOf(seizureTypes));
-        if(seizureTypes != null){
+        if(!seizureTypes.isEmpty()){
             int n = seizureTypes.size();
             String chipList[] = new String[n];
             int i = 0;
