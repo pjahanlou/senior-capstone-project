@@ -198,6 +198,7 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                                                         FirebaseDatabase.getInstance().getReference("Users")
                                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                                 .child("userkey").setValue(response);
+                                                        CachedData.setUserKey(response);
                                                     }
                                                 }, new Response.ErrorListener() {
                                             @Override
