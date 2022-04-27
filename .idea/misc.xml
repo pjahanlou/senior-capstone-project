@@ -100,6 +100,7 @@
         <entry key="app/src/main/res/layout/activity_alert_page.xml" value="0.19305019305019305" />
         <entry key="app/src/main/res/layout/activity_app_settings.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_contacts_page.xml" value="0.20364583333333333" />
         <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.15721728817922137" />
         <entry key="app/src/main/res/layout/activity_location_permission.xml" value="0.25" />
@@ -109,13 +110,14 @@
         <entry key="app/src/main/res/layout/activity_navbar.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_pop_up_window.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/activity_profile_settings.xml" value="0.20364583333333333" />
         <entry key="app/src/main/res/layout/activity_questionaire.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/activity_questionnaire_personal.xml" value="0.302734375" />
         <entry key="app/src/main/res/layout/activity_text_permission.xml" value="0.1125" />
         <entry key="app/src/main/res/layout/activity_twitter_login.xml" value="0.136328125" />
         <entry key="app/src/main/res/layout/activity_update_contacts.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/activity_usual_locations.xml" value="0.1125" />
+        <entry key="app/src/main/res/layout/activity_usual_locations.xml" value="0.3600827692289661" />
         <entry key="app/src/main/res/layout/activity_write_read_permission.xml" value="0.1125" />
         <entry key="app/src/main/res/layout/addjournal.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/custom_newuser_dialog.xml" value="0.18984375" />
