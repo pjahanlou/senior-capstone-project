@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 // TODO Look into replacing LocalBroadcastManager with something non-deprecated such as androidx.lifecycle.LiveData
@@ -23,9 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("deprecation")
+//@SuppressWarnings("deprecation")
 @SuppressLint("MissingPermission")
 public class BluetoothSerial {
+
+    private Handler handler; // handler that gets info from Bluetooth service
+
     private static String STRAPP_BLUETOOTH = "STRappBluetooth";
 
     public static String BLUETOOTH_CONNECTED = "bluetooth-connection-started";
@@ -53,6 +57,11 @@ public class BluetoothSerial {
     AsyncTask<Void, Void, BluetoothDevice> connectionTask;
 
     String devicePrefix;
+
+    private interface MessageConstants {
+        public static final int MESSAGE_READ = 0;
+        public static final int MESSAGE_WRITE = 1;
+    }
 
     // Listens for discount message from bluetooth system and reestablishing a connection
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
@@ -322,10 +331,8 @@ public class BluetoothSerial {
     public interface MessageHandler {
         int read(int bufferSize, byte[] buffer);
     }
-    class readMsg implements MessageHandler {
-
+    public class readMsg implements MessageHandler {
         public int read(int bufferSize, byte[] buffer) {
-
 //            int[] msgArr = new int[bufferSize];
             StringBuilder msg = new StringBuilder();
             int leftBracketCount = 0;
@@ -358,10 +365,15 @@ public class BluetoothSerial {
                 }
             }while(leftBracketCount != rightBracketCount);
             System.out.println(msg);
+            System.out.println(bytesConsumed);
             return bytesConsumed;
         }
     }
-
+    public class CallbackTest {
+        public void onRead(MessageHandler doRead, int bufferSize, byte[] buffer) {
+            doRead.read(bufferSize, buffer);
+        }
+    }
     public void close() {
 
         connected = false;

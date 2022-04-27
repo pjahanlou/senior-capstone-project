@@ -36,7 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+import com.example.seizuredetectionapp.BluetoothSerial;
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnEDA;
     Button btnMM;
@@ -49,6 +49,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     ArrayList lineEntries;
     private ImageView hintImage;
     private TextView textBox, titleBox;
+    String deviceNamePrefix = "STRapp";
 
     enum GraphType {
         GraphType_EDA,
