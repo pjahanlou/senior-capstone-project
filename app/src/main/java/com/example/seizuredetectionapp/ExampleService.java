@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -193,6 +194,14 @@ public class ExampleService extends Service {
                 SystemClock.sleep(1000);
                 Log.d("Log", String.valueOf(counter));
                 counter++;
+                if (HTTPHelpers.Debug()) {
+                    // Post fake HR, acceleration, gyro, and EDA
+                    try {
+                        postFakeData();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 makeOkHTTPReq();
                 // TODO: Change to response from microservice in the near future
                 if(counter == 10){
@@ -249,7 +258,11 @@ public class ExampleService extends Service {
 
             // Pulling user countdown timer from shared preferences
             sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
-            userCountdownTime = Integer.parseInt(sharedPreferences.getString("countdown timer", ""));
+            if(!sharedPreferences.getString("countdown timer", "").equals("")){
+                userCountdownTime = Integer.parseInt(sharedPreferences.getString("countdown timer", ""));
+            } else{
+                userCountdownTime = 30;
+            }
 
             // These are for the stop alarm button
             Intent snoozeIntent = new Intent(ExampleService.this, StopAlarmListener.class);
@@ -343,6 +356,90 @@ public class ExampleService extends Service {
                     }
                 }
             });
+        }
+        private void postFakeData() throws JSONException {
+            // Start with EDA
+            String s = "eda";
+            JSONObject obj = new JSONObject();
+            Random r = new Random();
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            if (CachedData.getUserKey() == "") {
+                return;
+            }
+
+            String key = "?key=" + CachedData.getUserKey();
+
+            obj.put("timestamp", System.currentTimeMillis() / 1000L);
+            obj.put("reading", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            CachedData.addEDA(obj.getInt("timestamp"), (float)obj.getDouble("reading"));
+
+            JsonObjectRequest req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
+                    response -> {
+//                        Log.d("BackgroundProcess /eda", response.toString());
+                    },
+                    error -> {
+                        Log.d("BackgroundProcess /eda", error.toString());
+                    }
+            );
+
+            queue.add(req);
+
+            // HR
+            obj = new JSONObject();
+            obj.put("timestamp", System.currentTimeMillis() / 1000L);
+            obj.put("reading", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            CachedData.addHR(obj.getInt("timestamp"), (float)obj.getDouble("reading"));
+
+            req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
+                    response -> {
+                        // Okay
+//                        Log.d("BackgroundProcess /hr", response.toString());
+                    },
+                    error -> {
+                        Log.d("BackgroundProcess /hr", error.toString());
+                    }
+            );
+            queue.add(req);
+
+            obj = new JSONObject();
+            obj.put("timestamp", System.currentTimeMillis() / 1000L);
+            JSONObject subobj = new JSONObject();
+            subobj.put("x", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            subobj.put("y", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            subobj.put("z", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            obj.put("reading", subobj);
+            float length = (float)Math.sqrt(subobj.getDouble("x") * subobj.getDouble("x") + subobj.getDouble("y") * subobj.getDouble("y") + subobj.getDouble("z") * subobj.getDouble("z"));
+            CachedData.addMM(obj.getInt("timestamp"), Math.round(length * 10.f) / 10.f);
+
+            req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
+                    response -> {
+                        // Okay
+//                        Log.d("BackgroundProcess /acc", response.toString());
+                    },
+                    error -> {
+                        Log.d("BackgroundProcess /acc", error.toString());
+                    }
+            );
+            queue.add(req);
+
+            obj = new JSONObject();
+            obj.put("timestamp", System.currentTimeMillis() / 1000L);
+            subobj.put("x", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            subobj.put("y", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            subobj.put("z", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
+            obj.put("reading", subobj);
+
+            req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
+                    response -> {
+                        // Okay
+//                        Log.d("BackgroundProcess /gyro", response.toString());
+                    },
+                    error -> {
+                        Log.d("BackgroundProcess /gyro", error.toString());
+                    }
+            );
+            queue.add(req);
         }
     }
 

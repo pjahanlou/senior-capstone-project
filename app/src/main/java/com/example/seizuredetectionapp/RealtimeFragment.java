@@ -1,16 +1,11 @@
 package com.example.seizuredetectionapp;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,17 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,20 +30,16 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.Timestamp;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
+import com.txusballesteros.SnakeView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
@@ -66,15 +51,17 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     long lineCount;
     private String currentUserID;
 
-    LineChart lineChart;
-    LineData lineData;
-    LineDataSet lineDataSet;
-    ArrayList lineEntries;
+//    LineChart lineChart;
+//    LineData lineData;
+//    LineDataSet lineDataSet;
+//    ArrayList lineEntries;
     private ImageView hintImage;
     private TextView textBox, titleBox;
 
+    private SnakeView snakeView;
+
     // SET TO FALSE WHEN BACKEND IS READY
-    static boolean useDummyData = true;
+    static boolean useDummyData = false;
 
     enum GraphType {
         GraphType_EDA,
@@ -123,17 +110,38 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         reading = root.findViewById(R.id.txtCircle);
 
-        lineCount = 2;
-        lineChart = root.findViewById(R.id.lineChart);
-        lineChart.getAxisLeft().setDrawGridLines(false);
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.getAxisRight().setDrawGridLines(false);
-        lineEntries = new ArrayList<>();
-        getEntries();
-        createChart("Electrodermal Activity");
+        lineCount = 1;
+//        lineChart = root.findViewById(R.id.lineChart);
+//        lineChart.getAxisLeft().setDrawGridLines(false);
+//        lineChart.getXAxis().setDrawGridLines(false);
+//        lineChart.getAxisRight().setDrawGridLines(false);
+//        lineEntries = new ArrayList<>();
+//        lineDataSet = new LineDataSet(lineEntries, "Vitals");
+//        lineData = new LineData(lineDataSet);
+//        lineChart.setData(lineData);
+//        lineDataSet.setColors(Color.parseColor("#FFFFFF"));
+//        lineDataSet.setValueTextColor(Color.BLACK);
+//        lineDataSet.setValueTextSize(18f);
+//        lineDataSet.setDrawValues(false);
+//        lineDataSet.setLineWidth(3.f);
+//        XAxis x = lineChart.getXAxis();
+//        x.setDrawLabels(false);
+//
+//        graphType = GraphType.GraphType_EDA;
+//
+//        Description desc = new Description();
+//        desc.setText("Electrodermal Activity");
+//        desc.setTextSize(21.f);
+//        lineChart.setDescription(desc);
 
-        graphType = GraphType.GraphType_EDA;
-        updateGraph(true);
+        snakeView = root.findViewById(R.id.snake);
+        snakeView.setMaximumNumberOfValues(30);
+        snakeView.setMinValue(0.f);
+        snakeView.setMaxValue(255.f);
+
+        reading.setText("Calibrating");
+
+        getData(true);
 
         return root;
     }
@@ -165,7 +173,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 showHint(view.getContext());
                 break;
         }
-        updateGraph(false);
+        getData(false);
     }
 
     private void showHint(Context context) {
@@ -194,7 +202,11 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         dialog.show();
     }
 
-    private void updateGraph(boolean rfrsh) {
+    private void getData(boolean rfrsh) {
+        // We closed, go home
+        if (getContext() == null) {
+            return;
+        }
         String s = "Something broke";
         switch (graphType) {
             case GraphType_EDA:
@@ -209,33 +221,41 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         }
 
         getEntries();
-        createChart(s);
 
-        if (useDummyData) {
+//        lineChart.notifyDataSetChanged();
+//        lineChart.invalidate();
 
-            lineChart.notifyDataSetChanged();
-            lineChart.invalidate();
-
-            Entry e = (Entry) lineEntries.get(29);
-            float y = e.getY();
-            y = Math.round(y  * 10.f) / 10.f;
-            reading.setText(String.valueOf(y));
-            lineChart.setData(lineData);
+        ArrayList<CachedData.CacheNode> nodelist = null;
+        switch (graphType) {
+            case GraphType_EDA:
+                nodelist = CachedData.EDAReadings;
+                break;
+            case GraphType_HR:
+                nodelist = CachedData.HRReadings;
+                break;
+            case GraphType_MM:
+                nodelist = CachedData.MMReadings;
+                break;
         }
 
+//        lineChart.setData(lineData);
         if (rfrsh) {
             refresh(1000);
         }
     }
 
+    private void updateGraph() {
+
+    }
+
+
     private void refresh(int milliseconds) {
+        if (milliseconds <= 0) {
+            getData(true);
+            return;
+        }
         final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                updateGraph(true);
-            }
-        };
+        final Runnable runnable = () -> getData(true);
 
         handler.postDelayed(runnable, milliseconds);
     }
@@ -243,93 +263,80 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     // TODO; retrieve real-time data (need to refactor backend first) -John
     private void getEntries() {
         if (useDummyData) {
-            Random r = new Random();
-            if (lineEntries.isEmpty()) {
-                for (int i = 1; i <= 30; ++i) {
-                    Entry e = new Entry(i, r.nextFloat() * 30.f);
-                    lineEntries.add(e);
-                    lineCount++;
-                }
-            } else {
-                while (lineEntries.size() < 30) {
-                    Entry e = new Entry(lineEntries.size()+1, r.nextFloat() * 30.f);
-                    lineEntries.add(e);
-                    lineCount++;
-                }
-
-                lineDataSet.removeFirst();
-                lineDataSet.addEntry(new Entry(lineCount-1, r.nextFloat() * 30.f));
-                lineCount++;
-            }
+//            Random r = new Random();
+//            if (lineEntries.isEmpty()) {
+//                for (int i = 1; i <= 30; ++i) {
+//                    Entry e = new Entry(i, r.nextFloat() * 30.f);
+//                    lineEntries.add(e);
+//                    lineCount++;
+//                }
+//            } else {
+//                while (lineEntries.size() < 30) {
+//                    Entry e = new Entry(lineEntries.size()+1, r.nextFloat() * 30.f);
+//                    lineEntries.add(e);
+//                    lineCount++;
+//                }
+//
+//                lineDataSet.removeFirst();
+//                lineDataSet.addEntry(new Entry(lineCount, r.nextFloat() * 30.f));
+//                lineCount++;
+//            }
         } else {
-            String s = "eda";
+            ArrayList<CachedData.CacheNode> nodelist = null;
             switch (graphType) {
                 case GraphType_EDA:
-                    s = "eda";
+                    nodelist = CachedData.EDAReadings;
                     break;
                 case GraphType_HR:
-                    s = "hr";
+                    nodelist = CachedData.HRReadings;
                     break;
                 case GraphType_MM:
-                    s = "acc";
+                    nodelist = CachedData.MMReadings;
                     break;
             }
 
-            requestData(s);
+//            if (nodelist.size() == 0) {
+//                return;
+//            }
+
+//            Random r = new Random();
+//            if (lineEntries.isEmpty()) {
+//                for (int i = 1; i <= 30; ++i) {
+//                    Entry e = new Entry(i, r.nextFloat() * 30.f);
+//                    lineEntries.add(e);
+//                    lineCount++;
+//                }
+//            } else {
+//                while (lineEntries.size() < 30) {
+//                    Entry e = new Entry(lineEntries.size()+1, r.nextFloat() * 30.f);
+//                    lineEntries.add(e);
+//                    lineCount++;
+//                }
+//
+//                lineDataSet.removeFirst();
+//                lineDataSet.addEntry(new Entry(lineCount, r.nextFloat() * 30.f));
+//                lineCount++;
+//            }
+
+            if (nodelist.size() == 0) {
+                reading.setText("Calibrating");
+            } else {
+                CachedData.CacheNode node = nodelist.get(nodelist.size()-1);
+                if (!node.exists) {
+                    reading.setText("Calibrating");
+                } else {
+                    reading.setText(String.valueOf(node.value));
+                }
+            }
+
+            for (CachedData.CacheNode node : nodelist) {
+                snakeView.addValue(node.value);
+            }
+
+            nodelist.clear();
         }
     }
 
     private void requestData(String dataType) {
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("userkey").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String key = "?key=" + snapshot.getValue();
-                        String after = "&after=" + String.valueOf(System.currentTimeMillis() / 1000L - 30);
-                        Log.d("aaa", HTTPHelpers.MYURL + dataType + key + after);
-                        RequestQueue queue = Volley.newRequestQueue(getContext());
-                        queue.start();
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, HTTPHelpers.MYURL + dataType + key + after,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d("aaa", response);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Volley Error", error.toString());
-                            }
-                        });
-                        queue.add(stringRequest);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void createChart(String graphStr) {
-        if (lineChart.getLineData() != null) {
-            lineChart.clearValues();
-        }
-        lineDataSet = new LineDataSet(lineEntries, "Vitals");
-        lineData = new LineData(lineDataSet);
-        lineChart.setData(lineData);
-        lineDataSet.setColors(Color.parseColor("#473fa2"));
-        lineDataSet.setValueTextColor(Color.BLACK);
-        lineDataSet.setValueTextSize(18f);
-        lineDataSet.setDrawValues(false);
-        lineDataSet.setLineWidth(3.f);
-        XAxis x = lineChart.getXAxis();
-        x.setDrawLabels(false);
-
-        Description desc = new Description();
-        desc.setText(graphStr);
-        desc.setTextSize(21.f);
-        lineChart.setDescription(desc);
     }
 }

@@ -17,13 +17,20 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginTabFragment extends Fragment implements View.OnClickListener {
 
@@ -118,9 +125,11 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     boolean isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
 
-                    if(user.isEmailVerified()){
+                    if(user.isEmailVerified()) {
                         LoginTabFragment.loginFlag = true;
-
+                        // Cache the user key into memory
+                        // Will save ooples of time
+                        cacheUserKey();
                     }
                     else{
                         user.sendEmailVerification();
@@ -137,5 +146,20 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         return loginFlag;
     }
 
+    private void cacheUserKey() {
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("userkey").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CachedData.setUserKey((String) snapshot.getValue());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // This shouldn't happen buuuuut we'll just call ourselves over and over and over and
+                cacheUserKey();
+            }
+        });
+    }
 }
