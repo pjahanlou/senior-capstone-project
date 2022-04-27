@@ -26,6 +26,7 @@ import static com.example.seizuredetectionapp.App.CHANNEL_ID;
 import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -47,22 +48,34 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+
 import cucumber.api.Pending;
 
 
 public class ExampleService extends Service {
 
     private Notification notification;
-    PrimeThread T1;
+    private PrimeThread T1 = new PrimeThread();
     public static MediaPlayer mp;
     public String seizurePrediction;
     boolean running = true;
+    public static NotificationCompat.Builder seizureNotification;
+    public static int seizureNotificationID = 101;
+    public static NotificationManagerCompat notificationManager;
+    private static boolean seizureDetected = false;
+    private HashMap<String, String> personalInfo = new HashMap<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -76,9 +89,10 @@ public class ExampleService extends Service {
         createNotification("Reading Vitals", pendingIntent);
         startForeground(1, notification);
 
+        getPersonalInfo();
+        Log.d("personal info", personalInfo.toString());
+
         // Starting the service thread
-        // TODO: Figure out a way to stop the thread
-        T1 = new PrimeThread();
         Log.d("input", input);
         if(input.equals("Start Service")){
             T1.start();
@@ -92,6 +106,45 @@ public class ExampleService extends Service {
         //stopSelf();
 
         return START_NOT_STICKY;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getPersonalInfo(){
+        LocalSettings localSettings = new LocalSettings();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        int currentYear = LocalDateTime.now().getYear();
+        Log.d("now", currentYear+"");
+
+        SharedPreferences sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
+        String age = sharedPreferences.getString("age", localSettings.getAge());
+        String gender = sharedPreferences.getString("sex", localSettings.getSex());
+        String height = sharedPreferences.getString("height", localSettings.getHeight());
+        String weight = String.valueOf(Math.round(Float.valueOf(sharedPreferences.getString("weight", localSettings.getWeight()))));
+
+        String ageYear = age.split("/")[2];
+        String ageDifference = String.valueOf(currentYear - Integer.parseInt(ageYear));
+
+        String genderConverted = null;
+        if(gender.equals("Male")){
+            genderConverted = "1";
+        } else{
+            genderConverted = "0";
+        }
+
+        String heightCm = convertToCm(height);
+
+        personalInfo.put("Age", ageDifference);
+        personalInfo.put("Gender", genderConverted);
+        personalInfo.put("Height", heightCm);
+        personalInfo.put("Weight", weight);
+    }
+
+    private String convertToCm(String height){
+        String heightCm = null;
+        int feet = Integer.parseInt(height.split("'")[0]);
+        int inches = Integer.parseInt(height.split("'")[1]);
+        heightCm = String.valueOf(Math.round((feet * 30.48) + (inches * 2.54)));
+        return heightCm;
     }
 
     /**
@@ -127,12 +180,8 @@ public class ExampleService extends Service {
      * */
     class PrimeThread extends Thread {
         private LocalSettings localSettings;
-        private NotificationCompat.Builder seizureNotification;
-        private int seizureNotificationID = 101;
-        private NotificationManagerCompat notificationManager;
         private SharedPreferences sharedPreferences;
         private int userCountdownTime;
-        private boolean seizureDetected = false;
         private int timer = 0;
         private String input = "Seizure has been detected!";
 
@@ -149,7 +198,7 @@ public class ExampleService extends Service {
                 if(counter == 10){
                     seizureDetected = true;
 
-                    // TODO: Test these
+                    // TODO: Fix default sound bug
                     openAlertPage();
                     vibratePhone();
                     playAlarm();
@@ -170,6 +219,9 @@ public class ExampleService extends Service {
                         seizureNotification.setProgress(0, 0, false);
                         notificationManager.notify(seizureNotificationID, seizureNotification.build());
                         seizureDetected = false;
+                        // TODO: do we text their emergency contacts when the timer on notification runs out?
+                        //  since we we already open up alert page in the background
+                        //  If we do open up alert page, then close it on stop alarm so we don't contact people
                     }
                 }
             }
@@ -251,7 +303,22 @@ public class ExampleService extends Service {
         private void makeOkHTTPReq(){
             OkHttpClient client = new OkHttpClient();
 
-            String url = "http://104.237.129.207:8080/iris/api/v1.0/getpred?key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=?aX=1&aY=1&aZ=5&Temp=100&EDA=1&Hr=80";
+            // TODO: Put user info here
+            String url = "http://104.237.129.207:8080/iris/api/v1.0/getpred?" +
+                    "key=dlnPAXE2CRNuB2y9h3nPJt6n4iH9YLvONt6RSugo_yg=?" +
+                    "aX=0.5743198755375472&" +
+                    "aY=0.29907562940537&" +
+                    "aZ=-0.051028125757191845&" +
+                    "Temp=31.00307301767742&" +
+                    "EDA=3.695537166802325&" +
+                    "Hr=114.76355888505616&" +
+                    "Age=28"+personalInfo.get("Age")+
+                    "&" +
+                    "Gender=1"+personalInfo.get("Gender")+
+                    "&" +
+                    "Height=172"+personalInfo.get("Height")+
+                    "&" +
+                    "Weight="+personalInfo.get("Weight");
 
             Request request = new Request.Builder()
                     .url(url)
@@ -307,6 +374,10 @@ public class ExampleService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.d("Here", "I am here");
             mp.stop();
+            seizureNotification.setProgress(0, 0, false);
+            seizureNotification.setContentText("Countdown Cancelled.");
+            notificationManager.notify(seizureNotificationID, seizureNotification.build());
+            seizureDetected = false;
         }
     }
 }

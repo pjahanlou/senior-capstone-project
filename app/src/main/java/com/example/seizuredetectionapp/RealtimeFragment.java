@@ -319,7 +319,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         lineDataSet = new LineDataSet(lineEntries, "Vitals");
         lineData = new LineData(lineDataSet);
         lineChart.setData(lineData);
-        lineDataSet.setColors(getResources().getColor(R.color.purple_500));
+        lineDataSet.setColors(Color.parseColor("#473fa2"));
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setValueTextSize(18f);
         lineDataSet.setDrawValues(false);

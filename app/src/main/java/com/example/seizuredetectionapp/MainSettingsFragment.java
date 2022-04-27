@@ -193,23 +193,6 @@ public class MainSettingsFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.profileImage:
-                new MaterialTapTargetPrompt.Builder(this)
-                        .setTarget(R.id.profileImage)
-                        .setBackgroundColour(getResources().getColor(R.color.LightSteelBlue))
-                        .setPrimaryText("Send your first email")
-                        .setSecondaryText("Tap the envelope to start composing your first email")
-                        .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener()
-                        {
-                            @Override
-                            public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state)
-                            {
-                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED)
-                                {
-                                    // User has pressed the prompt target
-                                }
-                            }
-                        })
-                        .show();
                 selectImage();
                 break;
             case R.id.profileSettingsButton:
