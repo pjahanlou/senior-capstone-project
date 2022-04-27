@@ -197,27 +197,9 @@ public class AddJournal extends Activity implements View.OnClickListener {
                 durationPicker();
                 break;
             case R.id.seizureInfo:
-                if(edit){
-                    updateInformation();
-                    Toast.makeText(AddJournal.this, "Journal Saved.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(AddJournal.this, SeizureMoreInfo.class);
-                    intent.putExtra("page", "AddJournal");
-                    intent.putExtra("id",ID);
-                    intent.putExtra("key",true);
-                    startActivity(intent);
-                } else {
-                    ID = saveInformation();
-                    if(!ID.equals("Failed")){
-                        Intent intent = new Intent(AddJournal.this, SeizureMoreInfo.class);
-                        intent.putExtra("page", "AddJournal");
-                        intent.putExtra("id",ID);
-                        intent.putExtra("key",true);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(AddJournal.this, "Error Saving Journal.", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                }
+                Intent intent = new Intent(AddJournal.this, SeizureMoreInfo.class);
+                startActivity(intent);
+                break;
         }
     }
 

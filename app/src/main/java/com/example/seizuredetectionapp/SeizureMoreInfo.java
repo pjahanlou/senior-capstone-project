@@ -23,9 +23,7 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
             ,myoclonic
             ,atonic
             ,epilepticSeizures;
-    String ID;
     String previousPage;
-    Boolean addJournalEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,7 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
         myoclonic = findViewById(R.id.Myoclonic);
         atonic = findViewById(R.id.Atonic);
         epilepticSeizures = findViewById(R.id.Epileptic_Seizure);
-        Log.d("page - SeizureMoreInfo", "SeizureMoreInfo Before Button back 2");
+
 
         //set listeners
         back.setOnClickListener(this);
@@ -60,12 +58,7 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try{
-            ID = getIntent().getExtras().getString("id");
-            addJournalEdit = getIntent().getExtras().getBoolean("key");
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
 
     }
     private void showHint(Context context, String type, String explanation) {
@@ -126,21 +119,7 @@ public class SeizureMoreInfo extends AppCompatActivity implements View.OnClickLi
                         "The spasms appear as a sudden jerk or jolt followed by stiffening. Often the child's arms fling outward and the knees pull up as the body bends forward.");
                 break;
             case R.id.seizure_back:
-                if(previousPage != null){
-                    if(previousPage.equals("AddJournal")){
-                        Intent intent = new Intent(this, AddJournal.class);
-                        intent.putExtra("id",ID);
-                        intent.putExtra("key",true);
-                        startActivity(intent);
-                    } else if (previousPage.equals("AppSettings")) {
-                        //Intent intent = new Intent(this, AddJournal.class);
-                        //intent.putExtra("page",previousPage);
-                        //startActivity(intent);
-                        finish();
-                    }
-                } else {
-                    finish();
-                }
+                finish();
                 break;
         }
 

@@ -239,7 +239,6 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.medicalSeizureHelp:
                 Intent intent = new Intent(this, SeizureMoreInfo.class);
-                intent.putExtra("page",previousActivity);
                 startActivity(intent);
         }
     }
