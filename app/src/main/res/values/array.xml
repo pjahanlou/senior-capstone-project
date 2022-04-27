@@ -19,8 +19,17 @@
         <item>@string/female</item>
     </array>
 
+    <array
+        name="seizureFrequencyGraphDropdown">
+        <item>@string/Week</item>
+        <item>@string/Month</item>
+        <item>@string/Year</item>
+    </array>
 
 
+    <string name="Week">Week</string>
+    <string name="Month">Month</string>
+    <string name="Year">Year</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="journalSortSeverity">Severity</string>

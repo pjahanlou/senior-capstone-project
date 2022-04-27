@@ -26,7 +26,6 @@
             android:textSize="30dp" />
 
 
-
         <com.skydoves.powerspinner.PowerSpinnerView
             android:id="@+id/sortDropdown"
             android:layout_width="wrap_content"
