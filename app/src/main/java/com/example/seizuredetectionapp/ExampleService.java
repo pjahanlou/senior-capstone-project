@@ -386,6 +386,7 @@ public class ExampleService extends Service {
             queue.add(req);
 
             // HR
+            s = "hr";
             obj = new JSONObject();
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
             obj.put("reading", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
@@ -402,6 +403,7 @@ public class ExampleService extends Service {
             );
             queue.add(req);
 
+            s = "acc";
             obj = new JSONObject();
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
             JSONObject subobj = new JSONObject();
@@ -423,6 +425,7 @@ public class ExampleService extends Service {
             );
             queue.add(req);
 
+            s = "gyro";
             obj = new JSONObject();
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
             subobj.put("x", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
