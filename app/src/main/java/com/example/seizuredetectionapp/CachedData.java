@@ -18,7 +18,7 @@ public class CachedData {
         public CacheNode(int stamp, float val) {
             timestamp = stamp;
             value = val;
-            exists = true;
+            exists = false;
         }
     }
 
@@ -34,19 +34,6 @@ public class CachedData {
             EDAReadings.remove(0);
         }
     }
-    public static void addBlankEDA() {
-        CacheNode n = new CacheNode(0, 0.f);
-        n.exists = false;
-        EDAReadings.add(n);
-        while (EDAReadings.size() > 30) {
-            EDAReadings.remove(0);
-        }
-    }
-    public static void setEDAFalse(int idx) {
-        CacheNode n = EDAReadings.get(idx);
-        n.exists = false;
-        EDAReadings.set(idx, n);
-    }
 
     public static void addHR(int timestamp, float reading) {
         CacheNode n = new CacheNode(timestamp, reading);
@@ -54,19 +41,6 @@ public class CachedData {
         while (HRReadings.size() > 30) {
             HRReadings.remove(0);
         }
-    }
-    public static void addBlankHR() {
-        CacheNode n = new CacheNode(0, 0.f);
-        n.exists = false;
-        HRReadings.add(n);
-        while (HRReadings.size() > 30) {
-            HRReadings.remove(0);
-        }
-    }
-    public static void setHRFalse(int idx) {
-        CacheNode n = HRReadings.get(idx);
-        n.exists = false;
-        HRReadings.set(idx, n);
     }
 
     public static void addMM(int timestamp, float reading) {
@@ -76,17 +50,16 @@ public class CachedData {
             MMReadings.remove(0);
         }
     }
-    public static void addBlankMM() {
-        CacheNode n = new CacheNode(0, 0.f);
-        n.exists = false;
-        MMReadings.add(n);
-        while (MMReadings.size() > 30) {
-            MMReadings.remove(0);
+
+    public static ArrayList listForGraphType(RealtimeFragment.GraphType type) {
+        switch (type) {
+            case GraphType_EDA:
+                return EDAReadings;
+            case GraphType_HR:
+                return HRReadings;
+            case GraphType_MM:
+                return MMReadings;
         }
-    }
-    public static void setMMFalse(int idx) {
-        CacheNode n = MMReadings.get(idx);
-        n.exists = false;
-        MMReadings.set(idx, n);
+        return null;
     }
 }

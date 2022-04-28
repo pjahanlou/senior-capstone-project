@@ -2,16 +2,13 @@ package com.example.seizuredetectionapp;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,35 +16,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.txusballesteros.SnakeView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnEDA;
     Button btnMM;
     Button btnHR;
     private Dialog dialog;
-    TextView reading;
+    TextView txtReading, txtType;
     long lineCount;
     private String currentUserID;
 
@@ -63,7 +42,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     // SET TO FALSE WHEN BACKEND IS READY
     static boolean useDummyData = false;
 
-    enum GraphType {
+    public enum GraphType {
         GraphType_EDA,
         GraphType_HR,
         GraphType_MM
@@ -108,7 +87,8 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         btnMM.setOnClickListener(this);
         hintImage.setOnClickListener(this);
 
-        reading = root.findViewById(R.id.txtCircle);
+        txtReading = root.findViewById(R.id.txtCircle);
+        txtType = root.findViewById(R.id.txtType);
 
         lineCount = 1;
 //        lineChart = root.findViewById(R.id.lineChart);
@@ -139,7 +119,11 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         snakeView.setMinValue(0.f);
         snakeView.setMaxValue(255.f);
 
-        reading.setText("Calibrating");
+        txtReading.setText("Calibrating");
+
+        clearCache(GraphType.GraphType_EDA);
+        clearCache(GraphType.GraphType_MM);
+        clearCache(GraphType.GraphType_HR);
 
         getData(true);
 
@@ -148,12 +132,14 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        String s = "Electrodermal Activity";
         switch (view.getId()) {
             case R.id.btnshowEDA:
                 if (graphType == GraphType.GraphType_EDA) {
                     return;
                 }
                 graphType = GraphType.GraphType_EDA;
+                s = "Electrodermal Activity";
                 break;
 
             case R.id.btnshowHR:
@@ -161,6 +147,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 graphType = GraphType.GraphType_HR;
+                s = "Heart Rate";
                 break;
 
             case R.id.btnshowMM:
@@ -168,11 +155,15 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 graphType = GraphType.GraphType_MM;
+                s = "Movement Magnitude";
                 break;
             case R.id.hintRealtime:
                 showHint(view.getContext());
-                break;
+                return;
         }
+        clearCache(graphType);
+        snakeView.clear();
+        txtType.setText(s);
         getData(false);
     }
 
@@ -192,12 +183,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);
 
-        gotIt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        gotIt.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }
@@ -224,30 +210,11 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 
 //        lineChart.notifyDataSetChanged();
 //        lineChart.invalidate();
-
-        ArrayList<CachedData.CacheNode> nodelist = null;
-        switch (graphType) {
-            case GraphType_EDA:
-                nodelist = CachedData.EDAReadings;
-                break;
-            case GraphType_HR:
-                nodelist = CachedData.HRReadings;
-                break;
-            case GraphType_MM:
-                nodelist = CachedData.MMReadings;
-                break;
-        }
-
 //        lineChart.setData(lineData);
         if (rfrsh) {
             refresh(1000);
         }
     }
-
-    private void updateGraph() {
-
-    }
-
 
     private void refresh(int milliseconds) {
         if (milliseconds <= 0) {
@@ -282,18 +249,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 //                lineCount++;
 //            }
         } else {
-            ArrayList<CachedData.CacheNode> nodelist = null;
-            switch (graphType) {
-                case GraphType_EDA:
-                    nodelist = CachedData.EDAReadings;
-                    break;
-                case GraphType_HR:
-                    nodelist = CachedData.HRReadings;
-                    break;
-                case GraphType_MM:
-                    nodelist = CachedData.MMReadings;
-                    break;
-            }
+            ArrayList<CachedData.CacheNode> nodelist = CachedData.listForGraphType(graphType);
 
 //            if (nodelist.size() == 0) {
 //                return;
@@ -319,24 +275,32 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 //            }
 
             if (nodelist.size() == 0) {
-                reading.setText("Calibrating");
+                txtReading.setText("Calibrating");
             } else {
-                CachedData.CacheNode node = nodelist.get(nodelist.size()-1);
-                if (!node.exists) {
-                    reading.setText("Calibrating");
-                } else {
-                    reading.setText(String.valueOf(node.value));
+                CachedData.CacheNode node = nodelist.get(nodelist.size() - 1);
+                txtReading.setText(String.valueOf(node.value));
+            }
+
+            for (int i = 0; i < nodelist.size(); ++i) {
+                CachedData.CacheNode node = nodelist.get(i);
+                if (node.exists) {
+                    continue;
                 }
-            }
-
-            for (CachedData.CacheNode node : nodelist) {
                 snakeView.addValue(node.value);
+                node.exists = true;
+                nodelist.set(i, node);
             }
 
-            nodelist.clear();
+//            nodelist.clear();
         }
     }
 
-    private void requestData(String dataType) {
+    private void clearCache(GraphType type) {
+        ArrayList<CachedData.CacheNode> list = CachedData.listForGraphType(type);
+        for (int i = 0; i < list.size(); ++i) {
+            CachedData.CacheNode n = list.get(i);
+            n.exists = false;
+            list.set(i, n);
+        }
     }
 }
