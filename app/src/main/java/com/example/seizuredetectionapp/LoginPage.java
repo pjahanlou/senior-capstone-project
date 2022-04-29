@@ -205,5 +205,4 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     public void onBackPressed(){
         this.finishAffinity();
     }
-
 }

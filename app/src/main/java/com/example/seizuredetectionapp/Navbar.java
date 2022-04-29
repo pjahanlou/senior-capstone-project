@@ -286,6 +286,4 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
             return gestureDetector.onTouchEvent(motionEvent);
         }
     }
-
-
 }

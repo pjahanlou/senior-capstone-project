@@ -239,5 +239,4 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         saveContactMap();
         finish();
     }
-
 }

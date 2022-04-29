@@ -458,5 +458,4 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         });
         return listOfJournals;
     }
-
 }
