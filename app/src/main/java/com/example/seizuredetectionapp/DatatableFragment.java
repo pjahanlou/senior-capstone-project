@@ -419,6 +419,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.startSeizureButton:
 
+
                 if(threadStatus == ThreadStatus.STARTED){
                     stopService();
                     threadStatus = ThreadStatus.STOPPED;

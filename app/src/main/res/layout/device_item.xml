@@ -30,6 +30,7 @@
     android:layout_height="wrap_content"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
     android:background="?colorSurface">
 
     <RelativeLayout

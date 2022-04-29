@@ -168,7 +168,8 @@ public class AddJournal extends Activity implements View.OnClickListener {
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btnclose:
-                finish();
+                //finish();
+                startActivity(new Intent(this, ScannerActivity.class));
                 break;
             case R.id.btnsave:
                 if(edit){

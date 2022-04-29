@@ -107,6 +107,7 @@
         <entry key="app/src/main/res/layout/activity_write_read_permission.xml" value="0.1125" />
         <entry key="app/src/main/res/layout/addjournal.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/custom_newuser_dialog.xml" value="0.18984375" />
+        <entry key="app/src/main/res/layout/device_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_alert_page.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_datatable.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_main_settings.xml" value="0.18984375" />

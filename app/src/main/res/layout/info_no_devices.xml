@@ -31,6 +31,7 @@
     android:orientation="vertical"
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingStart="@dimen/activity_horizontal_margin"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
     tools:ignore="ContentDescription">
 
     <androidx.appcompat.widget.AppCompatImageView
