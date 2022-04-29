@@ -10,7 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,13 +37,36 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
     private SwipeListener swipeListener;
     private String fragmentTag = "datatable";
     FloatingActionButton addJournal;
+    private boolean seizureDetected = false;
+    private boolean gotoAlert = false;
+    private boolean gotoSettings = false;
+    private SharedPreferences sharedPreferences;
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navbar);
 
-        //runFadeAnimation();
+        try{
+            seizureDetected = getIntent().getExtras().getBoolean("seizure");
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+        Log.d("seizure", ""+seizureDetected);
+
+        try{
+            gotoAlert = getIntent().getExtras().getBoolean("go to alert");
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
+        try{
+            gotoSettings = getIntent().getExtras().getBoolean("go to settings");
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+        Log.d("go to alert", ""+gotoAlert);
 
         // Initializing the views
         bottomNavigationView = findViewById(R.id.bottomNavbar);
@@ -58,6 +83,15 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
         // Without this, it goes to alert page
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.datatableFragment); // change to whichever id should be default
+        }
+
+        if(seizureDetected || gotoAlert){
+            Log.d("made it here", ""+seizureDetected);
+            bottomNavigationView.setSelectedItemId(R.id.alertPageFragment);
+        }
+
+        if(gotoSettings){
+            bottomNavigationView.setSelectedItemId(R.id.mainSettingsFragment);
         }
 
         // Initialize swipe listener
@@ -252,6 +286,4 @@ public class Navbar extends AppCompatActivity implements View.OnClickListener {
             return gestureDetector.onTouchEvent(motionEvent);
         }
     }
-
-
 }

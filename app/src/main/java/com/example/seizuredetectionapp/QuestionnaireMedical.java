@@ -36,22 +36,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.material.slider.RangeSlider;
 import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.chip.Chip;
 import com.royrodriguez.transitionbutton.TransitionButton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import cucumber.deps.com.thoughtworks.xstream.converters.extended.ToStringConverter;
+
 public class QuestionnaireMedical extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     Button openDatePicker;
-    String seizureStartD = "";
+    String seizureStartD = "", previousActivity;
     private Button submitQuestionnaireMedical;
     private LocalSettings localSettings;
     private NachoTextView seizureTypeView;
     private RangeSlider seizureFreqSlider, averageSeizureDurationSlider, longestSeizureSlider;
-    private ImageView hintImage;
+    private ImageView hintImage, seizureHelp;
     private TextView textBox, titleBox;
 
 
@@ -72,6 +78,8 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         Log.d("contact list", ""+settings.getStringSet("contact method", localSettings.getContactList()));
         Log.d("pref contact method", ""+settings.getString("preferred contact method", ""));
 
+
+
         seizureTypeView = findViewById(R.id.nacho_text_view);
         seizureFreqSlider = findViewById(R.id.seizureFrequencySlider);
         averageSeizureDurationSlider = findViewById(R.id.averageSeizureDurationSlider);
@@ -79,7 +87,39 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         openDatePicker = findViewById(R.id.openDatePickerDialog);
         submitQuestionnaireMedical = findViewById(R.id.submitQuestionnaireMedical);
         hintImage = findViewById(R.id.hintQuestionnaireMedical);
+        seizureHelp = findViewById(R.id.medicalSeizureHelp);
 
+
+        Set<String> seizureTypes = settings.getStringSet("seizureType", localSettings.getSeizureTypes());
+        Log.d("checkme", String.valueOf(seizureTypes));
+        if(!seizureTypes.isEmpty()){
+            int n = seizureTypes.size();
+            String chipList[] = new String[n];
+            int i = 0;
+            for (String x : seizureTypes)
+                chipList[i++] = x;
+
+            seizureTypeView.setText(Arrays.asList(chipList));
+        }
+        if(settings.getString("seizureFrequencyPerMonth", "") != ""){
+            seizureFreqSlider.setValues(Float.valueOf(settings.getString("seizureFrequencyPerMonth", "")));
+        }
+        if(settings.getString("seizureDuration", "") != "") {
+            Float seizureDuration = averageSeizureReconversion(settings.getString("seizureDuration", ""));
+            averageSeizureDurationSlider.setValues(Float.valueOf(seizureDuration));
+        }
+        if(settings.getString("longestSeizure", "") != "") {
+            Float longestSeizure = longestSeizureReconversion(settings.getString("longestSeizure", ""));
+            longestSeizureSlider.setValues(Float.valueOf(longestSeizure));
+        }
+
+        try{
+            previousActivity = getIntent().getExtras().getString("page");
+
+            Log.d("Previous Page: ", ""+previousActivity);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
 
         // Formatting the average seizure slider
         averageSeizureDurationSlider.setLabelFormatter(value -> {
@@ -105,6 +145,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         openDatePicker.setOnClickListener(this);
         submitQuestionnaireMedical.setOnClickListener(this);
         hintImage.setOnClickListener(this);
+        seizureHelp.setOnClickListener(this);
     }
 
     private String longestSeizureConvert(float value) {
@@ -117,6 +158,16 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         }
     }
 
+    private Float longestSeizureReconversion(String time){
+        if(time.equals("30 Sec")){
+            return 0f;
+        } else if(time.equals("1 Hour")){
+            return 60f;
+        }else {
+            return Float.parseFloat(time.substring(0, time.indexOf(" Min")));
+        }
+    }
+
     private String averageSeizureConvert(float value) {
         if((int) value == 0){
             return "0 sec";
@@ -126,6 +177,18 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
             return "30 Sec";
         } else {
             return secToMin((int) value);
+        }
+    }
+
+    private Float averageSeizureReconversion(String time){
+        if(time.equals("0 sec")){
+            return 0f;
+        } else if(time.equals("5 Sec")){
+            return 1f;
+        } else if(time.equals("30 Sec")){
+            return 2f;
+        } else {
+            return minToSec(time);
         }
     }
 
@@ -142,13 +205,25 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         return String.valueOf(minute)+" Min "+String.valueOf(secs)+" Sec";
     }
 
+    public float minToSec(String time){
+        Log.d("conversionCheck", time);
+        float minutes = Float.parseFloat(time.substring(0, time.indexOf(" Min")));
+        float seconds = minutes*60;
+        Log.d("conversionCheck", String.valueOf(minutes));
+        if(time.contains("Sec")){
+            seconds += Float.parseFloat(time.substring(time.indexOf("Min")+3, time.indexOf(" Sec")));
+            Log.d("conversionCheck", String.valueOf(seconds));
+        }
+        return (seconds/30)+1;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openDatePickerDialog:
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         this,
-                        0,
+                        R.style.datepicker_theme,
                         this,
                         Calendar.getInstance().get(Calendar.YEAR),
                         Calendar.getInstance().get(Calendar.MONTH),
@@ -162,6 +237,10 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
             case R.id.hintQuestionnaireMedical:
                 showHint(v.getContext());
                 break;
+            case R.id.medicalSeizureHelp:
+                Intent intent = new Intent(this, SeizureMoreInfo.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -173,26 +252,32 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
         String longestSeizure = longestSeizureConvert(longestSeizureSlider.getValues().get(0));
 
         if (seizureTypes == null) {
-            seizureTypeView.requestFocus();
             seizureTypeView.setError("A seizure type is required!");
+            seizureTypeView.requestFocus();
             return;
         }
 
         if (seizureStartD == "") {
-            openDatePicker.requestFocus();
-            openDatePicker.setError("A seizure start date is required!");
-            return;
+            if(previousActivity == null) {
+                openDatePicker.setError("A seizure start date is required!");
+                openDatePicker.requestFocus();
+                return;
+            }else if(!previousActivity.equals("AppSettings")){
+                openDatePicker.setError("A seizure start date is required!");
+                openDatePicker.requestFocus();
+                return;
+            }
         }
 
         if (seizureFreq == "0") {
-            openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
+            openDatePicker.requestFocus();
             return;
         }
 
         if (averageSeizure == "0") {
-            openDatePicker.requestFocus();
             openDatePicker.setError("A seizure start date is required!");
+            openDatePicker.requestFocus();
             return;
         }
 
@@ -213,9 +298,14 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
 
         questionnaireComplete("questionnaire bool", "1");
 
-        // Moving to Datatable fragment
-        startActivity(new Intent(this, LocationPermission.class));
-        
+        // Moving to next page
+        if(previousActivity != null){
+            if (previousActivity.equals("AppSettings")) {
+                finish();
+            }
+        }else {
+            startActivity(new Intent(this, LocationPermission.class));
+        }
     }
 
     private void questionnaireComplete(String field, String value){

@@ -19,7 +19,7 @@
                     android:layout_alignParentTop="true"
                     android:background="@drawable/addjournal_button_bg"
                     android:text="Save"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false" />
 
                 <Button
                     android:id="@+id/btnclose"
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/moodTitle"
                     android:background="@color/white"
-                    android:hint="Example: Sad, Happy"
+                    android:hint="Example: Sad, Happy, Cheerful, Fear"
                     android:paddingLeft="20dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/DarkGray"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/typeOfSeizureTitle"
                     android:background="@color/white"
-                    android:hint="Example: Tonic Clonic, Grand Mal"
+                    android:hint="Example: Tonic, Clonic, Absence"
                     android:paddingLeft="20dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/DarkGray"
@@ -61,7 +61,7 @@
                     app:chipHeight="30dp"
                     app:chipTextColor="@color/black"
                     app:chipTextSize="16dp" />
-
+<!--
                 <Button
                     android:id="@+id/duration"
                     android:layout_width="match_parent"
@@ -76,6 +76,16 @@
                     android:textColorHint="@color/DarkGray"
                     android:textSize="16dp"
                     android:textStyle="normal" />
+                -->
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/durationTitle"
+                    android:theme="@style/AddJournal_slider"
+                    android:valueFrom="0"
+                    android:valueTo="120"
+                    android:stepSize="1.0"/>
 
                 <com.hootsuite.nachos.NachoTextView
                     android:id="@+id/triggers"
@@ -99,9 +109,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/descriptionTitle"
                     android:background="@color/white"
+                    android:hint="Did you notice any changes prior to having a Seizure?\nWhat were you doing prior to having a seizure?\nAre you on any medications? If so, what medications?"
                     android:paddingLeft="20dp"
                     android:paddingTop="10dp"
-                    android:hint="Please fill this out with helpful information for your doctor."
                     android:paddingBottom="10dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/DarkGray"
@@ -167,17 +177,17 @@
             android:textSize="16sp"
             android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/typeOfSeizureTitle"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mood"
-            android:layout_marginLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="Type of Seizure"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/typeOfSeizureTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mood"
+                    android:layout_marginLeft="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Type of Seizure"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
         <TextView
             android:id="@+id/moodTitle"
@@ -242,5 +252,17 @@
                     android:textColorHint="@color/DarkGray"
                     android:textSize="16sp" />
 
+                <ImageView
+                    android:id="@+id/seizureInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mood"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_toEndOf="@+id/typeOfSeizureTitle"
+                    android:src="@drawable/ic_baseline_help_icon" />
+
+
         </RelativeLayout>
+
 </ScrollView>

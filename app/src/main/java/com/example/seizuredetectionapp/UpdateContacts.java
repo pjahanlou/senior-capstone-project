@@ -1,8 +1,5 @@
 package com.example.seizuredetectionapp;
 
-import static com.example.seizuredetectionapp.Questionnaire.addedContacts;
-import static com.example.seizuredetectionapp.Questionnaire.contactMap;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +35,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
     private String[] contactValues;
     private LocalSettings localSettings;
     ArrayList<UpdateContactLayout> contactList = new ArrayList<UpdateContactLayout>();
+    private String previousActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +50,26 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         changeContactListButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
+        try{
+            previousActivity = getIntent().getExtras().getString("page");
+
+            Log.d("Previous Page: ", ""+previousActivity);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
         // Getting the user contacts hashmap
         Map<String, String> contactMapSave = loadContactMap();
         Log.d("contact map", ""+contactMapSave.toString());
 
         // Merging contactMap from ContactsPage and the previous Contacts
+        /*
         if(contactMap != null){
             contactMapSave.putAll(contactMap);
             Log.d("merged contacts", ""+contactMapSave.toString());
         }
+
+         */
 
         // Iterating through the merged contact map and adding them to the listview
         Iterator hmIterator = contactMapSave.entrySet().iterator();
@@ -89,7 +98,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
             // set item width
             deleteItem.setWidth(dp2px(UpdateContacts.this, 90));
             // set a icon
-            deleteItem.setIcon(R.drawable.ic_delete);
+            //deleteItem.setIcon(getDrawable(R.drawable.ic_delete));
             // add to menu
             menu.addMenuItem(deleteItem);
         };
@@ -108,8 +117,9 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                     contacts.remove(position);
                     Log.d("contact layout list", ""+contacts.toString());
                     //adapter = new UpdateContactAdapter(this, R.layout.item_update_contact, contacts);
-                    //listView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(position);
+                    listView.setAdapter(adapter);
+                    //adapter.notifyDataSetChanged();
                     break;
             }
             // false : close the menu; true : not close the menu
@@ -151,13 +161,29 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                 saveContactMap();
                 Intent intent = new Intent(this, ContactsPage.class);
                 intent.putExtra("settings page", true);
+                intent.putExtra("page", previousActivity);
                 startActivity(intent);
                 break;
             case R.id.saveButton:
                 // TODO: Save the user changes to the local settings
                 saveContactMap();
-                startActivity(new Intent(UpdateContacts.this, AppSettings.class));
+                navigateToNextPage();
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(previousActivity != null){
+            if(previousActivity.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra("go to alert", true);
+                startActivity(intent);
+            }
+            if(previousActivity.equals("AppSettings")){
+                startActivity(new Intent(this, AppSettings.class));
+            }
+        } else{
+            finish();
         }
     }
 
@@ -181,7 +207,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         } else{
             Log.d("contacts status", "Failed");
         }
-        addedContacts = null;
+        //addedContacts = null;
     }
 
     /**
@@ -192,6 +218,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         for(UpdateContactLayout contactLayout:contacts){
             newContacts.put(contactLayout.getNumber(), contactLayout.getName());
         }
+        Log.d("saveContactsMap", newContacts.toString());
 
         SharedPreferences pSharedPref = getSharedPreferences(localSettings.PREFERENCES, MODE_PRIVATE);
         if (pSharedPref != null){
@@ -202,8 +229,8 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                     .putString("contact map", jsonString)
                     .apply();
         }
-        addedContacts = null;
-        contactMap = null;
+        //addedContacts = null;
+        //contactMap = null;
     }
 
     @Override
@@ -212,5 +239,4 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         saveContactMap();
         finish();
     }
-
 }

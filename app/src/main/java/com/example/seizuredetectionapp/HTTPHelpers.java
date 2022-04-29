@@ -10,6 +10,12 @@ import java.net.URL;
 public class HTTPHelpers {
 	public static final String MYURL = "http://104.237.129.207:8080/";
 
+	// HEY!
+	// Change me to false when we have the wristband working and attached
+	// -John
+	private static final boolean useDummyData = true;
+	public static final boolean Debug() {return useDummyData; }
+
 	private static HttpURLConnection setupConn(String path, String params, String method) {
 		// Create a http request to the server
 		HttpURLConnection conn = null;

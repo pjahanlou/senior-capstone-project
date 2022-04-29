@@ -118,8 +118,10 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     private Double userLatitude, userLongitude;
     private ImageView hintImage;
     private TextView textBox, titleBox;
-
     private LocalSettings localSettings;
+
+    private boolean locationPermission, textPermission;
+    private Set<String> usualLocations = new HashSet<>();
 
     public AlertPageFragment() {
         // Required empty public constructor
@@ -151,6 +153,44 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        // Check to see if they have given permission for location
+        locationPermission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED;
+        if (!locationPermission) {
+            String descriptionLocation = "Unfortunately, help request is unavailable. Please give STRapp location access, so it can better notify your contacts.";
+            String titleLocation = "Location Permission";
+            String buttonText = "Sure!";
+            showMessage(getContext(), descriptionLocation, titleLocation, buttonText);
+        }
+
+        // Check to see if they have given permission for text
+        textPermission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) ==
+                PackageManager.PERMISSION_GRANTED;
+        if (!textPermission) {
+            String descriptionText = "Unfortunately, help request is unavailable. Please give STRapp SMS access, so it can better notify your contacts.";
+            String titleText = "SMS Permission";
+            String buttonText = "Sure!!";
+            showMessage(getContext(), descriptionText, titleText, buttonText);
+        }
+
+        // Check to see if they have given usual locations
+        usualLocations = pullLocationsFromLocalSettings();
+        if(usualLocations.isEmpty()){
+            String descriptionUsualLocation = "Unfortunately, help request is unavailable. Please add your usual locations in App Settings, so STRapp can better notify your contacts.";
+            String titleUsualLocation = "Usual Locations";
+            String buttonText = "Add Locations";
+            showMessage(getContext(), descriptionUsualLocation, titleUsualLocation, buttonText);
+        }
+
+        // Check to see if they have given contacts
+        contactList = loadContactMap();
+        if(contactList.isEmpty()){
+            String descriptionContact = "Unfortunately, help request is unavailable. Please add your emergency contacts in App Settings, so STRapp can better notify your contacts.";
+            String titleContact = "Emergency Contacts";
+            String buttonText = "Add Contacts";
+            showMessage(getContext(), descriptionContact, titleContact, buttonText);
+        }
+
         // database configurations for writing journals to firebase
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
@@ -162,13 +202,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         // Initializing location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
-            getLocation();
-        }
-
-         */
 
         Log.d("User Address", userAddress+" this");
 
@@ -196,10 +229,12 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         cancelButton.setOnClickListener(this);
         hintImage.setOnClickListener(this);
 
-        getLocation();
-
-        timerStatus = AlertPageFragment.TimerStatus.STARTED;
-        startAlertPage();
+        // If all permissions are there, start the page
+        if(textPermission && locationPermission && !usualLocations.isEmpty() && !contactList.isEmpty()){
+            getLocation();
+            timerStatus = AlertPageFragment.TimerStatus.STARTED;
+            startAlertPage();
+        }
 
         return root;
     }
@@ -247,9 +282,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
             case R.id.cancel:
 
-                DatatableFragment nextFrag = new DatatableFragment();
-                int currentFragment = ((ViewGroup)getView().getParent()).getId();
-
                 if(timerStatus == AlertPageFragment.TimerStatus.STARTED){
                     stopCountDownTimer();
                 }
@@ -259,21 +291,22 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
                     changeUI(timerStatus);
                 }
 
-                // Moving to the datatable fragment if user cancels
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(currentFragment, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();
-                // Updating the navbar to reflect the move to datatable
-                Navbar.getBottomNavigationView().setSelectedItemId(R.id.datatableFragment);
+                startDatatable();
                 break;
             case R.id.hintFragmentAlertPage:
-                showHint(v.getContext());
+                String description = "When a seizure has been detected your emergency contacts will be notified after a countdown. If the countdown starts and" +
+                                        " you do not believe you are having a seizure, you can press the cancel button at the bottom.";
+                String title = "Help Request";
+                showHint(v.getContext(), description, title);
                 break;
         }
     }
 
-    private void showHint(Context context) {
+    private void startDatatable(){
+        startActivity(new Intent(getContext(), Navbar.class));
+    }
+
+    private void showHint(Context context, String description, String title) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.profile_settings_hint);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -284,8 +317,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
         textBox = dialog.getWindow().findViewById(R.id.textView2);
         titleBox = dialog.getWindow().findViewById(R.id.textView);
-        textBox.setText("When a seizure has been detected your emergency contacts will be notified after a countdown. If the countdown starts and you do not believe you are having a seizure, you can press the cancel button at the bottom.");
-        titleBox.setText("Alert Page");
+        textBox.setText(description);
+        titleBox.setText(title);
 
         Button gotIt = dialog.findViewById(R.id.btn_gotit);
 
@@ -293,6 +326,59 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showMessage(Context context, String description, String title, String buttonText) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.custom_newuser_dialog);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.dialog_bg));
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+        textBox = dialog.getWindow().findViewById(R.id.textView2);
+        titleBox = dialog.getWindow().findViewById(R.id.textView);
+        textBox.setText(description);
+        titleBox.setText(title);
+
+        Button okay = dialog.findViewById(R.id.btn_okay);
+        okay.setText(buttonText);
+
+        Button cancel = dialog.findViewById(R.id.btn_cancel);
+
+        okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                switch(buttonText){
+                    case "Sure!!":
+                        intent = new Intent(getContext(), TextPermission.class);
+                        break;
+                    case "Sure!":
+                        intent = new Intent(getContext(), LocationPermission.class);
+                        break;
+                    case "Add Contacts":
+                        intent = new Intent(getContext(), UpdateContacts.class);
+                        break;
+                    case "Add Locations":
+                        intent = new Intent(getContext(), UsualLocations.class);
+                        break;
+                }
+                intent.putExtra("page", "alert page");
+                startActivity(intent);
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                startDatatable();
             }
         });
 
@@ -341,26 +427,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      */
     private void startAlertPage() {
 
-        /*
-        userTable.child("Settings").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Questionnaire settings = snapshot.getValue(Questionnaire.class);
-                AlertPageFragment.preferredContactMethod = settings.contactMethod;
-                AlertPageFragment.contactList = settings.addedContacts;
-                AlertPageFragment.userCountdownTime = settings.countdownTimer;
-
-                AlertPageFragment.start();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Setting Data Retrieval", error.getDetails());
-            }
-        });
-
-         */
-
         // Retrieving user info from shared preferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(LocalSettings.PREFERENCES, Context.MODE_PRIVATE);
         preferredContactMethod = sharedPreferences.getString("preferred contact method", LocalSettings.getPreferredContactMethod());
@@ -369,7 +435,6 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         Log.d("countdown time", ""+userCountdownTime);
 
         // Pulling the contact list
-        contactList = loadContactMap();
         Log.d("preferred contact", ""+contactList.toString());
 
         start();
@@ -422,33 +487,11 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
         //getLocation();
 
         // Pulling the usual locations from local settings
-        Set<String> usualLocations = pullLocationsFromLocalSettings();
-
         String closestLocation = "";
 
         // Checking if the user is near any of their usual locations
-        for(String location:usualLocations){
-            // Getting the coordinates of a usual location
-            LatLng latLng = getLocationFromAddress(location);
-            Log.d("latlng", latLng.toString());
-
-            // Setting coordinate points
-            Location userLocation = new Location("user location");
-            userLocation.setLatitude(userLatitude);
-            userLocation.setLongitude(userLongitude);
-
-            Location usualLocation = new Location("usual location");
-            usualLocation.setLatitude(latLng.latitude);
-            usualLocation.setLongitude(latLng.longitude);
-
-            // Calculating the distance
-            float distance = userLocation.distanceTo(usualLocation);
-            Log.d("distance", String.valueOf(distance));
-
-            // If the user is within half a mile of a usual location
-            if(distance <= 800){
-                closestLocation = location;
-            }
+        if(usualLocations != null){
+            closestLocation = findClosestLocation();
         }
 
         switch (preferredContactMethod){
@@ -484,9 +527,40 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
 
                 break;
 
-            case "email":
+            case "None":
                 break;
         }
+    }
+
+    private String findClosestLocation(){
+        String closestLocation = "";
+
+        for(String location:usualLocations){
+            // Getting the coordinates of a usual location
+            LatLng latLng = getLocationFromAddress(location);
+            //logcat was crashing the build for Jordan
+            //Log.d("latlng", latLng.toString());
+
+            // Setting coordinate points
+            Location userLocation = new Location("user location");
+            userLocation.setLatitude(userLatitude);
+            userLocation.setLongitude(userLongitude);
+
+            Location usualLocation = new Location("usual location");
+            usualLocation.setLatitude(latLng.latitude);
+            usualLocation.setLongitude(latLng.longitude);
+
+            // Calculating the distance
+            float distance = userLocation.distanceTo(usualLocation);
+            Log.d("distance", String.valueOf(distance));
+
+            // If the user is within half a mile of a usual location
+            if(distance <= 800){
+                closestLocation = location;
+            }
+        }
+
+        return closestLocation;
     }
 
     /**
@@ -573,15 +647,15 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
      * TODO: Update the journal info in the future
      */
     private void saveJournal(){
-        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").
                 format(Calendar.getInstance().getTime());
         List<String> moodType = new ArrayList<String>();
         List<String> seizureType = new ArrayList<String>();
-        String durationOfSeizure = "";
+        String durationOfSeizure = "0.0";
         List<String> seizureTrigger = new ArrayList<String>();
-        String seizureDescription = "";
+        String seizureDescription = "No description entered.";
         String postSeizureDescription = "";
-        String severity = "";
+        String severity = "0.0";
 
         Journal newJournal = new Journal(timeStamp, moodType, seizureType, durationOfSeizure,
                 seizureTrigger, seizureDescription, postSeizureDescription, severity);

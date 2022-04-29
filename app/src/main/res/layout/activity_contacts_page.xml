@@ -24,6 +24,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/searchButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -55,4 +56,5 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+>>>>>>> main
 </RelativeLayout>

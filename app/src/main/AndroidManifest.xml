@@ -6,8 +6,8 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
-    <permission android:name="android.permission.BLUETOOTH" android:label="BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <permission android:name="android.permission.BLUETOOTH" android:label="BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -15,9 +15,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".App"
@@ -27,6 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".SeizureMoreInfo"
+            android:exported="false" />
         <activity
             android:name=".WriteReadPermission"
             android:exported="false" />
@@ -43,16 +48,14 @@
             android:exported="true" />
         <activity
             android:name=".TextPermission"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".LocationPermission"
             android:exported="true" />
         <activity
             android:name=".ContactPermission"
             android:exported="true" />
-        <activity
-            android:name=".UpdateContacts"
-            android:exported="true" />
+        <activity android:name=".UpdateContacts" />
         <activity
             android:name=".Navbar"
             android:exported="true" />
@@ -61,7 +64,7 @@
             android:exported="false" />
         <activity
             android:name=".AppSettings"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainSettings"
             android:exported="false" />
@@ -84,12 +87,6 @@
             android:name=".AddJournal"
             android:exported="false" />
         <activity
-            android:name=".ScannerActivity"
-            android:exported="true" />
-        <activity
-            android:name=".BleActivity"
-            android:exported="true" />
-        <activity
             android:name=".Datatable"
             android:exported="true" />
         <activity
@@ -100,6 +97,12 @@
             android:exported="false" />
         <activity
             android:name=".QuestionnaireMedical"
+            android:exported="true" />
+        <activity
+            android:name=".ScannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".BleActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
@@ -114,6 +117,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".ExampleService" />
+
+        <receiver android:name=".ExampleService$StopAlarmListener" />
     </application>
 </manifest>

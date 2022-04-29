@@ -43,6 +43,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
     private UsualLocationsAdapter adapter;
 
     private LocalSettings localSettings;
+    private String previousActivity = null;
+    private String wasAlertPageOrAppSettings;
+    private String wasAlertPageOrAppSettingsFromGoogleMaps;
+    private String prev;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,21 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         // Pulling from local settings
         Set<String> savedLocations  = pullFromLocalSettings();
 
+        // Getting the string from alert page
+        try{
+            wasAlertPageOrAppSettings = getIntent().getExtras().getString("page");
+            Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettings);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
+        try{
+            wasAlertPageOrAppSettingsFromGoogleMaps = getIntent().getExtras().getString("page - GoogleMaps");
+            Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettingsFromGoogleMaps);
+        } catch (Throwable e){
+            e.printStackTrace();
+        }
+
         // Locations selected in the GoogleMaps page
         ArrayList<String> receivedLocations = new ArrayList<>();
         try {
@@ -76,7 +95,7 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
         }
 
         // Merging the saved locations and received locations
-        if(savedLocations != null){
+        if(savedLocations != null && receivedLocations != null){
             Set<String> receivedLocationsSet = new HashSet<>(receivedLocations);
             savedLocations.addAll(receivedLocationsSet);
             Log.d("merged locations", savedLocations.toString());
@@ -121,8 +140,10 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
             switch (index) {
                 case 0:
                     // Delete location
+                    UsualLocationsLayout deleteItem = locations.get(position);
                     locations.remove(position);
-                    adapter.notifyDataSetChanged();
+                    adapter.remove(deleteItem);
+                    swipeMenuListView.setAdapter(adapter);
                     break;
             }
             // false : close the menu; true : not close the menu
@@ -137,14 +158,46 @@ public class UsualLocations extends AppCompatActivity implements View.OnClickLis
 
         switch(view.getId()){
             case R.id.saveLocationButton:
-                startActivity(new Intent(this, Navbar.class));
+                navigateToNextPage();
                 break;
             case R.id.addNewLocationButton:
-                startActivity(new Intent(this, GoogleMaps.class));
+                Intent intent = new Intent(this, GoogleMaps.class);
+                Log.d("page - UsualLocations", ""+wasAlertPageOrAppSettings);
+                intent.putExtra("page", wasAlertPageOrAppSettings);
+                startActivity(intent);
                 break;
             case R.id.hintUsualLocations:
                 showHint(view.getContext());
                 break;
+        }
+    }
+
+    private void navigateToNextPage(){
+        if(wasAlertPageOrAppSettings != null){
+            if(wasAlertPageOrAppSettings.equals("AppSettings - Google Maps")){
+                startActivity(new Intent(this, AppSettings.class));
+            }else if(wasAlertPageOrAppSettings.equals("alert page - Google Maps")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
+            } else if(wasAlertPageOrAppSettings.equals("alert page")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
+            } else if(wasAlertPageOrAppSettings.equals("AppSettings")){
+                startActivity(new Intent(this, AppSettings.class));
+            }
+        }else if(wasAlertPageOrAppSettingsFromGoogleMaps != null){
+            if(wasAlertPageOrAppSettingsFromGoogleMaps.equals("alert page - Google Maps")){
+                Intent intent = new Intent(this, Navbar.class);
+                intent.putExtra ("go to alert", true);
+                startActivity (intent);
+            } else if(wasAlertPageOrAppSettingsFromGoogleMaps.equals("AppSettings - Google Maps")){
+                startActivity(new Intent(this, AppSettings.class));
+            }
+        }
+        else if(wasAlertPageOrAppSettings == null || wasAlertPageOrAppSettingsFromGoogleMaps == null){
+            startActivity(new Intent(this, Navbar.class));
         }
     }
 

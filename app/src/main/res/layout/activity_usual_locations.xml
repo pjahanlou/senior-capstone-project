@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/button_bg"
         android:text="Save"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:textAllCaps="false"
         android:layout_marginLeft="5dp">
     </Button>>
@@ -100,6 +100,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/locationText"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintWidth_percent="0.9"
                     app:layout_constraintHeight_percent="0.7">
 
