@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.1640625" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/addjournal_button_bg.xml" value="0.1015625" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/bottom_sheet_layout.xml" value="0.2203125" />
         <entry key="..\:/Users/Lewis/Desktop/Senior Capstone/senior-capstone-project/app/src/main/res/drawable/button_bg.xml" value="0.1015625" />
@@ -38,6 +39,8 @@
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/login_tap_fragment.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/Lewis/Documents/Senior Project Repo/finalCapstone/senior-capstone-project/app/src/main/res/layout/signup_tab_fragment.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/User/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_scanner.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/User/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/device_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/Questionnaire.xml" value="0.25" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_alert_settings.xml" value="0.275" />
         <entry key="..\:/Users/willc/OneDrive/Documents/GitHub/senior-capstone-project/app/src/main/res/layout/activity_contacts_page.xml" value="0.275" />
@@ -82,6 +85,7 @@
         <entry key="app/src/main/res/drawable/vie_bg.xml" value="0.16597222222222222" />
         <entry key="app/src/main/res/layout/activity_alert_page.xml" value="0.19305019305019305" />
         <entry key="app/src/main/res/layout/activity_app_settings.xml" value="0.18984375" />
+        <entry key="app/src/main/res/layout/activity_ble.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_bottom_view_journal.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_datatable.xml" value="0.10740740740740741" />
         <entry key="app/src/main/res/layout/activity_forget_password.xml" value="0.15721728817922137" />
@@ -95,6 +99,7 @@
         <entry key="app/src/main/res/layout/activity_questionaire.xml" value="0.16822916666666668" />
         <entry key="app/src/main/res/layout/activity_questionnaire_medical.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/activity_questionnaire_personal.xml" value="0.302734375" />
+        <entry key="app/src/main/res/layout/activity_scanner.xml" value="0.17395833333333333" />
         <entry key="app/src/main/res/layout/activity_text_permission.xml" value="0.1125" />
         <entry key="app/src/main/res/layout/activity_twitter_login.xml" value="0.136328125" />
         <entry key="app/src/main/res/layout/activity_update_contacts.xml" value="0.18" />
@@ -106,6 +111,12 @@
         <entry key="app/src/main/res/layout/fragment_datatable.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_main_settings.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/info_no_bluetooth.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/info_no_bluetooth_permission.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/info_no_devices.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/info_no_location_permission.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/info_not_supported.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/layout/info_timeout.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/item_usual_location.xml" value="0.1125" />
         <entry key="app/src/main/res/layout/journal_item_listview.xml" value="0.29922779922779924" />
         <entry key="app/src/main/res/layout/listview_textformat.xml" value="0.1" />
