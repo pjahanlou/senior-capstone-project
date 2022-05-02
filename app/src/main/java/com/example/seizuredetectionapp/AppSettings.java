@@ -102,6 +102,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.connectToWearable:
                 startActivity(new Intent(this, ScannerActivity.class));
+                break;
         }
     }
 }

@@ -83,6 +83,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -394,6 +395,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
     private void sortJournals(String selectedItem){
         ArrayList<JournalLayout> sortedJournals = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
         for(Journal journal: journals){
             if(!journal.dateAndTime.equals("")) {
@@ -405,7 +407,27 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
                 @Override
                 public int compare(JournalLayout journalLayout, JournalLayout t1) {
-                    return t1.getDateAndTime().compareTo(journalLayout.getDateAndTime());
+                    Log.d("d1", t1.getDateAndTime());
+                    Log.d("d2", journalLayout.getDateAndTime());
+                    String d1 = t1.getDateAndTime();
+                    String d1Converted = d1.substring(0, Math.min(d1.length(), 15));
+
+                    String d2 = journalLayout.getDateAndTime();
+                    String d2Converted = d2.substring(0, Math.min(d2.length(), 15));
+
+                    Date date1 = null;
+                    Date date2 = null;
+
+                    try {
+                         date1 = sdf.parse(d1Converted);
+                         date2 = sdf.parse(d2Converted);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if(date1 != null && date2 != null){
+                        return date1.compareTo(date2);
+                    }
+                    return 0 ;
                 }
             });
         }

@@ -304,7 +304,7 @@ public class QuestionnaireMedical extends AppCompatActivity implements View.OnCl
                 finish();
             }
         }else {
-            startActivity(new Intent(this, LocationPermission.class));
+            startActivity(new Intent(this, DisplayOverPermission.class));
         }
     }
 
