@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +42,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
 
     private Questionnaire settings = new Questionnaire();
     private Activity QuestionnaireMedical;
+
+//    public static final String EXTRA_DEVICE = "com.example.seizuredetectionapp.EXTRA_DEVICE";
+//    public static DiscoveredBluetoothDevice device;
 
     Intent intent;
 
@@ -64,6 +68,8 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         changeContactList.setOnClickListener(this);
         changeUsualLocations.setOnClickListener(this);
         connectToWearable.setOnClickListener(this);
+//        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
+//        Log.d("device", device.toString());
     }
 
     @Override
