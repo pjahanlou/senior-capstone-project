@@ -40,6 +40,18 @@ public class STRappBleViewModel extends AndroidViewModel {
         return strappBleManager.getLedState();
     }
 
+    public LiveData<String> getAccxData() { return strappBleManager.getAccxData(); }
+
+    public LiveData<String> getAccyData() { return strappBleManager.getAccyData(); }
+
+    public LiveData<String> getAcczData() { return strappBleManager.getAcczData(); }
+
+    public LiveData<String> getGyroxData() { return strappBleManager.getGyroxData(); }
+
+    public LiveData<String> getGyroyData() { return strappBleManager.getGyroyData(); }
+
+    public LiveData<String> getGyrozData() { return strappBleManager.getGyrozData(); }
+
     /**
      * Connect to the given peripheral.
      *

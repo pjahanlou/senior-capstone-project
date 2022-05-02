@@ -62,7 +62,7 @@
     <string name="location_permission_info">From Android 6.0 until 11 the application
         requires Location permission in order to scan for Bluetooth Low Energy devices. This
         is because Bluetooth LE beacons, for example iBeacons or Eddystone, may be used to
-        determine the phone\'s and user\'s location.\n\n<b>nRF Blinky</b> will not use
+        determine the phone\'s and user\'s location.\n\n<b>nRF STRapp</b> will not use
 		this information in any way.\n\nOn Android 12 and above, a new Bluetooth Scan permission
 		is requested with a flag that prevents using scanning for estimating location, but on this system
         version, unfortunately, no scan results are returned without location enabled.</string>
@@ -74,11 +74,11 @@
     <string name="bluetooth_disabled_info">The Bluetooth adapter is turned off.\nClick the button
         below to enable it.</string>
 
-    <string name="blinky_guide_title">CAN\'T SEE YOUR BLINKY?</string>
-    <string name="blinky_guide_info">1. <b>Turn on</b> the device and is connect to
+    <string name="strapp_guide_title">CAN\'T SEE YOUR STRapp Wristband?</string>
+    <string name="strapp_guide_info">1. <b>Turn on</b> the device and is connect to
 		a power source using a micro USB cable or a coin cell is plugged in.\n\n2. Make sure
-        the application advertises LED Button Service (LBS), or change the filter in the menu.</string>
-    <string name="blinky_guide_location_info">3. Location is turned off.\n\nLocation service is required
+        the application advertises STRapp Service (STR), or change the filter in the menu.</string>
+    <string name="strapp_guide_location_info">3. Location is turned off.\n\nLocation service is required
         in order to scan for Bluetooth LE devices. If you are sure your device is advertising and
         it doesn\'t show up here, click the button below to enable Location.</string>
     <string name="state_connecting">Connecting…</string>
@@ -102,10 +102,8 @@
     <string name="button_summary">Press Button 1 on the dev kit.</string>
 
     <string name="not_supported_title">DEVICE NOT SUPPORTED</string>
-    <string name="not_supported_info">1. The Blinky service hasn\'t been found on the device\'s
-		attribute table.\n\n2. Make sure the DK is flashed with the correct firmware.\n\n3. If you
-		used the DK with another firmware before, the old services might have been cached by
-		the system.</string>
+    <string name="not_supported_info">1. The STRapp service hasn\'t been found on the device\'s
+		attribute table.</string>
 
     <string name="timeout_title">CONNECTION TIMED OUT</string>
     <string name="timeout_info">Make sure your device is powered ON and in range.</string>

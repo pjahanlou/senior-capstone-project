@@ -2,6 +2,7 @@ package com.example.seizuredetectionapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 
@@ -11,12 +12,16 @@ import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Objects;
+
 import no.nordicsemi.android.ble.livedata.state.ConnectionState;
 import no.nordicsemi.android.ble.observer.ConnectionObserver;
 
 public class BleActivity extends AppCompatActivity {
-    public static final String EXTRA_DEVICE = "no.nordicsemi.android.blinky.EXTRA_DEVICE";
+    public static final String EXTRA_DEVICE = "com.example.seizuredetectionapp.EXTRA_DEVICE";
 
     private STRappBleViewModel viewModel;
     private ActivityBleBinding binding;
@@ -40,6 +45,8 @@ public class BleActivity extends AppCompatActivity {
 
         // Configure the view model.
         viewModel = new ViewModelProvider(this).get(STRappBleViewModel.class);
+        Log.d("device", String.valueOf(device));
+        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
         viewModel.connect(device);
 
         // Set up views.
@@ -62,6 +69,9 @@ public class BleActivity extends AppCompatActivity {
                     binding.progressContainer.setVisibility(View.GONE);
                     binding.deviceContainer.setVisibility(View.VISIBLE);
                     onConnectionStateChanged(true);
+//                    final Intent dataSTRappIntent = new Intent(this, DatatableFragment.class);
+//                    dataSTRappIntent.putExtra(DatatableFragment.EXTRA_DEVICE, EXTRA_DEVICE);
+//                    startActivity(dataSTRappIntent);
                     break;
                 case DISCONNECTED:
                     if (state instanceof ConnectionState.Disconnected) {
@@ -84,9 +94,11 @@ public class BleActivity extends AppCompatActivity {
             binding.ledState.setText(isOn ? R.string.turn_on : R.string.turn_off);
             binding.ledSwitch.setChecked(isOn);
         });
-        viewModel.getSensorState().observe(this,
-                pressed -> binding.buttonState.setText(true ?
-                        R.string.button_pressed : R.string.button_released));
+        LiveData<String> AccX = viewModel.getAccxData();
+        Log.d("AccX", String.valueOf(AccX));
+        Log.d("AccX", String.valueOf(AccX));
+        viewModel.getAccxData().observe(this,
+                pressed -> binding.buttonState.setText(String.format(Objects.requireNonNull(viewModel.getAccxData().getValue()))));
     }
 
     private void onConnectionStateChanged(final boolean connected) {

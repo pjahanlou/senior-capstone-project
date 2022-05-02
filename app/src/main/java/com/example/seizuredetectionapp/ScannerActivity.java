@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -44,6 +45,7 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 
     private ScannerViewModel scannerViewModel;
     private ActivityScannerBinding binding;
+    private Button back;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -197,9 +199,9 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
 
     @Override
     public void onItemClick(@NonNull final DiscoveredBluetoothDevice device) {
-        final Intent controlBlinkIntent = new Intent(this, BleActivity.class);
-        controlBlinkIntent.putExtra(BleActivity.EXTRA_DEVICE, device);
-        startActivity(controlBlinkIntent);
+        final Intent controlSTRappIntent = new Intent(this, BleActivity.class);
+        controlSTRappIntent.putExtra(BleActivity.EXTRA_DEVICE, device);
+        startActivity(controlSTRappIntent);
     }
 
     /**

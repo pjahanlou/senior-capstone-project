@@ -46,14 +46,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/blinky_guide_title"
+        android:text="@string/strapp_guide_title"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/blinky_guide_info"
+        android:text="@string/strapp_guide_info"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
 
     <LinearLayout
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/blinky_guide_location_info"
+            android:text="@string/strapp_guide_location_info"
             android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
 
         <com.google.android.material.button.MaterialButton
