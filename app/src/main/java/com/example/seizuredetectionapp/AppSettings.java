@@ -29,7 +29,8 @@ import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 public class AppSettings extends AppCompatActivity implements View.OnClickListener{
-    private Button changePersonalQuestionnaire, changeContactList, closeActivity, changeMedicalQuestionnaire, changeUsualLocations;
+    private Button changePersonalQuestionnaire, changeContactList, closeActivity,
+            changeMedicalQuestionnaire, changeUsualLocations, connectToWearable;
     private Switch PrivacyMode;
 
     private String currentUserUID;
@@ -54,6 +55,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         changePersonalQuestionnaire = findViewById(R.id.startPersonalQuestionnaire);
         changeContactList = findViewById(R.id.changeContactList);
         changeUsualLocations = findViewById(R.id.changeUsualLocations);
+        connectToWearable = findViewById(R.id.connectToWearable);
         
         // Adding event listeners to the buttons and dropdowns
         closeActivity.setOnClickListener(this);
@@ -61,6 +63,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         changePersonalQuestionnaire.setOnClickListener(this);
         changeContactList.setOnClickListener(this);
         changeUsualLocations.setOnClickListener(this);
+        connectToWearable.setOnClickListener(this);
     }
 
     @Override
@@ -90,6 +93,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 intent = new Intent(this, UpdateContacts.class);
                 intent.putExtra("page", "AppSettings");
                 startActivity(intent);
+                break;
+            case R.id.connectToWearable:
+                startActivity(new Intent(this, ScannerActivity.class));
                 break;
         }
     }
