@@ -14,6 +14,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.seizuredetectionapp.BuildConfig;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleAccXDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleAccYDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleAccZDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleGyroXDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleGyroYDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleGyroZDataCallback;
+import com.example.seizuredetectionapp.profile.blecallbacks.BleHrmDataCallback;
 import com.example.seizuredetectionapp.profile.blecallbacks.BleLedDataCallback;
 import com.example.seizuredetectionapp.profile.blecallbacks.BleSensorDataCallback;
 import com.example.seizuredetectionapp.profile.bledata.BleLED;
@@ -33,24 +40,36 @@ public class STRappBleManager extends ObservableBleManager {
     private final static UUID STR_UUID_CHR_ELECTRODERMAL = UUID.fromString("96254b67-7ed3-449c-9030-7f6313711921");
     /** Heart rate characteristic UUID. */
     private final static UUID STR_UUID_CHR_HEARTRATE = UUID.fromString("96254b68-7ed3-449c-9030-7f6313711921");
-    /** Accelerometer characteristic UUID. */
-    private final static UUID STR_UUID_CHR_ACCELEROMETER = UUID.fromString("96254b69-7ed3-449c-9030-7f6313711921");
-    /** Gyroscope characteristic UUID. */
-    private final static UUID STR_UUID_CHR_GYROSCOPE = UUID.fromString("96254b6a-7ed3-449c-9030-7f6313711921");
+    /** Accelerometer X characteristic UUID. */
+    private final static UUID STR_UUID_CHR_ACCELEROMETERX = UUID.fromString("96254b69-7ed3-449c-9030-7f6313711921");
+    /** Accelerometer Y characteristic UUID. */
+    private final static UUID STR_UUID_CHR_ACCELEROMETERY = UUID.fromString("96254b6a-7ed3-449c-9030-7f6313711921");
+    /** Accelerometer Z characteristic UUID. */
+    private final static UUID STR_UUID_CHR_ACCELEROMETERZ = UUID.fromString("96254b6b-7ed3-449c-9030-7f6313711921");
+    /** Gyroscope X characteristic UUID. */
+    private final static UUID STR_UUID_CHR_GYROSCOPEX = UUID.fromString("96254b6c-7ed3-449c-9030-7f6313711921");
+    /** Gyroscope Y characteristic UUID. */
+    private final static UUID STR_UUID_CHR_GYROSCOPEY = UUID.fromString("96254b6d-7ed3-449c-9030-7f6313711921");
+    /** Gyroscope Z characteristic UUID. */
+    private final static UUID STR_UUID_CHR_GYROSCOPEZ = UUID.fromString("96254b6e-7ed3-449c-9030-7f6313711921");
     /** Temperature characteristic UUID. */
-    private final static UUID STR_UUID_CHR_TEMPERATURE = UUID.fromString("96254b6b-7ed3-449c-9030-7f6313711921");
+    private final static UUID STR_UUID_CHR_TEMPERATURE = UUID.fromString("96254b6f-7ed3-449c-9030-7f6313711921");
 
     private final MutableLiveData<Boolean> ledState = new MutableLiveData<>();
-    private final MutableLiveData<String> accData = new MutableLiveData<>();
-    private final MutableLiveData<String> gyroData = new MutableLiveData<>();
-    private final MutableLiveData<String> edaData = new MutableLiveData<>();
-    private final MutableLiveData<String> hrmData = new MutableLiveData<>();
-    private final MutableLiveData<String> tmpData = new MutableLiveData<>();
-    private final MutableLiveData<String> timeData = new MutableLiveData<>();
-    private final MutableLiveData<String> battData = new MutableLiveData<>();
+    private final MutableLiveData<String> accxData = new MutableLiveData<>();
+    private final MutableLiveData<String> accyData = new MutableLiveData<>();
+    private final MutableLiveData<String> acczData = new MutableLiveData<>();
+    private final MutableLiveData<String> gyroxData = new MutableLiveData<>();
+    private final MutableLiveData<String> gyroyData = new MutableLiveData<>();
+    private final MutableLiveData<String> gyrozData = new MutableLiveData<>();
+//    private final MutableLiveData<String> edaData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> hrmData = new MutableLiveData<>();
+//    private final MutableLiveData<String> tmpData = new MutableLiveData<>();
+//    private final MutableLiveData<String> timeData = new MutableLiveData<>();
+//    private final MutableLiveData<String> battData = new MutableLiveData<>();
     private final MutableLiveData<String> sensorData = new MutableLiveData<>();
 
-    private BluetoothGattCharacteristic ledCharacteristic, accCharacteristic, gyroCharacteristic, edaCharacteristic, tempCharacteristic, sensorCharacteristic;
+    private BluetoothGattCharacteristic ledCharacteristic, accxCharacteristic, accyCharacteristic, acczCharacteristic, gyroxCharacteristic, gyroyCharacteristic, gyrozCharacteristic, edaCharacteristic, hrmCharacteristic, tempCharacteristic, sensorCharacteristic;
     private LogSession logSession;
     private boolean supported;
     private boolean ledOn;
@@ -59,14 +78,15 @@ public class STRappBleManager extends ObservableBleManager {
         super(context);
     }
 
-    public final LiveData<Boolean> getLedState() {
-        return ledState;
-    }
-
-    public final LiveData<String> getAccData() {
-        return accData;
-    }
-
+    public final LiveData<Boolean> getLedState() {  return ledState;    }
+    public final LiveData<String> getAccxData() {    return accxData;    }
+    public final LiveData<String> getAccyData() {    return accyData;    }
+    public final LiveData<String> getAcczData() {    return acczData;    }
+    public final LiveData<String> getGyroxData() {   return gyroxData;   }
+    public final LiveData<String> getGyroyData() {   return gyroyData;   }
+    public final LiveData<String> getGyrozData() {   return gyrozData;   }
+//    public final LiveData<String> getEdaData() {     return edaData;     }
+    public final LiveData<Integer> getHrmData() {   return hrmData;     }
     public final LiveData<String> getSensorData() {
         return sensorData;
     }
@@ -159,6 +179,125 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
+    private final BleHrmDataCallback hrmCallback = new BleHrmDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onHrmValChanged(@NonNull final BluetoothDevice device,
+                                      final int data) {
+            log(LogContract.Log.Level.APPLICATION, "HRM " + (data));
+            hrmData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleAccXDataCallback accxCallback = new BleAccXDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onAccXValChanged(@NonNull final BluetoothDevice device,
+                                    final String data) {
+            log(LogContract.Log.Level.APPLICATION, "AccX " + (data));
+            accxData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleAccYDataCallback accyCallback = new BleAccYDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onAccYValChanged(@NonNull final BluetoothDevice device,
+                                     final String data) {
+            log(LogContract.Log.Level.APPLICATION, "AccY " + (data));
+            accyData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleAccZDataCallback acczCallback = new BleAccZDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onAccZValChanged(@NonNull final BluetoothDevice device,
+                                     final String data) {
+            log(LogContract.Log.Level.APPLICATION, "AccZ " + (data));
+            acczData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleGyroXDataCallback gyroxCallback = new BleGyroXDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onGyroXValChanged(@NonNull final BluetoothDevice device,
+                                     final String data) {
+            log(LogContract.Log.Level.APPLICATION, "GyroX " + (data));
+            accxData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleGyroYDataCallback gyroyCallback = new BleGyroYDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onGyroYValChanged(@NonNull final BluetoothDevice device,
+                                      final String data) {
+            log(LogContract.Log.Level.APPLICATION, "GyroY " + (data));
+            accxData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
+    private final BleGyroZDataCallback gyrozCallback = new BleGyroZDataCallback() {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onGyroZValChanged(@NonNull final BluetoothDevice device,
+                                      final String data) {
+            log(LogContract.Log.Level.APPLICATION, "GyroZ " + (data));
+            accxData.setValue(data);
+        }
+
+        @Override
+        public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
+                                          @NonNull final Data data) {
+            // Data can only invalid if we read them. We assume the app always sends correct data.
+            log(Log.WARN, "Invalid data received: " + data);
+        }
+    };
+
 
     /**
      * BluetoothGatt callbacks object.
@@ -166,35 +305,45 @@ public class STRappBleManager extends ObservableBleManager {
     private class STRappBleManagerGattCallback extends BleManagerGattCallback {
         @Override
         protected void initialize() {
-//            setNotificationCallback(timestampCharacteristic).with(timestampCallback);
-            setNotificationCallback(sensorCharacteristic).with(sensorCallback);
-            readCharacteristic(sensorCharacteristic).with(sensorCallback).enqueue();
-            enableNotifications(sensorCharacteristic).enqueue();
-//            enableNotifications(timestampCharacteristic).enqueue();
+//            setNotificationCallback(timeCharacteristic).with(timestampCallback);
+//            readCharacteristic(sensorCharacteristic).with(sensorCallback).enqueue();
+            readCharacteristic(accxCharacteristic).with(accxCallback).enqueue();
+            readCharacteristic(accyCharacteristic).with(accyCallback).enqueue();
+            readCharacteristic(acczCharacteristic).with(acczCallback).enqueue();
+            readCharacteristic(gyroxCharacteristic).with(gyroxCallback).enqueue();
+            readCharacteristic(gyroyCharacteristic).with(gyroyCallback).enqueue();
+            readCharacteristic(gyrozCharacteristic).with(gyrozCallback).enqueue();
+            readCharacteristic(hrmCharacteristic).with(hrmCallback).enqueue();
+//            enableNotifications(timeCharacteristic).enqueue();
         }
 
         @Override
         public boolean isRequiredServiceSupported(@NonNull final BluetoothGatt gatt) {
             final BluetoothGattService service = gatt.getService(STR_UUID_SERVICE);
             if (service != null) {
-                sensorCharacteristic = service.getCharacteristic(STR_UUID_CHR_ELECTRODERMAL);
-                ledCharacteristic = service.getCharacteristic(STR_UUID_CHR_HEARTRATE);
+                accxCharacteristic = service.getCharacteristic(STR_UUID_CHR_ACCELEROMETERX);
+                accyCharacteristic = service.getCharacteristic(STR_UUID_CHR_ACCELEROMETERY);
+                acczCharacteristic = service.getCharacteristic(STR_UUID_CHR_ACCELEROMETERZ);
+                gyroxCharacteristic = service.getCharacteristic(STR_UUID_CHR_GYROSCOPEX);
+                gyroyCharacteristic = service.getCharacteristic(STR_UUID_CHR_GYROSCOPEY);
+                gyrozCharacteristic = service.getCharacteristic(STR_UUID_CHR_GYROSCOPEZ);
+                hrmCharacteristic = service.getCharacteristic(STR_UUID_CHR_HEARTRATE);
             }
 
-            boolean writeRequest = false;
-            if (ledCharacteristic != null) {
-                final int ledProperties = ledCharacteristic.getProperties();
-                writeRequest = (ledProperties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0;
-            }
+//            boolean writeRequest = false;
+//            if (ledCharacteristic != null) {
+//                final int ledProperties = ledCharacteristic.getProperties();
+//                writeRequest = (ledProperties & BluetoothGattCharacteristic.PROPERTY_WRITE) > 0;
+//            }
 
-            supported = sensorCharacteristic != null && ledCharacteristic != null && writeRequest;
-            return supported;
+            supported = accxCharacteristic != null;
+            return true;
         }
 
         @Override
         protected void onServicesInvalidated() {
-            sensorCharacteristic = null;
-            ledCharacteristic = null;
+//            sensorCharacteristic = null;
+//            ledCharacteristic = null;
         }
     }
 

@@ -90,6 +90,14 @@ import java.util.Set;
 import gherkin.lexer.Ca;
 import gherkin.lexer.Vi;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
+import com.example.seizuredetectionapp.databinding.ActivityBleBinding;
+import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
+import no.nordicsemi.android.ble.livedata.state.ConnectionState;
+import no.nordicsemi.android.ble.observer.ConnectionObserver;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,6 +117,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private String isQuestionnaireComplete;
     private Set<String> contactList = new HashSet<String>();
     private SharedPreferences sharedPreferences;
+
 
     Button btnSettings;
     ListView journalList;
@@ -459,7 +468,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
-
+    // TODO: Connect BLE Device
     public void startService() {
         threadStatus = ThreadStatus.STARTED;
         startSeizureButton.setText("Stop Seizure Detection");
@@ -468,6 +477,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         if(!foregroundServiceRunning()){
             Intent serviceIntent = new Intent(getContext(), ExampleService.class);
             serviceIntent.putExtra("inputExtra", "Start Service");
+//            serviceIntent.putExtra(ExampleService.EXTRA_DEVICE, AppSettings.EXTRA_DEVICE);
 
             ContextCompat.startForegroundService(getContext(), serviceIntent);
         }

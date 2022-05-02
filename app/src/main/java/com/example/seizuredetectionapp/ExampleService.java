@@ -57,6 +57,16 @@ import java.util.HashMap;
 
 import cucumber.api.Pending;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
+import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
+import com.example.seizuredetectionapp.databinding.ActivityBleBinding;
+import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
+import no.nordicsemi.android.ble.livedata.state.ConnectionState;
+import no.nordicsemi.android.ble.observer.ConnectionObserver;
+
 
 public class ExampleService extends Service {
 
@@ -70,6 +80,9 @@ public class ExampleService extends Service {
     public static NotificationManagerCompat notificationManager;
     private static boolean seizureDetected = false;
     private HashMap<String, String> personalInfo = new HashMap<>();
+//    public static final String EXTRA_DEVICE = "com.example.seizuredetectionapp.EXTRA_DEVICE";
+//
+//    private STRappBleViewModel viewModel;
 
     @Override
     public void onCreate() {
@@ -92,6 +105,12 @@ public class ExampleService extends Service {
 
         getPersonalInfo();
         Log.d("personal info", personalInfo.toString());
+
+//        final DiscoveredBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
+//        // 381d7460
+//        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
+//        Log.d("device", device.toString());
+//        viewModel.connect(device);
 
         // Starting the service thread
         Log.d("input", input);
@@ -194,6 +213,7 @@ public class ExampleService extends Service {
                 SystemClock.sleep(1000);
                 Log.d("Log", String.valueOf(counter));
                 counter++;
+                // TODO: Ble calls
                 if (HTTPHelpers.Debug()) {
                     // Post fake HR, acceleration, gyro, and EDA
                     try {
