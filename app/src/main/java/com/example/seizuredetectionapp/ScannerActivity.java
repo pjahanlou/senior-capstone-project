@@ -2,7 +2,9 @@ package com.example.seizuredetectionapp;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -35,6 +37,7 @@ import com.example.seizuredetectionapp.databinding.ActivityScannerBinding;
 import com.example.seizuredetectionapp.utils.Utils;
 import com.example.seizuredetectionapp.viewmodels.ScannerStateLiveData;
 import com.example.seizuredetectionapp.viewmodels.ScannerViewModel;
+import com.google.gson.Gson;
 
 public class ScannerActivity extends AppCompatActivity implements DevicesAdapter.OnItemClickListener {
     // This flag is false when the app is first started (cold start).
@@ -46,6 +49,8 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
     private ScannerViewModel scannerViewModel;
     private ActivityScannerBinding binding;
     private Button back;
+    private SharedPreferences sharedPreferences;
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -157,6 +162,8 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
                 openPermissionSettings();
             });
         }
+
+        sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -201,7 +208,20 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
     public void onItemClick(@NonNull final DiscoveredBluetoothDevice device) {
         final Intent controlSTRappIntent = new Intent(this, BleActivity.class);
         controlSTRappIntent.putExtra(BleActivity.EXTRA_DEVICE, device);
+        saveDevice(device);
         startActivity(controlSTRappIntent);
+    }
+
+    public void saveDevice(DiscoveredBluetoothDevice device){
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String deviceJson = gson.toJson(device);
+        prefsEditor.putString("device", deviceJson);
+        if(prefsEditor.commit()){
+            Log.d("device", "device save successful");
+        } else{
+            Log.d("device", "device save not successful");
+        }
     }
 
     /**
