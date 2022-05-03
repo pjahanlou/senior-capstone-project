@@ -120,19 +120,24 @@ public class ExampleService extends Service {
         String age = sharedPreferences.getString("age", localSettings.getAge());
         String gender = sharedPreferences.getString("sex", localSettings.getSex());
         String height = sharedPreferences.getString("height", localSettings.getHeight());
-        String weight = String.valueOf(Math.round(Float.valueOf(sharedPreferences.getString("weight", localSettings.getWeight()))));
+        String weightstr = sharedPreferences.getString("weight", localSettings.getWeight());
+        String weight = "200";
+        if (weightstr != null) {
+            weight = String.valueOf(Math.round(Float.valueOf(weightstr)));
+        }
 
-        String ageYear = age.split("/")[2];
+
+        String ageYear = age != null ? age.split("/")[2] : "2000";
         String ageDifference = String.valueOf(currentYear - Integer.parseInt(ageYear));
 
         String genderConverted = null;
-        if(gender.equals("Male")){
+        if(gender != null && gender.equals("Male")){
             genderConverted = "1";
         } else{
             genderConverted = "0";
         }
 
-        String heightCm = convertToCm(height);
+        String heightCm = height != null ? convertToCm(height) : "180";
 
         personalInfo.put("Age", ageDifference);
         personalInfo.put("Gender", genderConverted);
