@@ -70,6 +70,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
@@ -145,6 +146,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private static final int PERMISSION_REQUEST_CODE = 200;
     private ImageView hintImage;
     private Button startSeizureButton;
+    private DiscoveredBluetoothDevice BLEDevice;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
@@ -204,6 +206,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             showNewUserDialog();
         }
 
+        BLEDevice = loadBLEDevice();
 
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
@@ -391,6 +394,13 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
                 break;
         }
+    }
+
+    public DiscoveredBluetoothDevice loadBLEDevice(){
+        Gson gson = new Gson();
+        String deviceJson = sharedPreferences.getString("device", "");
+        DiscoveredBluetoothDevice device = gson.fromJson(deviceJson, DiscoveredBluetoothDevice.class);
+        return device;
     }
 
     private void sortJournals(String selectedItem){

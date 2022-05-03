@@ -17,7 +17,7 @@
         android:layout_weight="1"
         app:defaultNavHost="true"
         app:navGraph="@navigation/bottom_navbar"
-
+        android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
          />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
