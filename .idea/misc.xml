@@ -157,6 +157,8 @@
         <entry key="app/src/main/res/layout/fragment_datatable_hint.xml" value="0.2375" />
         <entry key="app/src/main/res/layout/fragment_main_settings.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/info_no_devices.xml" value="0.2786458333333333" />
+        <entry key="app/src/main/res/layout/info_not_supported.xml" value="0.2786458333333333" />
         <entry key="app/src/main/res/layout/journal_item_listview.xml" value="0.29922779922779924" />
         <entry key="app/src/main/res/layout/listview_textformat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/login_tap_fragment.xml" value="0.25" />
