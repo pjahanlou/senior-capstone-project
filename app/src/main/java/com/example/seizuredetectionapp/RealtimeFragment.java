@@ -41,6 +41,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     String deviceNamePrefix = "STRapp";
 
     private SnakeView snakeView;
+    private float maxValue;
 
     // SET TO FALSE WHEN BACKEND IS READY
     static boolean useDummyData = false;
@@ -117,6 +118,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 //        desc.setTextSize(21.f);
 //        lineChart.setDescription(desc);
 
+        maxValue = 255.f;
         snakeView = root.findViewById(R.id.snake);
         snakeView.setMaximumNumberOfValues(30);
         snakeView.setMinValue(0.f);
@@ -136,6 +138,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         String s = "Electrodermal Activity";
+
         switch (view.getId()) {
             case R.id.btnshowEDA:
                 if (graphType == GraphType.GraphType_EDA) {
@@ -143,6 +146,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 }
                 graphType = GraphType.GraphType_EDA;
                 s = "Electrodermal Activity";
+                maxValue = 100.f;
                 break;
 
             case R.id.btnshowHR:
@@ -151,6 +155,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 }
                 graphType = GraphType.GraphType_HR;
                 s = "Heart Rate";
+                maxValue = 255.f;
                 break;
 
             case R.id.btnshowMM:
@@ -159,6 +164,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 }
                 graphType = GraphType.GraphType_MM;
                 s = "Movement Magnitude";
+                maxValue = 100.f;
                 break;
             case R.id.hintRealtime:
                 showHint(view.getContext());
@@ -166,6 +172,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         }
         clearCache(graphType);
         snakeView.clear();
+        snakeView.setMaxValue(maxValue);
         txtType.setText(s);
         getData(false);
     }
@@ -196,19 +203,6 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
         if (getContext() == null) {
             return;
         }
-        String s = "Something broke";
-        switch (graphType) {
-            case GraphType_EDA:
-                s = "Electrodermal Activity";
-                break;
-            case GraphType_HR:
-                s = "Heart Rate";
-                break;
-            case GraphType_MM:
-                s = "Movement Magnitude";
-                break;
-        }
-
         getEntries();
 
 //        lineChart.notifyDataSetChanged();
@@ -281,7 +275,19 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 txtReading.setText("Calibrating");
             } else {
                 CachedData.CacheNode node = nodelist.get(nodelist.size() - 1);
-                txtReading.setText(String.valueOf(node.value));
+                String unit = "";
+                switch (graphType) {
+                    case GraphType_EDA:
+                        unit = "EDR";
+                        break;
+                    case GraphType_HR:
+                        unit = "bpm";
+                        break;
+                    case GraphType_MM:
+                        unit = "m/s^2";
+                        break;
+                }
+                txtReading.setText(node.value + "\n" + unit);
             }
 
             for (int i = 0; i < nodelist.size(); ++i) {
@@ -289,7 +295,14 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 if (node.exists) {
                     continue;
                 }
-                snakeView.addValue(node.value);
+                float val = node.value;
+                if (val > maxValue) {
+                    val = maxValue;
+                }
+                else if (val < 0) {
+                    val = 0;
+                }
+                snakeView.addValue(val);
                 node.exists = true;
                 nodelist.set(i, node);
             }
