@@ -284,7 +284,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                         unit = "m/s^2";
                         break;
                 }
-                txtReading.setText(node.value + "\n" + unit);
+                txtReading.setText(Math.round(node.value) + "\n" + unit);
             }
 
             for (int i = 0; i < nodelist.size(); ++i) {
@@ -299,7 +299,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
                 else if (val < 0) {
                     val = 0;
                 }
-                snakeView.addValue(val);
+                snakeView.addValue(Math.round(val));
                 node.exists = true;
                 nodelist.set(i, node);
             }
