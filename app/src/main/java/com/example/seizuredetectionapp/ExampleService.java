@@ -53,6 +53,7 @@ import org.picocontainer.annotations.Inject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.Random;
@@ -451,7 +452,7 @@ public class ExampleService extends LifecycleService {
 
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
             obj.put("reading", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
-            CachedData.addEDA(obj.getInt("timestamp"), (float)obj.getDouble("reading"));
+//            CachedData.addEDA(obj.getInt("timestamp"), (float)obj.getDouble("reading"));
 
             JsonObjectRequest req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
                     response -> {
@@ -468,8 +469,17 @@ public class ExampleService extends LifecycleService {
             s = "hr";
             obj = new JSONObject();
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
-            obj.put("reading", Math.round(r.nextFloat() * 100.0 * 10.f) / 10.f);
-            CachedData.addHR(obj.getInt("timestamp"), (float)obj.getDouble("reading"));
+            ArrayList<CachedData.CacheNode> node = CachedData.HRReadings;
+            int last = node.size() != 0 ? Math.round(node.get(0).value) : 100;
+            int plus = 0;
+            if (r.nextInt(4) != 0) {
+                plus = r.nextBoolean() ? r.nextInt(3) : -r.nextInt(2);
+                last += plus;
+            }
+            if (last < 90) last = 90;
+            else if (last > 110) last = 110;
+            obj.put("reading", last);
+            CachedData.addHR(obj.getInt("timestamp"), last);
 
             req = new JsonObjectRequest(com.android.volley.Request.Method.POST, HTTPHelpers.MYURL + s + key, obj,
                     response -> {
