@@ -52,6 +52,8 @@ public class STRappBleViewModel extends AndroidViewModel {
 
     public LiveData<String> getGyrozData() { return strappBleManager.getGyrozData(); }
 
+    public LiveData<Integer> getHrmData() { return strappBleManager.getHrmData(); }
+
     /**
      * Connect to the given peripheral.
      *

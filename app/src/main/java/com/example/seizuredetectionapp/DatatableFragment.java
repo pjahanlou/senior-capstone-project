@@ -93,6 +93,7 @@ import gherkin.lexer.Ca;
 import gherkin.lexer.Vi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
 import com.example.seizuredetectionapp.databinding.ActivityBleBinding;
@@ -147,6 +148,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private ImageView hintImage;
     private Button startSeizureButton;
     private DiscoveredBluetoothDevice BLEDevice;
+    private STRappBleViewModel viewModel;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
@@ -206,7 +208,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             showNewUserDialog();
         }
 
-        BLEDevice = loadBLEDevice();
+//        BLEDevice = loadBLEDevice();
+//        Log.d("BLEDevice", String.valueOf(BLEDevice));
+//        LiveData<String> AccX = viewModel.getAccxData();
+//        Log.d("AccX", String.valueOf(AccX));
+
 
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
@@ -226,6 +232,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
@@ -509,7 +516,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         if(!foregroundServiceRunning()){
             Intent serviceIntent = new Intent(getContext(), ExampleService.class);
             serviceIntent.putExtra("inputExtra", "Start Service");
-//            serviceIntent.putExtra(ExampleService.EXTRA_DEVICE, AppSettings.EXTRA_DEVICE);
 
             ContextCompat.startForegroundService(getContext(), serviceIntent);
         }

@@ -24,7 +24,7 @@ public abstract class BleAccXDataCallback implements ProfileDataCallback, DataSe
         parse(device, data);
     }
 
-    private void parse(@NonNull final BluetoothDevice device, @NonNull final Data data) {
+    public void parse(@NonNull final BluetoothDevice device, @NonNull final Data data) {
 //        if (data.size() != 1) {
 //            onInvalidDataReceived(device, data);
 //            return;
@@ -35,4 +35,8 @@ public abstract class BleAccXDataCallback implements ProfileDataCallback, DataSe
         String newString = new String(bytes, StandardCharsets.UTF_8);
         onAccXValChanged(device, newString);
     }
+//    public String getData() {
+//        parse(@NonNull final BluetoothDevice device, @NonNull final Data data)
+//        return ;
+//    }
 }

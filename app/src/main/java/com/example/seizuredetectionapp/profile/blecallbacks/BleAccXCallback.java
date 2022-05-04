@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice;
 
 import androidx.annotation.NonNull;
 
+import no.nordicsemi.android.log.LogContract;
+
 public interface BleAccXCallback {
 
     /**

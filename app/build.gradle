@@ -46,6 +46,9 @@ dependencies {
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+//    implementation 'com.google.dagger:dagger:2.28.3'
+//    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
+
 
     // https://github.com/skyfishjy/android-ripple-background
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
@@ -75,6 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.1.0'
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     implementation 'com.txusballesteros:snake:1.0'
+    implementation 'androidx.lifecycle:lifecycle-service:2.4.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'androidx.arch.core:core-testing:2.0.0'

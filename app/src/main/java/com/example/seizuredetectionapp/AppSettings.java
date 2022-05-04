@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,11 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
+import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
@@ -42,6 +46,9 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
 
     private Questionnaire settings = new Questionnaire();
     private Activity QuestionnaireMedical;
+    private DiscoveredBluetoothDevice BLEDevice;
+    private STRappBleViewModel localViewModel;
+    private SharedPreferences sharedPreferences;
 
 //    public static final String EXTRA_DEVICE = "com.example.seizuredetectionapp.EXTRA_DEVICE";
 //    public static DiscoveredBluetoothDevice device;
@@ -52,7 +59,7 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
-
+        sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
         // initializing the buttons
         closeActivity = findViewById(R.id.back);
         changeMedicalQuestionnaire = findViewById(R.id.startMedicalQuestionnaire);
@@ -70,6 +77,11 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
         connectToWearable.setOnClickListener(this);
 //        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
 //        Log.d("device", device.toString());
+//        BLEDevice = loadBLEDevice();
+//        localViewModel = loadViewModel();
+//        Log.d("BLEDevice", String.valueOf(BLEDevice));
+//        LiveData<String> AccX = localViewModel.getAccxData();
+//        Log.d("AccX", String.valueOf(AccX));
     }
 
     @Override
@@ -105,4 +117,19 @@ public class AppSettings extends AppCompatActivity implements View.OnClickListen
                 break;
         }
     }
+
+    public DiscoveredBluetoothDevice loadBLEDevice(){
+        Gson gson = new Gson();
+        String deviceJson = sharedPreferences.getString("device", "");
+        DiscoveredBluetoothDevice device = gson.fromJson(deviceJson, DiscoveredBluetoothDevice.class);
+        return device;
+    }
+
+    public STRappBleViewModel loadViewModel(){
+        Gson gson = new Gson();
+        String viewModelJson = sharedPreferences.getString("viewModel", "");
+        STRappBleViewModel viewModel = gson.fromJson(viewModelJson, STRappBleViewModel.class);
+        return viewModel;
+    }
+
 }
