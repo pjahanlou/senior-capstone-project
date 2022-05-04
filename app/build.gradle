@@ -45,6 +45,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.0.1'
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+//    implementation 'com.google.dagger:dagger:2.28.3'
+//    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.3'
+
 
     // https://github.com/skyfishjy/android-ripple-background
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
@@ -74,6 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.1.0'
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     implementation 'com.txusballesteros:snake:1.0'
+    implementation 'androidx.lifecycle:lifecycle-service:2.4.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.google.truth:truth:1.0.1'
     testImplementation 'androidx.arch.core:core-testing:2.0.0'
@@ -105,9 +110,19 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:2.5.0"
 
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.3.2'
+    implementation 'no.nordicsemi.android:ble:2.4.0'
+    implementation 'no.nordicsemi.android:ble-common:2.4.0'
+    implementation 'no.nordicsemi.android:ble-livedata:2.4.0'
+    implementation 'no.nordicsemi.android.support.v18:scanner:1.6.0'
+    implementation 'no.nordicsemi.android:log:2.3.0'
 
     // https://github.com/IvanKovac/TimePickerWithSeconds
     implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
 
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+
+    implementation 'com.google.code.gson:gson:2.8.8'
 }

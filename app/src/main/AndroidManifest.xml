@@ -7,6 +7,11 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <permission
+        android:name="android.permission.BLUETOOTH"
+        android:label="BLUETOOTH" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -28,6 +33,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".DisplayOverPermission"
+            android:exported="true" />
         <activity
             android:name=".SeizureMoreInfo"
             android:exported="false" />
@@ -96,6 +104,12 @@
             android:exported="false" />
         <activity
             android:name=".QuestionnaireMedical"
+            android:exported="true" />
+        <activity
+            android:name=".ScannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".BleActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

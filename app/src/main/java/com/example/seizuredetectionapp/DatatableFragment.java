@@ -54,6 +54,7 @@ import android.widget.ToggleButton;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -69,6 +70,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
@@ -82,11 +84,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
 import gherkin.lexer.Ca;
+import gherkin.lexer.Vi;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
+import com.example.seizuredetectionapp.databinding.ActivityBleBinding;
+import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
+import no.nordicsemi.android.ble.livedata.state.ConnectionState;
+import no.nordicsemi.android.ble.observer.ConnectionObserver;
 
 
 /**
@@ -108,6 +121,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private Set<String> contactList = new HashSet<String>();
     private SharedPreferences sharedPreferences;
 
+
     Button btnSettings;
     ListView journalList;
     ArrayList<Journal> journals = new ArrayList<>();
@@ -118,10 +132,10 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     FirebaseDatabase database;
     DatabaseReference myRef;
     LinearLayout sheetBottom;
-    private String currentUserUID;
+    private String currentUserUID, graphDisplaySpinnerValue;
     BottomSheetBehavior bottomSheetBehavior;
     private Button btnHelpRequest;
-    private PowerSpinnerView sortDropDown;
+    private PowerSpinnerView sortDropDown, graphDisplaySpinner;
     private String[] sortOptions = new String[1];
     ListView sortedJournalList;
     ArrayList<String> sortedJournalInfo = new ArrayList<>();
@@ -133,10 +147,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     private static final int PERMISSION_REQUEST_CODE = 200;
     private ImageView hintImage;
     private Button startSeizureButton;
+    private DiscoveredBluetoothDevice BLEDevice;
+    private STRappBleViewModel viewModel;
 
     BarChart barChart;
     ArrayList<Calendar> journalDates;
-    Button graphDisplayYear, graphDisplayMonth, graphDisplayWeek;
     TextView textBox, titleBox;
 
     public enum ThreadStatus {
@@ -193,6 +208,11 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             showNewUserDialog();
         }
 
+//        BLEDevice = loadBLEDevice();
+//        Log.d("BLEDevice", String.valueOf(BLEDevice));
+//        LiveData<String> AccX = viewModel.getAccxData();
+//        Log.d("AccX", String.valueOf(AccX));
+
 
         // Logging the personal questionnaire data
         Log.d("seizureTypes", ""+sharedPreferences.getStringSet("SeizureTypes", localSettings.getSeizureTypes()));
@@ -212,6 +232,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_datatable, container, false);
 
@@ -220,9 +241,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         btnHelpRequest = root.findViewById(R.id.helpRequest);
         journalList = root.findViewById(R.id.journalList);
         sortDropDown = root.findViewById(R.id.sortDropdown);
-        graphDisplayYear = root.findViewById(R.id.showGraphYear);
-        graphDisplayMonth = root.findViewById(R.id.showGraphMonth);
-        graphDisplayWeek = root.findViewById(R.id.showGraphWeek);
+        graphDisplaySpinner = root.findViewById(R.id.graphDisplaySpinner);
         hintImage = root.findViewById(R.id.hintDatatable);
         startSeizureButton = root.findViewById(R.id.startSeizureButton);
 
@@ -233,9 +252,6 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         //Buttons
-        graphDisplayYear.setOnClickListener(this);
-        graphDisplayMonth.setOnClickListener(this);
-        graphDisplayWeek.setOnClickListener(this);
         hintImage.setOnClickListener(this);
         startSeizureButton.setOnClickListener(this);
 
@@ -295,6 +311,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
 
             }
         });
+        Log.d("wehere", "before graph spinner listener");
+        graphDisplaySpinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(int i, @Nullable String s, int i1, String t1) {
+                Log.d("wehere", "in graph spinner listener");
+                changeGraphView(t1, root);
+            }
+        });
 
         sortDropDown.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener<String>() {
             @Override public void onItemSelected(int oldIndex, @Nullable String oldItem, int newIndex, String newItem) {
@@ -306,6 +330,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         dateCompare = normalizeDates(DAY_OF_WEEK);
 
         //assign Xaxis values
+        Log.d("startcheck", "fuck");
         ArrayList<String> xAxisValues = new ArrayList<String>();
         xAxisValues.add("Sun");
         xAxisValues.add("Mon");
@@ -320,8 +345,74 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
+    private void changeGraphView(String s, View view){
+        ArrayList<String> xAxisValues = new ArrayList<String>();
+        Log.d("NameCheck", s);
+        switch (s) {
+            case ("Year"):
+                Log.d("NameCheck", "Year");
+                dateCompare = normalizeDates(MONTH_OF_YEAR);
+
+                //assign Xaxis values
+                xAxisValues = new ArrayList<String>();
+                xAxisValues.add("Jan");
+                xAxisValues.add("Feb");
+                xAxisValues.add("Mar");
+                xAxisValues.add("Apr");
+                xAxisValues.add("May");
+                xAxisValues.add("Jun");
+                xAxisValues.add("Jul");
+                xAxisValues.add("Aug");
+                xAxisValues.add("Sep");
+                xAxisValues.add("Oct");
+                xAxisValues.add("Nov");
+                xAxisValues.add("Dec");
+
+                getDates(dateCompare, view, xAxisValues, MONTH_OF_YEAR);
+                break;
+
+            case ("Month"):
+                Log.d("NameCheck", "Month");
+                dateCompare = normalizeDates(WEEK_OF_MONTH);
+
+                //assign Xaxis values
+                xAxisValues = new ArrayList<String>();
+                int timeSpan = dateCompare.getActualMaximum(Calendar.WEEK_OF_MONTH);
+                for (int j = 1; j <= timeSpan; j++)
+                    xAxisValues.add("Week " + j);
+
+                getDates(dateCompare, view, xAxisValues, WEEK_OF_MONTH);
+                break;
+
+            case ("Week"):
+                Log.d("NameCheck", "Week");
+                dateCompare = normalizeDates(DAY_OF_WEEK);
+
+                //assign Xaxis values
+                xAxisValues = new ArrayList<String>();
+                xAxisValues.add("Sun");
+                xAxisValues.add("Mon");
+                xAxisValues.add("Tue");
+                xAxisValues.add("Wed");
+                xAxisValues.add("Thu");
+                xAxisValues.add("Fri");
+                xAxisValues.add("Sat");
+
+                getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
+                break;
+        }
+    }
+
+    public DiscoveredBluetoothDevice loadBLEDevice(){
+        Gson gson = new Gson();
+        String deviceJson = sharedPreferences.getString("device", "");
+        DiscoveredBluetoothDevice device = gson.fromJson(deviceJson, DiscoveredBluetoothDevice.class);
+        return device;
+    }
+
     private void sortJournals(String selectedItem){
         ArrayList<JournalLayout> sortedJournals = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
         for(Journal journal: journals){
             if(!journal.dateAndTime.equals("")) {
@@ -333,7 +424,27 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
                 @Override
                 public int compare(JournalLayout journalLayout, JournalLayout t1) {
-                    return t1.getDateAndTime().compareTo(journalLayout.getDateAndTime());
+                    Log.d("d1", t1.getDateAndTime());
+                    Log.d("d2", journalLayout.getDateAndTime());
+                    String d1 = t1.getDateAndTime();
+                    String d1Converted = d1.substring(0, Math.min(d1.length(), 15));
+
+                    String d2 = journalLayout.getDateAndTime();
+                    String d2Converted = d2.substring(0, Math.min(d2.length(), 15));
+
+                    Date date1 = null;
+                    Date date2 = null;
+
+                    try {
+                         date1 = sdf.parse(d1Converted);
+                         date2 = sdf.parse(d2Converted);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if(date1 != null && date2 != null){
+                        return date1.compareTo(date2);
+                    }
+                    return 0 ;
                 }
             });
         }
@@ -341,9 +452,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
             Collections.sort(sortedJournals, new Comparator<JournalLayout>() {
                 @Override
                 public int compare(JournalLayout journalLayout, JournalLayout t1) {
-                    String d1 = durationStringToInt(t1.getDuration());
-                    String d2 = durationStringToInt(journalLayout.getDuration());
-                    return d1.compareTo(d2);
+                    return Float.valueOf(t1.getDuration()).compareTo(Float.valueOf(journalLayout.getDuration()));
                 }
             });
         }
@@ -377,55 +486,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Intent intent;
-        ArrayList<String> xAxisValues = new ArrayList<String>();
         switch (view.getId()){
-            case(R.id.showGraphYear):
-                dateCompare = normalizeDates(MONTH_OF_YEAR);
-
-                //assign Xaxis values
-                xAxisValues = new ArrayList<String>();
-                xAxisValues.add("Jan");
-                xAxisValues.add("Feb");
-                xAxisValues.add("Mar");
-                xAxisValues.add("Apr");
-                xAxisValues.add("May");
-                xAxisValues.add("Jun");
-                xAxisValues.add("Jul");
-                xAxisValues.add("Aug");
-                xAxisValues.add("Sep");
-                xAxisValues.add("Oct");
-                xAxisValues.add("Nov");
-                xAxisValues.add("Dec");
-
-                getDates(dateCompare, view, xAxisValues, MONTH_OF_YEAR);
-                break;
-            case(R.id.showGraphMonth):
-                dateCompare = normalizeDates(WEEK_OF_MONTH);
-
-                //assign Xaxis values
-                xAxisValues = new ArrayList<String>();
-                int timeSpan = dateCompare.getActualMaximum(Calendar.WEEK_OF_MONTH);
-                for(int i = 1; i <= timeSpan; i++)
-                    xAxisValues.add("Week " + i);
-
-                getDates(dateCompare, view, xAxisValues, WEEK_OF_MONTH);
-                break;
-            case(R.id.showGraphWeek):
-
-                dateCompare = normalizeDates(DAY_OF_WEEK);
-
-                //assign Xaxis values
-                xAxisValues = new ArrayList<String>();
-                xAxisValues.add("Sun");
-                xAxisValues.add("Mon");
-                xAxisValues.add("Tue");
-                xAxisValues.add("Wed");
-                xAxisValues.add("Thu");
-                xAxisValues.add("Fri");
-                xAxisValues.add("Sat");
-
-                getDates(dateCompare, view, xAxisValues, DAY_OF_WEEK);
-                break;
             case(R.id.settings):
                 intent = new Intent(getContext(), MainSettings.class);
                 startActivity(intent);
@@ -446,7 +507,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
-
+    // TODO: Connect BLE Device
     public void startService() {
         threadStatus = ThreadStatus.STARTED;
         startSeizureButton.setText("Stop Seizure Detection");
@@ -562,7 +623,7 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         }
 
         BarDataSet barDataSet = new BarDataSet(entries, title);
-        //barDataSet.setDrawValues(false);
+        barDataSet.setDrawValues(false);
         barDataSet.setColor(Color.parseColor("#473fa2"));
         BarData data = new BarData(barDataSet);
 
@@ -571,6 +632,8 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         barChart.notifyDataSetChanged();
         barChart.animateXY(2000, 2000);
         barChart.setDrawGridBackground(false);
+
+        barChart.setExtraOffsets(5f,5f,0f,15f);
 
         XAxis axisX = barChart.getXAxis();
         axisX.setGranularity(1f);
@@ -581,20 +644,14 @@ public class DatatableFragment extends Fragment implements View.OnClickListener{
         YAxis axisY = barChart.getAxisLeft();
         axisY.setAxisMaximum(Math.max(maxValue, 5f));
         axisY.setGranularity(1f);
+        axisY.setGridLineWidth(2f);
+        axisY.setGridColor(Color.parseColor("#B0C4DE"));
         Log.d("getMax", String.valueOf(maxValue));
-//        if(timeSpan == DAY_OF_WEEK){
-//            axisY.setAxisMaximum(10f);
-//        }if(timeSpan == WEEK_OF_MONTH){
-//            axisY.setAxisMaximum(25f);
-//        }if(timeSpan == MONTH_OF_YEAR){
-//            axisY.setAxisMaximum(50f);
-//        }
 
         YAxis rightAxis = barChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawAxisLine(false);
         rightAxis.setDrawLabels(false);
-
 
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);

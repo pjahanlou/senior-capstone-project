@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.txusballesteros.SnakeView;
 
 import java.util.ArrayList;
+import java.util.Random;
+import com.example.seizuredetectionapp.BluetoothSerial;
 
 public class RealtimeFragment extends Fragment implements View.OnClickListener {
     Button btnEDA;
@@ -36,6 +38,7 @@ public class RealtimeFragment extends Fragment implements View.OnClickListener {
 //    ArrayList lineEntries;
     private ImageView hintImage;
     private TextView textBox, titleBox;
+    String deviceNamePrefix = "STRapp";
 
     private SnakeView snakeView;
     private float maxValue;

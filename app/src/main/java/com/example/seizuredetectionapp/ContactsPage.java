@@ -52,6 +52,7 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
     private boolean settings;
     private SearchView searchView;
     private LocalSettings localSettings;
+    private String page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,12 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
         if(extras != null){
             settings = extras.getBoolean("settings page");
             Log.d("settings", ""+settings);
+        }
+
+        try{
+            page = extras.getString("page");
+        } catch(Throwable e){
+            e.printStackTrace();
         }
 
         // Stores our active xml for later use
@@ -140,7 +147,11 @@ public class ContactsPage extends AppCompatActivity implements Serializable {
                 // Saving the contact hashmap to local settings
                 Log.d("finished contacts", "button Clicked on contact: " + adapter.listOfContacts);
                 if(settings){
-                    startActivity(new Intent(this, UpdateContacts.class));
+                    Intent intent = new Intent(this, UpdateContacts.class);
+                    if(page != null){
+                        intent.putExtra("page", page);
+                    }
+                    startActivity(intent);
                 }
                 finish();
             }

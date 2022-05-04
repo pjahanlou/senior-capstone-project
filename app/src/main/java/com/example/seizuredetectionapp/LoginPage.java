@@ -66,10 +66,12 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
 
         // Checking if the user has completed the questionnaire or not
 
-
+        /*
         if(isQuestionnaireComplete != null && isQuestionnaireComplete.equals("1")){
             startActivity(new Intent(this, Navbar.class));
         }
+
+         */
 
 
 
@@ -203,5 +205,4 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     public void onBackPressed(){
         this.finishAffinity();
     }
-
 }

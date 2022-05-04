@@ -161,6 +161,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                 saveContactMap();
                 Intent intent = new Intent(this, ContactsPage.class);
                 intent.putExtra("settings page", true);
+                intent.putExtra("page", previousActivity);
                 startActivity(intent);
                 break;
             case R.id.saveButton:
@@ -179,7 +180,7 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
                 startActivity(intent);
             }
             if(previousActivity.equals("AppSettings")){
-                finish();
+                startActivity(new Intent(this, AppSettings.class));
             }
         } else{
             finish();
@@ -238,5 +239,4 @@ public class UpdateContacts extends AppCompatActivity implements View.OnClickLis
         saveContactMap();
         finish();
     }
-
 }
