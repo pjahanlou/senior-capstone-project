@@ -179,7 +179,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleHrmDataCallback hrmCallback = new BleHrmDataCallback() {
+    public final BleHrmDataCallback hrmCallback = new BleHrmDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onHrmValChanged(@NonNull final BluetoothDevice device,
@@ -196,7 +196,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleAccXDataCallback accxCallback = new BleAccXDataCallback() {
+    public final BleAccXDataCallback accxCallback = new BleAccXDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onAccXValChanged(@NonNull final BluetoothDevice device,
@@ -204,6 +204,7 @@ public class STRappBleManager extends ObservableBleManager {
             log(LogContract.Log.Level.APPLICATION, "AccX " + (data));
             accxData.setValue(data);
         }
+
 
         @Override
         public void onInvalidDataReceived(@NonNull final BluetoothDevice device,
@@ -213,7 +214,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleAccYDataCallback accyCallback = new BleAccYDataCallback() {
+    public final BleAccYDataCallback accyCallback = new BleAccYDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onAccYValChanged(@NonNull final BluetoothDevice device,
@@ -230,7 +231,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleAccZDataCallback acczCallback = new BleAccZDataCallback() {
+    public final BleAccZDataCallback acczCallback = new BleAccZDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onAccZValChanged(@NonNull final BluetoothDevice device,
@@ -247,7 +248,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleGyroXDataCallback gyroxCallback = new BleGyroXDataCallback() {
+    public final BleGyroXDataCallback gyroxCallback = new BleGyroXDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onGyroXValChanged(@NonNull final BluetoothDevice device,
@@ -264,7 +265,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleGyroYDataCallback gyroyCallback = new BleGyroYDataCallback() {
+    public final BleGyroYDataCallback gyroyCallback = new BleGyroYDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onGyroYValChanged(@NonNull final BluetoothDevice device,
@@ -281,7 +282,7 @@ public class STRappBleManager extends ObservableBleManager {
         }
     };
 
-    private final BleGyroZDataCallback gyrozCallback = new BleGyroZDataCallback() {
+    public final BleGyroZDataCallback gyrozCallback = new BleGyroZDataCallback() {
         @SuppressLint("WrongConstant")
         @Override
         public void onGyroZValChanged(@NonNull final BluetoothDevice device,
@@ -305,7 +306,12 @@ public class STRappBleManager extends ObservableBleManager {
     private class STRappBleManagerGattCallback extends BleManagerGattCallback {
         @Override
         protected void initialize() {
-//            setNotificationCallback(timeCharacteristic).with(timestampCallback);
+            setNotificationCallback(accxCharacteristic).with(accxCallback);
+            setNotificationCallback(accyCharacteristic).with(accyCallback);
+            setNotificationCallback(acczCharacteristic).with(acczCallback);
+            setNotificationCallback(gyroxCharacteristic).with(gyroxCallback);
+            setNotificationCallback(gyroyCharacteristic).with(gyroyCallback);
+            setNotificationCallback(gyrozCharacteristic).with(gyrozCallback);
 //            readCharacteristic(sensorCharacteristic).with(sensorCallback).enqueue();
             readCharacteristic(accxCharacteristic).with(accxCallback).enqueue();
             readCharacteristic(accyCharacteristic).with(accyCallback).enqueue();
@@ -314,7 +320,12 @@ public class STRappBleManager extends ObservableBleManager {
             readCharacteristic(gyroyCharacteristic).with(gyroyCallback).enqueue();
             readCharacteristic(gyrozCharacteristic).with(gyrozCallback).enqueue();
             readCharacteristic(hrmCharacteristic).with(hrmCallback).enqueue();
-//            enableNotifications(timeCharacteristic).enqueue();
+            enableNotifications(accxCharacteristic).enqueue();
+            enableNotifications(accyCharacteristic).enqueue();
+            enableNotifications(acczCharacteristic).enqueue();
+            enableNotifications(gyroxCharacteristic).enqueue();
+            enableNotifications(gyroyCharacteristic).enqueue();
+            enableNotifications(gyrozCharacteristic).enqueue();
         }
 
         @Override

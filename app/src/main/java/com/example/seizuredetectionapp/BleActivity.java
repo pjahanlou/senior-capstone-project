@@ -1,6 +1,8 @@
 package com.example.seizuredetectionapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import com.example.seizuredetectionapp.adapter.DiscoveredBluetoothDevice;
 import com.example.seizuredetectionapp.databinding.ActivityBleBinding;
 import com.example.seizuredetectionapp.viewmodels.STRappBleViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -25,35 +28,41 @@ public class BleActivity extends AppCompatActivity {
 
     private STRappBleViewModel viewModel;
     private ActivityBleBinding binding;
+    private SharedPreferences sharedPreferences;
+    private LocalSettings localSettings;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
         final Intent intent = getIntent();
         final DiscoveredBluetoothDevice device = intent.getParcelableExtra(EXTRA_DEVICE);
+        saveDevice(device);
         final String deviceName = device.getName();
         final String deviceAddress = device.getAddress();
+        onConnectionStateChanged(true);
 
-        final MaterialToolbar toolbar = binding.toolbar;
-        toolbar.setTitle(deviceName != null ? deviceName : getString(R.string.unknown_device));
-        toolbar.setSubtitle(deviceAddress);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        final MaterialToolbar toolbar = binding.toolbar;
+//        toolbar.setTitle(deviceName != null ? deviceName : getString(R.string.unknown_device));
+//        toolbar.setSubtitle(deviceAddress);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        final Intent dataSTRappIntent = new Intent(this, Navbar.class);
+//        startActivity(dataSTRappIntent);
 
         // Configure the view model.
         viewModel = new ViewModelProvider(this).get(STRappBleViewModel.class);
-        Log.d("device", String.valueOf(device));
-        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
+//        saveViewModel(viewModel);
+//        Log.d("device", String.valueOf(device));
+//        Log.d("EXTRA_DEVICE", EXTRA_DEVICE);
         viewModel.connect(device);
 
         // Set up views.
         binding.ledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> viewModel.setLedState(isChecked));
         binding.infoNotSupported.actionRetry.setOnClickListener(v -> viewModel.reconnect());
         binding.infoTimeout.actionRetry.setOnClickListener(v -> viewModel.reconnect());
-
         viewModel.getConnectionState().observe(this, state -> {
             switch (state.getState()) {
                 case CONNECTING:
@@ -67,10 +76,9 @@ public class BleActivity extends AppCompatActivity {
                     break;
                 case READY:
                     binding.progressContainer.setVisibility(View.GONE);
-                    binding.deviceContainer.setVisibility(View.VISIBLE);
+//                    binding.deviceContainer.setVisibility(View.VISIBLE);
                     onConnectionStateChanged(true);
-//                    final Intent dataSTRappIntent = new Intent(this, DatatableFragment.class);
-//                    dataSTRappIntent.putExtra(DatatableFragment.EXTRA_DEVICE, EXTRA_DEVICE);
+//                    final Intent dataSTRappIntent = new Intent(this, AppSettings.class);
 //                    startActivity(dataSTRappIntent);
                     break;
                 case DISCONNECTED:
@@ -90,6 +98,8 @@ public class BleActivity extends AppCompatActivity {
                     break;
             }
         });
+        final Intent dataSTRappIntent = new Intent(this, Navbar.class);
+        startActivity(dataSTRappIntent);
         viewModel.getLedState().observe(this, isOn -> {
             binding.ledState.setText(isOn ? R.string.turn_on : R.string.turn_off);
             binding.ledSwitch.setChecked(isOn);
@@ -99,6 +109,18 @@ public class BleActivity extends AppCompatActivity {
         Log.d("AccX", String.valueOf(AccX));
         viewModel.getAccxData().observe(this,
                 pressed -> binding.buttonState.setText(String.format(Objects.requireNonNull(viewModel.getAccxData().getValue()))));
+    }
+
+    public void saveDevice(DiscoveredBluetoothDevice device){
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String deviceJson = gson.toJson(device);
+        prefsEditor.putString("device", deviceJson);
+        if(prefsEditor.commit()){
+            Log.d("device", "device save successful");
+        } else{
+            Log.d("device", "device save not successful");
+        }
     }
 
     private void onConnectionStateChanged(final boolean connected) {

@@ -162,8 +162,6 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
                 openPermissionSettings();
             });
         }
-
-        sharedPreferences = getSharedPreferences(localSettings.PREFERENCES, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -208,20 +206,7 @@ public class ScannerActivity extends AppCompatActivity implements DevicesAdapter
     public void onItemClick(@NonNull final DiscoveredBluetoothDevice device) {
         final Intent controlSTRappIntent = new Intent(this, BleActivity.class);
         controlSTRappIntent.putExtra(BleActivity.EXTRA_DEVICE, device);
-        saveDevice(device);
         startActivity(controlSTRappIntent);
-    }
-
-    public void saveDevice(DiscoveredBluetoothDevice device){
-        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String deviceJson = gson.toJson(device);
-        prefsEditor.putString("device", deviceJson);
-        if(prefsEditor.commit()){
-            Log.d("device", "device save successful");
-        } else{
-            Log.d("device", "device save not successful");
-        }
     }
 
     /**
