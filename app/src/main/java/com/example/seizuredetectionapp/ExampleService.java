@@ -987,14 +987,14 @@ public class ExampleService extends Service {
             obj = new JSONObject();
             obj.put("timestamp", System.currentTimeMillis() / 1000L);
             ArrayList<CachedData.CacheNode> node = CachedData.HRReadings;
-            int last = node.size() != 0 ? Math.round(node.get(0).value) : 100;
+            int last = node.size() != 0 ? Math.round(node.get(0).value) : 105;
             int plus = 0;
-            if (r.nextInt(4) != 0) {
+            if (r.nextInt(5) != 0) {
                 plus = r.nextBoolean() ? r.nextInt(3) : -r.nextInt(2);
                 last += plus;
             }
-            if (last < 90) last = 90;
-            else if (last > 110) last = 110;
+            if (last < 95) last = 95;
+            else if (last > 115) last = 115;
             obj.put("reading", last);
             CachedData.addHR(obj.getInt("timestamp"), last);
 

@@ -91,8 +91,8 @@ public class AlertPageFragment extends Fragment implements View.OnClickListener{
     public String userCountdownTime = "30";
     public String preferredContactMethod;
     public Map<String, String> contactList = new HashMap<>();
-    private String seizureMessage = "Help! I'm having a seizure!";
-    private String cancelMessage = "Get Punked! I didn't have a seizure";
+    private String seizureMessage = "STRapp: Help request sent. Waiting for acknowledgement";
+    private String cancelMessage = "STRapp: All clear. I'm okay.";
 
     private SmsManager smsManager;
 

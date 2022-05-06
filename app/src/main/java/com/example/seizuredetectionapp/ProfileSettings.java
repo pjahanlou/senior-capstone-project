@@ -267,11 +267,11 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 try {
                     //save file to downloads directory
                     document.writeTo(new FileOutputStream(file));
-                    Toast.makeText(ProfileSettings.this, "PDF Saved.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileSettings.this, "Journal.txt Saved.", Toast.LENGTH_SHORT).show();
 
 
                 } catch (IOException e) {
-                    Toast.makeText(ProfileSettings.this, "PDF Upload Failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileSettings.this, "Journal.txt Upload Failed.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
 
                 }
@@ -313,7 +313,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 saveFileToExternalStorage("Journals","Journals");
-                Toast.makeText(this, "Pdf Saved.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Journal.txt Saved.", Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -337,7 +337,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 saveFileToExternalStorage("Journals","Journals");
-                Toast.makeText(this, "Pdf Saved.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Journal.txt Saved.", Toast.LENGTH_SHORT).show();
             }
 
         }
